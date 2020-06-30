@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://1dayluo.github.io</id>
+    <title>悠远乡</title>
+    <updated>2020-06-30T04:08:40.592Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://1dayluo.github.io"/>
+    <link rel="self" href="https://1dayluo.github.io/atom.xml"/>
+    <subtitle>(*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站</subtitle>
+    <logo>https://1dayluo.github.io/images/avatar.png</logo>
+    <icon>https://1dayluo.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, 悠远乡</rights>
+    <entry>
+        <title type="html"><![CDATA[线程捕获KeyboardInterrupter]]></title>
+        <id>https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/</id>
+        <link href="https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/">
+        </link>
+        <updated>2020-06-30T03:39:19.000Z</updated>
+        <content type="html"><![CDATA[<p>线程捕获KeyboardInterrupter不能简单用<code>try....except</code>.......来捕获。原因在stackover上说的很明白：This is a Python bug. When waiting for a condition in threading.Condition.wait(), KeyboardInterrupt is never sent.<br>
+以以下代码为例：</p>
+<pre><code class="language-python">import threading
+cond = threading.Condition(threading.Lock())
+cond.acquire()
+cond.wait(None)
+print &quot;done&quot;
+</code></pre>
+<p>在wait()返回之前，Keyboardinterrupt的信号是不会发送给运行中的程序的。<br>
+所以，要想实现捕获KeyboardInterrupt有以下几种方法：</p>
+<ol>
+<li>设置信号</li>
+<li>在线程中使用timeout</li>
+</ol>
+<h2 id="设置信号">设置信号</h2>
+<p>示例代码如下</p>
+<pre><code class="language-python">import multiprocessing
+import time
+import signal
+import sys
+
+
+# based on http://stackoverflow.com/a/6191991/1711188
+# but instead of calling Pool.join(), we just close and manually poll for processes exiting
+# also it assumes we have a finite number of jobs we want to run; if they complete
+# it terminates in the normal way
+
+
+def init_worker():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+
+
+def worker(jobid):
+    time.sleep(1.1234)
+    print(&quot;Working on job...&quot;, jobid)
+
+
+def main():
+    pool = multiprocessing.Pool(3, init_worker)
+    try:
+        results = []
+        for i in range(23):
+            results.append(pool.apply_async(worker, (i,)))
+
+
+        pool.close()
+        while True:
+            if all(r.ready() for r in results):
+                print(&quot;All processes completed&quot;)
+                return
+            time.sleep(1)
+
+
+    except KeyboardInterrupt:
+        print(&quot;Caught KeyboardInterrupt, terminating workers&quot;)
+        pool.terminate()
+        pool.join()
+
+
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h2 id="在线程中使用timeout">在线程中使用timeout</h2>
+<p>我初次见于<code>map_async</code>中，<br>
+用法大抵如下：</p>
+<pre><code class="language-python">from multiprocessing.pool import ThreadPool
+import time
+
+timeout = 25
+
+with ThreadPool(processes=4) as tp:
+    async_result = tp.map_async(time.sleep, [5, 4])
+
+    for i in range(timeout):
+        time.sleep(1)
+
+        if async_result.ready():
+            if async_result.successful():
+                print(async_result.get())
+                break
+    else:
+        print(&quot;Task did not complete on time, or with errors&quot;)
+</code></pre>
+<h3 id="参考文章">参考文章</h3>
+<p>参考如下：<br>
+https://codecalamity.com/threadpools-explained-in-the-deep-end/<br>
+https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-multiprocessing-pool/6191991#6191991</p>
+]]></content>
+    </entry>
+</feed>
