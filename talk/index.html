@@ -13,21 +13,13 @@
     <title>悠远乡</title>
 </head>
 <style>
-    @media screen and (max-width: 1300px) {
-        .archives-content ul li>span {
-            display: none;
-        }
 
-        .archives-content ul {
-            padding: 0px;
-        }
-    }
 </style>
 
 <body>
     <!-- 响应式布局，针对PC端内容显示 -->
     <div id="content">
-        <div class="nav-large">
+        <div class="talkShow">
             <div class="row">
                 <div class="side"><html>
 
@@ -243,93 +235,7 @@
             alert("博主暂未设置QQ联系方式");
     }
 </script></div>
-                <div id="main" class="col-xs-12 col-sm-7">
-                    <body">
-    <div class="archives-content">
-        
-        
-        <div class="archives-year">2020</div>
-        <ul>
-            
-            
-            <li><span></span>
-                <div>
-                  <a href="https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/" class="post">
-                    <div class="archives-title">线程捕获KeyboardInterrupter</div>
-                    <div class="archives-time">2020-06-30</div>
-                </a>
-                    
-                </div>
-                <!-- 2020-06-30 -->
-            </li>
-            
-            
-        </ul>
-        
-    </div>
-</body">
-                    <div style="background:white">
-                        <div class="pagi">
-    <ul>
-        
-        <li><a style="width:100px">&nbsp;</a></li>
-        
-                <li><a id="page1">1</a></li>
-                <li><a id="page2" class="active">2</a></li>
-                <li><a id="page3">3</a></li>
-                
-        <li><a style="width:100px">&nbsp;</a></li>
-        
-            </ul>
-</div>
-
-<div id="pagination-prev" style="display:none"> 
-</div>
-<div id="pagination-next" style="display:none"> </div>
-
-
-<script>
-    var prevstr = document.getElementById("pagination-prev").innerHTML;
-    var nextstr = document.getElementById("pagination-next").innerHTML;
-    var page1 = document.getElementById("page1");
-    var page2 = document.getElementById("page2");
-    var page3 = document.getElementById("page3");
-    page1.innerHTML = '-';
-    page2.innerHTML = '1';
-    page3.innerHTML = '-';
-    if (prevstr.length > 5) {
-        if (prevstr.indexOf("page/") != -1) {
-            var prevnum = parseInt(prevstr.split("page/")[1]);
-            page1.innerHTML = prevnum;
-            page2.innerHTML = prevnum + 1;
-        } else {
-            page1.innerHTML = 1;
-            page2.innerHTML = 2;
-        }
-    }
-    if (nextstr.indexOf("page/") != -1) {
-        var nextnum = parseInt(nextstr.split("page/")[1]);
-        page3.innerHTML = nextnum;
-        page2.innerHTML = nextnum - 1;
-    }
-</script>
-                        <div style="padding-bottom:10%"></div>
-                    </div>
-                </div>
-                <div class="col-xs-6 col-sm-2"></div>
-            </div>
-        </div>
-        <div id="bg">
-        </div>
-        <div id="bgchoice" style="display: none"></div>
-        
-        <div id="bgurl" style="display:none"></div>
-           
-    </div>
-
-    <!-- 响应式布局，针对手机端内容显示 -->
-    <div class="nav-small">
-        <head>
+                <div class="tbar"> <head>
 
   <!-- 引入Bootstrap核心样式文件 -->
   <link rel="stylesheet" href="https://1dayluo.github.io/media/css/bootstrap.min.css">
@@ -402,36 +308,210 @@
   <!-- 引入BootStrap核心js文件 -->
   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
-        <div style="margin-top:60px"></div>
-        <body">
-    <div class="archives-content">
-        
-        
-        <div class="archives-year">2020</div>
-        <ul>
-            
-            
-            <li><span></span>
-                <div>
-                  <a href="https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/" class="post">
-                    <div class="archives-title">线程捕获KeyboardInterrupter</div>
-                    <div class="archives-time">2020-06-30</div>
-                </a>
-                    
+                    <div style="margin-top:60px"></div>
                 </div>
-                <!-- 2020-06-30 -->
-            </li>
-            
-            
-        </ul>
-        
-    </div>
-</body">
-        <div class="pagination-container">
-            
-            
+                <div id="main" class="col-xs-12 col-sm-7" style="z-index: 999;">
+                    <style>
+    /* 触发弹窗图片的样式 */
+    .talkimg {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .talkimg:hover {
+        opacity: 0.7;
+    }
+
+    /* 弹窗背景 */
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Sit on top */
+        padding-top: 100px;
+        /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.9);
+        /* Black w/ opacity */
+    }
+
+    /* 图片 */
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
+
+
+
+    /* 添加动画 */
+    .modal-content,
+    #caption {
+        -webkit-animation-name: zoom;
+        -webkit-animation-duration: 0.6s;
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+
+    @-webkit-keyframes zoom {
+        from {
+            -webkit-transform: scale(0)
+        }
+
+        to {
+            -webkit-transform: scale(1)
+        }
+    }
+
+    @keyframes zoom {
+        from {
+            transform: scale(0)
+        }
+
+        to {
+            transform: scale(1)
+        }
+    }
+
+    /* 关闭按钮 */
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 80px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* 小屏幕中图片宽度为 100% */
+    @media only screen and (max-width: 700px) {
+        .modal-content {
+            width: 100%;
+        }
+    }
+</style>
+
+<body>
+    <div id="talks">
+        <div id="talkContainer">
         </div>
-        <div style="margin-bottom:60px">&nbsp;</div>
+        <button id="getmorebt" type="button" onclick="add()">获取更多</button>
+    </div>
+    </div>
+    <!-- 弹窗 -->
+    <div id="myModal" class="modal">
+        <img class="modal-content" id="img01">
+        <!-- 关闭按钮 -->
+        <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+    </div>
+
+
+</body>
+<script>
+    var talksall = [];
+    var talks = [];
+    var talkindex;
+
+    get();
+    add();
+
+    function get() {
+        var t = JSON.parse('[]');
+        talkindex = t.length - 1;
+        for (var i = t.length - 1; i >= 0; i--) {
+            var d = {};
+            d["time"] = t[i].time;
+            d["author"] = t[i].author;
+            d["text"] = t[i].text;
+            d["img"] = t[i].img;
+            talksall.push(d);
+        }
+    }
+
+    function add() {
+        for (var i = talkindex; i >= 0 && i > talkindex - 3; i--) {
+            talks.push(talksall[i]);
+        }
+        talkindex = (talkindex - 3) >= 0 ? (talkindex - 3) : -1;
+        if (talkindex < 0) $("#getmorebt").hide();
+        show();
+        refreshImg();
+    }
+
+    function show() {
+        var talkT = document.getElementById("talkContainer");
+        talkT.innerHTML = "";
+        for (var i = 0; i < talks.length; i++) {
+            talkT.innerHTML += '\
+            <div class="talk" v-for="t in talks"> \
+                <img src="' + talks[i].img + '" class="talkimg"> \
+                <div class="ainfo">\
+                    <div class="ainfo-intro">\
+                        <img class="intro1" src="https://1dayluo.github.io/images/avatar.png?v=1593490241833">\
+                        <div class="author">' + talks[i].author + '</div>·\
+                        <div class="time">' + talks[i].time + '</div>\
+                    </div>\
+                </div>\
+                <div class="talkcontent">' + talks[i].text + '\
+                </div\>\
+            ';
+        }
+    }
+
+    function refreshImg() {
+        // 获取弹窗
+        var modal = document.getElementById('myModal');
+
+        // 获取图片插入到弹窗 - 使用 "alt" 属性作为文本部分的内容
+        var img = document.getElementsByClassName("talkimg");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        for (var i in img) {
+            img[i].onclick = function () {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+        }
+
+        // 获取 <span> 元素，设置关闭按钮
+        var span = document.getElementsByClassName("close")[0];
+
+        // 当点击 (x), 关闭弹窗
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+    }
+</script>
+<!-- 由于vue中click失效 转由基本js书写  查看大图 -->
+                </div>
+                <div class="col-xs-6 col-sm-2"></div>
+            </div>
+        </div>
+        <div id="bg">
+        </div>
+        <div id="bgchoice" style="display: none"></div>
+        
+        <div id="bgurl" style="display:none"></div>
+           
     </div>
     <div id="landlord">
         <div class="message" style="opacity:0"></div>
@@ -441,13 +521,14 @@
 
 </html>
 <script src="https://1dayluo.github.io/media/js/index.js"></script>
-
-<script type="text/javascript">
-    var message_Path = '/live2d/'
-    var home_Path = 'http://ericam.top/' //此处修改为你的域名，必须带斜杠
-</script>
-<script type="text/javascript" src="https://1dayluo.github.io/media/live2d/js/live2d.js"></script>
-<script type="text/javascript" src="https://1dayluo.github.io/media/live2d/js/message.js"></script>
-<script type="text/javascript">
-    loadlive2d("live2d", "https://1dayluo.github.io/media/live2d/assets/tororo.model.json");
-</script>
+        
+        <script type="text/javascript">
+            var message_Path = '/live2d/'
+            var home_Path = 'http://ericam.top/' //此处修改为你的域名，必须带斜杠
+        </script>
+        <script type="text/javascript" src="https://1dayluo.github.io/media/live2d/js/live2d.js"></script>
+        <script type="text/javascript" src="https://1dayluo.github.io/media/live2d/js/message.js"></script>
+        <script type="text/javascript">
+            loadlive2d("live2d", "https://1dayluo.github.io/media/live2d/assets/tororo.model.json");
+        </script>
+        

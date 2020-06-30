@@ -243,77 +243,49 @@
             alert("博主暂未设置QQ联系方式");
     }
 </script></div>
-                <div id="main" class="col-xs-12 col-sm-7">
-                    <body">
-    <div class="archives-content">
+                <div id="main" class="col-xs-12 col-sm-7" style="z-index: 999;">
+                    <body>
+    <div id="friendscontainermobile">
         
         
-        <div class="archives-year">2020</div>
-        <ul>
-            
-            
-            <li><span></span>
-                <div>
-                  <a href="https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/" class="post">
-                    <div class="archives-title">线程捕获KeyboardInterrupter</div>
-                    <div class="archives-time">2020-06-30</div>
-                </a>
-                    
-                </div>
-                <!-- 2020-06-30 -->
-            </li>
-            
-            
-        </ul>
         
     </div>
-</body">
-                    <div style="background:white">
-                        <div class="pagi">
-    <ul>
-        
-        <li><a style="width:100px">&nbsp;</a></li>
-        
-                <li><a id="page1">1</a></li>
-                <li><a id="page2" class="active">2</a></li>
-                <li><a id="page3">3</a></li>
-                
-        <li><a style="width:100px">&nbsp;</a></li>
-        
-            </ul>
-</div>
 
-<div id="pagination-prev" style="display:none"> 
-</div>
-<div id="pagination-next" style="display:none"> </div>
+    <div id="friendscontainer">
+        
+        
+        
+    </div>
+</body>
+                    <div name="comment" style="background: white">
+                        <div class="commentcontainer">
+                            
+                            
+                            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 
+<div id="gitalk-container"></div>
 
 <script>
-    var prevstr = document.getElementById("pagination-prev").innerHTML;
-    var nextstr = document.getElementById("pagination-next").innerHTML;
-    var page1 = document.getElementById("page1");
-    var page2 = document.getElementById("page2");
-    var page3 = document.getElementById("page3");
-    page1.innerHTML = '-';
-    page2.innerHTML = '1';
-    page3.innerHTML = '-';
-    if (prevstr.length > 5) {
-        if (prevstr.indexOf("page/") != -1) {
-            var prevnum = parseInt(prevstr.split("page/")[1]);
-            page1.innerHTML = prevnum;
-            page2.innerHTML = prevnum + 1;
-        } else {
-            page1.innerHTML = 1;
-            page2.innerHTML = 2;
-        }
-    }
-    if (nextstr.indexOf("page/") != -1) {
-        var nextnum = parseInt(nextstr.split("page/")[1]);
-        page3.innerHTML = nextnum;
-        page2.innerHTML = nextnum - 1;
-    }
+
+  var gitalk = new Gitalk({
+    clientID: '15aa7fb3398e44bb6262',
+    clientSecret: 'bd6200411152ecc8ab15ba312b0b2f2a43e290f5',
+    repo: '1dayluo.github.io',
+    owner: '1dayluo',
+    admin: ['1dayluo'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
 </script>
-                        <div style="padding-bottom:10%"></div>
+
+                            
+                            
+                            
+                        </div>
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-2"></div>
@@ -403,35 +375,50 @@
   <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
         <div style="margin-top:60px"></div>
-        <body">
-    <div class="archives-content">
+        <body>
+    <div id="friendscontainermobile">
         
         
-        <div class="archives-year">2020</div>
-        <ul>
-            
-            
-            <li><span></span>
-                <div>
-                  <a href="https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/" class="post">
-                    <div class="archives-title">线程捕获KeyboardInterrupter</div>
-                    <div class="archives-time">2020-06-30</div>
-                </a>
-                    
-                </div>
-                <!-- 2020-06-30 -->
-            </li>
-            
-            
-        </ul>
         
     </div>
-</body">
-        <div class="pagination-container">
-            
-            
-        </div>
+
+    <div id="friendscontainer">
+        
+        
+        
+    </div>
+</body>
         <div style="margin-bottom:60px">&nbsp;</div>
+        <div name="comment" style="background: white">
+            <div class="commentcontainer">
+                
+                
+                <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '15aa7fb3398e44bb6262',
+    clientSecret: 'bd6200411152ecc8ab15ba312b0b2f2a43e290f5',
+    repo: '1dayluo.github.io',
+    owner: '1dayluo',
+    admin: ['1dayluo'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+                
+                
+                
+            </div>
+        </div>
     </div>
     <div id="landlord">
         <div class="message" style="opacity:0"></div>
