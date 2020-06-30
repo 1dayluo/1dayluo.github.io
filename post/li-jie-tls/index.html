@@ -1,8 +1,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="线程捕获KeyboardInterrupter不能简单用try....except.......来捕获。原因在stackover上说的很明白：This is a Python bug. When waiting for a conditio..." />
-    <meta name="keywords" content="python" />
+    <meta name="description" content="为什么需要TLS
+前提：每个线程都有TLS
+如果我们要在多线程中对全局变量(Global Variable)进行操作，除了保护多个线程对该变量内存读写不会有影响（加锁)，同时也要保证在单个线程在某些不可控状态下对其进行修改时，程序不会因此发..." />
+    <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://1dayluo.github.io/media/css/bootstrap.min.css">
     
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/rainbow.min.css">
@@ -293,131 +295,61 @@
         <div class="postshow">
             
             <div class="postdetailimg" style="width:100%;overflow: hidden;display: none">
-                
-                <img src="\media\images\custom-postdefaultimage.jpg" class="postimage">
-                
+                <img src="http://pic.netbian.com/uploads/allimg/200627/004311-15931897916db2.jpg" class="postimage" style="cursor:auto">
             </div>
             <div class="postinfo">
                 <div class="postdate"><i class="fa fa-calendar"></i>2020-06-30</div>
-            <div class="poststatus postdate"><i class="fa fa-clock-o"></i> 2 min read</div>
-            <div class="posttag">
-                
-                <a href="https://1dayluo.github.io/tag/7Wdu5WLBU/" class="postlink">
-                    <i class="fa fa-tag"></i> python
-                </a>
-                
+                <div class="poststatus postdate"><i class="fa fa-clock-o"></i> 2 min read</div>
+                <div class="posttag">
+                    
+                </div>
             </div>
-        </div>
-        
+            
         <div id="texttitle" style="text-align: center">
-            <h2>线程捕获KeyboardInterrupter</h2>
+            <h2>理解TLS</h2>
             <!-- id 将作为查询条件 -->
-            <div id="pl" style="display:none">https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/</div>
+            <div id="pl" style="display:none">https://1dayluo.github.io/post/li-jie-tls/</div>
             <div id="rootaddr" style="display:none">https://1dayluo.github.io</div>
-            <span id="hotnum" class="leancloud_visitors" data-flag-title="线程捕获KeyboardInterrupter">
+            <span id="hotnum" class="leancloud_visitors" data-flag-title="理解TLS">
                 <h4 class="readercount">热度🔥: <i class="leancloud-visitors-count">loading...</i></h4>
             </span>
         </div>
         <div class="text ">
-            <p>线程捕获KeyboardInterrupter不能简单用<code>try....except</code>.......来捕获。原因在stackover上说的很明白：This is a Python bug. When waiting for a condition in threading.Condition.wait(), KeyboardInterrupt is never sent.<br>
-以以下代码为例：</p>
-<pre><code class="language-python">import threading
-cond = threading.Condition(threading.Lock())
-cond.acquire()
-cond.wait(None)
-print &quot;done&quot;
+            <h2 id="为什么需要tls">为什么需要TLS</h2>
+<p>前提：每个线程都有TLS<br>
+如果我们要在多线程中对全局变量(<code>Global Variable</code>)进行操作，除了保护多个线程对该变量内存读写不会有影响（加锁)，同时也要保证在单个线程在某些不可控状态下对其进行修改时，程序不会因此发生产生影响，例如崩溃。<br>
+那么，我们不定义全局变量，将其定义为局部变量，但是即使是局部变量在函数调用的时候，传递该参数又很麻烦。例如</p>
+<pre><code class="language-python">def process_student(name):
+    std = Student(name)
+    # std是局部变量，但是每个函数都要用它，因此必须传进去：
+    do_task_1(std)
+    do_task_2(std)
+
+def do_task_1(std):
+    do_subtask_1(std)
+    do_subtask_2(std)
+
+def do_task_2(std):
+    do_subtask_2(std)
+    do_subtask_2(std)
 </code></pre>
-<p>在wait()返回之前，Keyboardinterrupt的信号是不会发送给运行中的程序的。<br>
-所以，要想实现捕获KeyboardInterrupt有以下几种方法：</p>
-<ol>
-<li>设置信号</li>
-<li>在线程中使用timeout</li>
-</ol>
-<h2 id="设置信号">设置信号</h2>
-<p>示例代码如下</p>
-<pre><code class="language-python">import multiprocessing
-import time
-import signal
-import sys
-
-
-# based on http://stackoverflow.com/a/6191991/1711188
-# but instead of calling Pool.join(), we just close and manually poll for processes exiting
-# also it assumes we have a finite number of jobs we want to run; if they complete
-# it terminates in the normal way
-
-
-def init_worker():
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
-
-
-def worker(jobid):
-    time.sleep(1.1234)
-    print(&quot;Working on job...&quot;, jobid)
-
-
-def main():
-    pool = multiprocessing.Pool(3, init_worker)
-    try:
-        results = []
-        for i in range(23):
-            results.append(pool.apply_async(worker, (i,)))
-
-
-        pool.close()
-        while True:
-            if all(r.ready() for r in results):
-                print(&quot;All processes completed&quot;)
-                return
-            time.sleep(1)
-
-
-    except KeyboardInterrupt:
-        print(&quot;Caught KeyboardInterrupt, terminating workers&quot;)
-        pool.terminate()
-        pool.join()
-
-
-
-
-if __name__ == &quot;__main__&quot;:
-    main()
-</code></pre>
-<h2 id="在线程中使用timeout">在线程中使用timeout</h2>
-<p>我初次见于<code>map_async</code>中，<br>
-用法大抵如下：</p>
-<pre><code class="language-python">from multiprocessing.pool import ThreadPool
-import time
-
-timeout = 25
-
-with ThreadPool(processes=4) as tp:
-    async_result = tp.map_async(time.sleep, [5, 4])
-
-    for i in range(timeout):
-        time.sleep(1)
-
-        if async_result.ready():
-            if async_result.successful():
-                print(async_result.get())
-                break
-    else:
-        print(&quot;Task did not complete on time, or with errors&quot;)
-</code></pre>
-<h3 id="参考文章">参考文章</h3>
-<p>参考如下：<br>
-https://codecalamity.com/threadpools-explained-in-the-deep-end/<br>
-https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-multiprocessing-pool/6191991#6191991</p>
+<p>在用全局变量和局部变量都会产生如此窘迫的情况下，产生了TLS的概念。同时也是为了代码更加的整洁/布局合理（搞技术的老毛病，完美主义+强迫症?)</p>
+<h2 id="什么是threadlocal变量">什么是ThreadLocal变量</h2>
+<p>ThreadLocal变量，也就是线程本地变量，它会为每个使用该变量的线程维护一个变量的副本，在某个线程中，对该变量的修改，只会改变自己的副本，不会影响其他的线程的副本。</p>
+<p>未完待续…</p>
+<h2 id="参考文章">参考文章</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/60126952">深入理解Python的TLS机制和Threading.local()</a><br>
+<a href="http://timd.cn/python-thread-local/">python-thread-local</a></p>
 
         </div>
         
-        <div class="prev-post">
-            上一篇
-            <a href="https://1dayluo.github.io/post/li-jie-tls/">
-                理解TLS
+        
+        <div class="next-post">
+            下一篇
+            <a href="https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/">
+                线程捕获KeyboardInterrupter
             </a>
         </div>
-        
         
     </div>
     </div>
@@ -495,12 +427,9 @@ https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-mul
                     <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li><a href="#%E8%AE%BE%E7%BD%AE%E4%BF%A1%E5%8F%B7">设置信号</a></li>
-<li><a href="#%E5%9C%A8%E7%BA%BF%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8timeout">在线程中使用timeout</a>
-<ul>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81tls">为什么需要TLS</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFthreadlocal%E5%8F%98%E9%87%8F">什么是ThreadLocal变量</a></li>
 <li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0">参考文章</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -608,131 +537,61 @@ https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-mul
         <div class="postshow">
             
             <div class="postdetailimg" style="width:100%;overflow: hidden;display: none">
-                
-                <img src="\media\images\custom-postdefaultimage.jpg" class="postimage">
-                
+                <img src="http://pic.netbian.com/uploads/allimg/200627/004311-15931897916db2.jpg" class="postimage" style="cursor:auto">
             </div>
             <div class="postinfo">
                 <div class="postdate"><i class="fa fa-calendar"></i>2020-06-30</div>
-            <div class="poststatus postdate"><i class="fa fa-clock-o"></i> 2 min read</div>
-            <div class="posttag">
-                
-                <a href="https://1dayluo.github.io/tag/7Wdu5WLBU/" class="postlink">
-                    <i class="fa fa-tag"></i> python
-                </a>
-                
+                <div class="poststatus postdate"><i class="fa fa-clock-o"></i> 2 min read</div>
+                <div class="posttag">
+                    
+                </div>
             </div>
-        </div>
-        
+            
         <div id="texttitle" style="text-align: center">
-            <h2>线程捕获KeyboardInterrupter</h2>
+            <h2>理解TLS</h2>
             <!-- id 将作为查询条件 -->
-            <div id="pl" style="display:none">https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/</div>
+            <div id="pl" style="display:none">https://1dayluo.github.io/post/li-jie-tls/</div>
             <div id="rootaddr" style="display:none">https://1dayluo.github.io</div>
-            <span id="hotnum" class="leancloud_visitors" data-flag-title="线程捕获KeyboardInterrupter">
+            <span id="hotnum" class="leancloud_visitors" data-flag-title="理解TLS">
                 <h4 class="readercount">热度🔥: <i class="leancloud-visitors-count">loading...</i></h4>
             </span>
         </div>
         <div class="text ">
-            <p>线程捕获KeyboardInterrupter不能简单用<code>try....except</code>.......来捕获。原因在stackover上说的很明白：This is a Python bug. When waiting for a condition in threading.Condition.wait(), KeyboardInterrupt is never sent.<br>
-以以下代码为例：</p>
-<pre><code class="language-python">import threading
-cond = threading.Condition(threading.Lock())
-cond.acquire()
-cond.wait(None)
-print &quot;done&quot;
+            <h2 id="为什么需要tls">为什么需要TLS</h2>
+<p>前提：每个线程都有TLS<br>
+如果我们要在多线程中对全局变量(<code>Global Variable</code>)进行操作，除了保护多个线程对该变量内存读写不会有影响（加锁)，同时也要保证在单个线程在某些不可控状态下对其进行修改时，程序不会因此发生产生影响，例如崩溃。<br>
+那么，我们不定义全局变量，将其定义为局部变量，但是即使是局部变量在函数调用的时候，传递该参数又很麻烦。例如</p>
+<pre><code class="language-python">def process_student(name):
+    std = Student(name)
+    # std是局部变量，但是每个函数都要用它，因此必须传进去：
+    do_task_1(std)
+    do_task_2(std)
+
+def do_task_1(std):
+    do_subtask_1(std)
+    do_subtask_2(std)
+
+def do_task_2(std):
+    do_subtask_2(std)
+    do_subtask_2(std)
 </code></pre>
-<p>在wait()返回之前，Keyboardinterrupt的信号是不会发送给运行中的程序的。<br>
-所以，要想实现捕获KeyboardInterrupt有以下几种方法：</p>
-<ol>
-<li>设置信号</li>
-<li>在线程中使用timeout</li>
-</ol>
-<h2 id="设置信号">设置信号</h2>
-<p>示例代码如下</p>
-<pre><code class="language-python">import multiprocessing
-import time
-import signal
-import sys
-
-
-# based on http://stackoverflow.com/a/6191991/1711188
-# but instead of calling Pool.join(), we just close and manually poll for processes exiting
-# also it assumes we have a finite number of jobs we want to run; if they complete
-# it terminates in the normal way
-
-
-def init_worker():
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
-
-
-def worker(jobid):
-    time.sleep(1.1234)
-    print(&quot;Working on job...&quot;, jobid)
-
-
-def main():
-    pool = multiprocessing.Pool(3, init_worker)
-    try:
-        results = []
-        for i in range(23):
-            results.append(pool.apply_async(worker, (i,)))
-
-
-        pool.close()
-        while True:
-            if all(r.ready() for r in results):
-                print(&quot;All processes completed&quot;)
-                return
-            time.sleep(1)
-
-
-    except KeyboardInterrupt:
-        print(&quot;Caught KeyboardInterrupt, terminating workers&quot;)
-        pool.terminate()
-        pool.join()
-
-
-
-
-if __name__ == &quot;__main__&quot;:
-    main()
-</code></pre>
-<h2 id="在线程中使用timeout">在线程中使用timeout</h2>
-<p>我初次见于<code>map_async</code>中，<br>
-用法大抵如下：</p>
-<pre><code class="language-python">from multiprocessing.pool import ThreadPool
-import time
-
-timeout = 25
-
-with ThreadPool(processes=4) as tp:
-    async_result = tp.map_async(time.sleep, [5, 4])
-
-    for i in range(timeout):
-        time.sleep(1)
-
-        if async_result.ready():
-            if async_result.successful():
-                print(async_result.get())
-                break
-    else:
-        print(&quot;Task did not complete on time, or with errors&quot;)
-</code></pre>
-<h3 id="参考文章">参考文章</h3>
-<p>参考如下：<br>
-https://codecalamity.com/threadpools-explained-in-the-deep-end/<br>
-https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-multiprocessing-pool/6191991#6191991</p>
+<p>在用全局变量和局部变量都会产生如此窘迫的情况下，产生了TLS的概念。同时也是为了代码更加的整洁/布局合理（搞技术的老毛病，完美主义+强迫症?)</p>
+<h2 id="什么是threadlocal变量">什么是ThreadLocal变量</h2>
+<p>ThreadLocal变量，也就是线程本地变量，它会为每个使用该变量的线程维护一个变量的副本，在某个线程中，对该变量的修改，只会改变自己的副本，不会影响其他的线程的副本。</p>
+<p>未完待续…</p>
+<h2 id="参考文章">参考文章</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/60126952">深入理解Python的TLS机制和Threading.local()</a><br>
+<a href="http://timd.cn/python-thread-local/">python-thread-local</a></p>
 
         </div>
         
-        <div class="prev-post">
-            上一篇
-            <a href="https://1dayluo.github.io/post/li-jie-tls/">
-                理解TLS
+        
+        <div class="next-post">
+            下一篇
+            <a href="https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/">
+                线程捕获KeyboardInterrupter
             </a>
         </div>
-        
         
     </div>
     </div>

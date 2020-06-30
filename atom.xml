@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://1dayluo.github.io</id>
     <title>悠远乡</title>
-    <updated>2020-06-30T07:32:57.144Z</updated>
+    <updated>2020-06-30T08:39:33.752Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://1dayluo.github.io"/>
     <link rel="self" href="https://1dayluo.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://1dayluo.github.io/images/avatar.png</logo>
     <icon>https://1dayluo.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 悠远乡</rights>
+    <entry>
+        <title type="html"><![CDATA[理解TLS]]></title>
+        <id>https://1dayluo.github.io/post/li-jie-tls/</id>
+        <link href="https://1dayluo.github.io/post/li-jie-tls/">
+        </link>
+        <updated>2020-06-30T07:52:47.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[线程捕获KeyboardInterrupter]]></title>
         <id>https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/</id>
