@@ -44,7 +44,7 @@
 <body>
     <div id=side>
         <div class="avatar-border">
-            <img src="https://1dayluo.github.io/images/avatar.png?v=1593490276557" class="avatar">
+            <img src="https://1dayluo.github.io/images/avatar.png?v=1593490950659" class="avatar">
         </div>
         <div class="sitename">悠远乡</div>
         <span class="describtion" data-text='["(*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站"]'>&nbsp;</span>
@@ -99,6 +99,10 @@
     
     
     
+        <div class="mchocie describtion">
+            <a href="https://1dayluo.github.io/talk" class="menubutton">说说</a>
+        </div>
+        
     
     <div class="mchocie describtion">
         <a href="https://1dayluo.github.io/friends" class="menubutton">友人帐</a>
@@ -108,12 +112,47 @@
     <div id="footinfo">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | Theme: <a
         href="https://github.com/850552586/gridea-theme-fog">Fog</a></div>
     
+    <div id="sitegotimeDate">载入天数...</div>
+    <div id="sitegotimes">载入时分秒...</div>
+    <div id="cussitetime" style="display:none">30/06/2020</div>
+    
     
     </div>
 </body>
 
 </html>
 <script src="https://1dayluo.github.io/media/js/wordshow.js"></script>
+
+<script>
+    //----------------------站点运行时间
+    var now = new Date();
+
+    function createtime() {
+        var sitegotime = document.getElementById("cussitetime").innerHTML + " 00:00:00";
+        var grt = new Date(sitegotime); //此处修改你的建站时间或者网站上线时间 
+        now.setTime(now.getTime() + 250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if (String(hnum).length == 1) {
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if (String(mnum).length == 1) {
+            mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if (String(snum).length == 1) {
+            snum = "0" + snum;
+        }
+        document.getElementById("sitegotimeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+        document.getElementById("sitegotimes").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()", 250);
+</script>
 
 <script>
     //-------------------------------------------------搜索
@@ -265,7 +304,7 @@
             
             <div class="postdetailimg" style="width:100%;overflow: hidden;display: none">
                 
-                <img src="" class="postimage">
+                <img src="\media\images\custom-postdefaultimage.jpg" class="postimage">
                 
             </div>
             <div class="postinfo">
@@ -392,9 +431,9 @@
         </div>
         <div id="bg">
         </div>
-        <div id="bgchoice" style="display: none"></div>
+        <div id="bgchoice" style="display: none">default</div>
         
-        <div id="bgurl" style="display:none"></div>
+        <div id="bgurl" style="display:none">\media\images\custom-bgimage.jpg</div>
            
     </div>
     <!-- 响应式布局，针对手机端内容显示 -->
@@ -457,6 +496,8 @@
           
           
           
+            <li><a href="https://1dayluo.github.io/talk">说说</a></li>
+            
           
           <li><a href="https://1dayluo.github.io/friends">友链</a></li>
 
@@ -484,7 +525,7 @@
             
             <div class="postdetailimg" style="width:100%;overflow: hidden;display: none">
                 
-                <img src="" class="postimage">
+                <img src="\media\images\custom-postdefaultimage.jpg" class="postimage">
                 
             </div>
             <div class="postinfo">
@@ -620,16 +661,6 @@
         alert("矮油，复制失败了...手动复制吧勇士！");
         e.clearSelection();
     });
-</script>
-
-<script type="text/javascript">
-    var message_Path = '/live2d/'
-    var home_Path = 'http://ericam.top/' //此处修改为你的域名，必须带斜杠
-</script>
-<script type="text/javascript" src="https://1dayluo.github.io/media/live2d/js/live2d.js"></script>
-<script type="text/javascript" src="https://1dayluo.github.io/media/live2d/js/message.js"></script>
-<script type="text/javascript">
-    loadlive2d("live2d", "https://1dayluo.github.io/media/live2d/assets/tororo.model.json");
 </script>
 
 <script>
