@@ -36,7 +36,7 @@
 <body>
     <div id=side>
         <div class="avatar-border">
-            <img src="https://1dayluo.github.io/images/avatar.png?v=1593506322407" class="avatar">
+            <img src="https://1dayluo.github.io/images/avatar.png?v=1593514742338" class="avatar">
         </div>
         <div class="sitename">悠远乡</div>
         <span class="describtion" data-text='["(*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站"]'>&nbsp;</span>
@@ -299,7 +299,7 @@
             </div>
             <div class="postinfo">
                 <div class="postdate"><i class="fa fa-calendar"></i>2020-06-30</div>
-                <div class="poststatus postdate"><i class="fa fa-clock-o"></i> 2 min read</div>
+                <div class="poststatus postdate"><i class="fa fa-clock-o"></i> 3 min read</div>
                 <div class="posttag">
                     
                 </div>
@@ -335,8 +335,59 @@ def do_task_2(std):
 </code></pre>
 <p>在用全局变量和局部变量都会产生如此窘迫的情况下，产生了TLS的概念。同时也是为了代码更加的整洁/布局合理（搞技术的老毛病，完美主义+强迫症?)</p>
 <h2 id="什么是threadlocal变量">什么是ThreadLocal变量</h2>
-<p>ThreadLocal变量，也就是线程本地变量，它会为每个使用该变量的线程维护一个变量的副本，在某个线程中，对该变量的修改，只会改变自己的副本，不会影响其他的线程的副本。</p>
-<p>未完待续…</p>
+<p>ThreadLocal变量，也就是线程本地变量，它会为每个使用该变量的线程维护一个变量的副本，在某个线程中，对该变量的修改，只会改变自己的副本，不会影响其他的线程的副本。<br>
+例如(这个例子可能不是很好），我在实际应用场景中有如下需求，我要在单条线程中处理和保存一个变量，类型为<code>list</code> ，并且在每次当前线程中的<code>for</code>循环中我会对这个list进行操作。这样我避免了每次在 <code>process_id</code>函数的位置都不得不传入last_id变量。</p>
+<pre><code class="language-python">import  threading
+import multiprocessing
+import signal
+import time
+
+last_id = threading.local()
+def process_id(id):
+    last_id.val.append(id)
+    return last_id
+
+def key_processing(id):
+    if id is not None :
+        filter = {'_id':{'$gte': id}}
+    else:
+        filter = {}
+    last_id.val = []
+    for i in range(20):
+        # save_id = i + 2
+        save_id = process_id(i)
+        print(save_id.val)
+
+
+def init_worker():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+def main():
+    pool = multiprocessing.Pool(3, init_worker)
+    idlist = [ i for i in range(10)]
+    try:
+        results = []
+        for id in idlist:
+            results.append(pool.apply_async(key_processing, (id,)))
+            # results.append(pool.apply_async(coroutine_process, (key_processing,id,)))
+        pool.close()
+        while True:
+            if all(r.ready() for r in results):
+                print(&quot;All processes completed&quot;)
+                return
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        print(&quot;Caught KeyboardInterrupt, terminating workers&quot;)
+        pool.terminate()
+        pool.join()
+    finally:
+
+        pass
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+<p>这样做的好处除了在比案例更复杂的场景使代码看起来规范，整齐外，在PEP266中有提，ThreadLocal变量是可以减少指令加速运算的，因为全局变量往往需要更多的指令。</p>
 <h2 id="参考文章">参考文章</h2>
 <p><a href="https://zhuanlan.zhihu.com/p/60126952">深入理解Python的TLS机制和Threading.local()</a><br>
 <a href="http://timd.cn/python-thread-local/">python-thread-local</a></p>
@@ -541,7 +592,7 @@ def do_task_2(std):
             </div>
             <div class="postinfo">
                 <div class="postdate"><i class="fa fa-calendar"></i>2020-06-30</div>
-                <div class="poststatus postdate"><i class="fa fa-clock-o"></i> 2 min read</div>
+                <div class="poststatus postdate"><i class="fa fa-clock-o"></i> 3 min read</div>
                 <div class="posttag">
                     
                 </div>
@@ -577,8 +628,59 @@ def do_task_2(std):
 </code></pre>
 <p>在用全局变量和局部变量都会产生如此窘迫的情况下，产生了TLS的概念。同时也是为了代码更加的整洁/布局合理（搞技术的老毛病，完美主义+强迫症?)</p>
 <h2 id="什么是threadlocal变量">什么是ThreadLocal变量</h2>
-<p>ThreadLocal变量，也就是线程本地变量，它会为每个使用该变量的线程维护一个变量的副本，在某个线程中，对该变量的修改，只会改变自己的副本，不会影响其他的线程的副本。</p>
-<p>未完待续…</p>
+<p>ThreadLocal变量，也就是线程本地变量，它会为每个使用该变量的线程维护一个变量的副本，在某个线程中，对该变量的修改，只会改变自己的副本，不会影响其他的线程的副本。<br>
+例如(这个例子可能不是很好），我在实际应用场景中有如下需求，我要在单条线程中处理和保存一个变量，类型为<code>list</code> ，并且在每次当前线程中的<code>for</code>循环中我会对这个list进行操作。这样我避免了每次在 <code>process_id</code>函数的位置都不得不传入last_id变量。</p>
+<pre><code class="language-python">import  threading
+import multiprocessing
+import signal
+import time
+
+last_id = threading.local()
+def process_id(id):
+    last_id.val.append(id)
+    return last_id
+
+def key_processing(id):
+    if id is not None :
+        filter = {'_id':{'$gte': id}}
+    else:
+        filter = {}
+    last_id.val = []
+    for i in range(20):
+        # save_id = i + 2
+        save_id = process_id(i)
+        print(save_id.val)
+
+
+def init_worker():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+def main():
+    pool = multiprocessing.Pool(3, init_worker)
+    idlist = [ i for i in range(10)]
+    try:
+        results = []
+        for id in idlist:
+            results.append(pool.apply_async(key_processing, (id,)))
+            # results.append(pool.apply_async(coroutine_process, (key_processing,id,)))
+        pool.close()
+        while True:
+            if all(r.ready() for r in results):
+                print(&quot;All processes completed&quot;)
+                return
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        print(&quot;Caught KeyboardInterrupt, terminating workers&quot;)
+        pool.terminate()
+        pool.join()
+    finally:
+
+        pass
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+<p>这样做的好处除了在比案例更复杂的场景使代码看起来规范，整齐外，在PEP266中有提，ThreadLocal变量是可以减少指令加速运算的，因为全局变量往往需要更多的指令。</p>
 <h2 id="参考文章">参考文章</h2>
 <p><a href="https://zhuanlan.zhihu.com/p/60126952">深入理解Python的TLS机制和Threading.local()</a><br>
 <a href="http://timd.cn/python-thread-local/">python-thread-local</a></p>
