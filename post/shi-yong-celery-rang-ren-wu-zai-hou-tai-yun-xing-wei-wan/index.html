@@ -1,0 +1,203 @@
+<html>
+      <head>
+        <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
+        <meta charset="utf-8">
+        <meta name="referrer" content="never">
+        <title>使用celery让任务在后台运行（未完) | 悠远乡</title>
+        <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.11.1/katex.min.css">
+        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+          <script src="https://1dayluo.github.io/media/scripts/mdui.min.js"></script>
+        <link rel="stylesheet" href="https://at.alicdn.com/t/font_1306644_jwtuc2zzbrd.css">
+        <link href="https://fonts.googleapis.com/css?family=Dancing+Script|Ma+Shan+Zheng&display=swap" rel="stylesheet">
+        <script src="https://cdn.bootcss.com/highlight.js/9.15.10/highlight.min.js"></script>
+        <script src="https://1dayluo.github.io/media/scripts/script.js"></script>
+        <script >hljs.initHighlightingOnLoad();</script>
+        
+
+    </head>
+    <body class="mdui-theme-primary-purple mdui-theme-accent-purple">
+        <header class="index-img mdui-m-b-3" >
+                          <button class="mdui-btn  mdui-btn-icon mdui-btn-dense mdui-color-theme-500 mdui-ripple yinying mdui-m-t-1 mdui-m-l-1" mdui-menu="{target: '#demo-attr-cascade'}"><i class="mdui-icon material-icons">&#xe5d2;</i></button>
+                <ul class="mdui-menu" id="demo-attr-cascade">
+                
+                        <li class="mdui-menu-item">
+                          <a href="/" class="mdui-ripple">首页</a>
+                        </li>
+                
+                        <li class="mdui-menu-item">
+                          <a href="/archives" class="mdui-ripple">归档</a>
+                        </li>
+                
+                        <li class="mdui-menu-item">
+                          <a href="/tags" class="mdui-ripple">标签</a>
+                        </li>
+                
+                        <li class="mdui-menu-item">
+                          <a href="/post/about" class="mdui-ripple">关于</a>
+                        </li>
+                
+                      </ul>
+
+        </header>
+        <div class="mdui-container post">
+                <div class="mdui-row">
+                        <div class="mdui-col-md-8 mdui-col-offset-md-2 ">
+                         <article class="mdui-shadow-10 mdui-p-a-2 post-list">
+                           <div class="mdui-typo-display-1 mdui-m-b-3">使用celery让任务在后台运行（未完)</div>
+                           <a  class="index-list-biaoqian ">2020-08-14</a>
+                           <div class="mdui-typo mdui-m-t-3 post-neirong"><h1 id="什么是celery">什么是celery</h1>
+<pre><code> Celery 是一个异步任务队列。你可以使用它在你的应用上下文之外执行任务。总的想法就是你的应用程序可能需要执行任何消耗资源的任务都可以交给任务队列，让你的应用程序自由和快速地响应客户端请求。
+</code></pre>
+<h1 id="我的尝试">我的尝试</h1>
+<p>最近写异步爬虫想在Flask中应用，找了很多方法，包括流式渲染。后来又接触了celery。celery在很多方面都会用到，flask也不例外。<br>
+在这里我用celery的意图是用celery在后台运行任务<br>
+首先在<code>__init__</code>中初始化celery，选择broker</p>
+<pre><code class="language-python">celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
+</code></pre>
+<p>我在config.py中设置了broker相关的配置，并在init中加载</p>
+<pre><code class="language-python">CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+</code></pre>
+<p>然后定义一个celery任务</p>
+<pre><code class="language-python">@celery.task()
+def get_topics(group_links):
+    with app.app_context():
+        topics = worker(group_links)
+    return topics
+</code></pre>
+<p>调取任务，其中<code>delay</code>方法相当于<code>apply_async</code>的一种简写方式。如果要用到更多的参数，则需调用<code>apply_async</code></p>
+<pre><code class="language-python">@app.route('/api/group/&lt;groupid&gt;',methods=['POST','GET'])
+def test_api(groupid):
+    base_url = 'https://www.douban.com/group/{}/'
+    links = [ base_url.format(i) for i in eval(groupid) ]
+
+
+    result = get_topics.delay(links)
+    return jsonify(result.get())
+
+    ````
+</code></pre>
+</div>
+                              <div class="mdui-divider mdui-m-t-3"></div>
+                              <div class="mdui-row-xs-2 mdui-m-t-2">
+  <div class="mdui-col"> </div>
+ <div class="mdui-col"><div class="mdui-text-right "><a href="https://1dayluo.github.io/post/avatar-de-gong-neng-shi-xian-xue-xi-bi-ji/"> ☆Avatar的功能实现学习笔记</a></div> </div>
+                                </div>
+                                <div class="mdui-divider mdui-m-t-2"></div>
+   
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '15aa7fb3398e44bb6262',
+    clientSecret: 'bd6200411152ecc8ab15ba312b0b2f2a43e290f5',
+    repo: '1dayluo.github.io',
+    owner: '1dayluo',
+    admin: ['1dayluo'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+ <script src="https://1dayluo.github.io/media/scripts/Valine.min.js"></script>
+ <div class="comment"></div>
+
+<script>
+      new Valine({
+            el: '.comment',
+
+
+
+            path: window.location.pathname,
+            pageSize: 30,
+            avatar:'mm', 
+       })
+
+    </script> 
+<script>
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+           if ($(window.location.hash).length) {
+              $('html, body').animate({scrollTop: $(window.location.hash).offset().top-90}, 1000);
+              clearInterval(checkExist);
+           }
+        }, 100);
+    }
+</script>
+                         </article>
+                 <div class="toc-container mdui-float-right">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFcelery">什么是celery</a></li>
+<li><a href="#%E6%88%91%E7%9A%84%E5%B0%9D%E8%AF%95">我的尝试</a></li>
+</ul>
+
+              </div>
+
+                        </div>
+                 </div>
+          
+        </div>
+        <script data-no-instant>
+    (function ($) {
+        $.extend({
+            adamsOverload: function () {
+                $.viewImage({
+                    'target'  : '.post-neirong img',
+                    'exclude' : '.vsmile-icons img , .song-links-item img',
+                    'delay'   : 300
+                });
+            }
+        });
+    })(jQuery);
+    jQuery.adamsOverload();
+</script>
+        <footer class="footer mdui-m-t-5 mdui-text-center">
+               <nav class="social-links">
+                      <ul>
+                      
+                            
+                           
+                            
+                           
+                            
+                           
+                            
+                           
+                            
+                           
+                            
+                           
+                            
+                           
+                            
+                           
+                            
+                           
+                            
+                           
+                            
+                           
+                            
+                           
+                      </ul>
+                    </nav>
+                    <div class="copyright">
+                      <p>Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> <br/> Theme <a href="https://github.com/shanbufun/gridea-theme-jia" target="_blank"  title="佳"  >Jia</a> by <a href="https://shanbu.fun/" target="_blank"  title="山卜方" >Shanbufun</a> </p>
+                  </div>
+              </footer>
+    </body>
+</html>
