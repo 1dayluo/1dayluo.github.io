@@ -3,7 +3,7 @@
         <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
         <meta charset="utf-8">
         <meta name="referrer" content="never">
-        <title>使用celery让任务在后台运行（未完) | 悠远乡</title>
+        <title>使用celery让任务在后台运行（失败，celery不支持windows) | 悠远乡</title>
         <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.11.1/katex.min.css">
         <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
@@ -44,22 +44,26 @@
                 <div class="mdui-row">
                         <div class="mdui-col-md-8 mdui-col-offset-md-2 ">
                          <article class="mdui-shadow-10 mdui-p-a-2 post-list">
-                           <div class="mdui-typo-display-1 mdui-m-b-3">使用celery让任务在后台运行（未完)</div>
+                           <div class="mdui-typo-display-1 mdui-m-b-3">使用celery让任务在后台运行（失败，celery不支持windows)</div>
                            <a  class="index-list-biaoqian ">2020-08-14</a>
                            <div class="mdui-typo mdui-m-t-3 post-neirong"><h1 id="什么是celery">什么是celery</h1>
 <pre><code> Celery 是一个异步任务队列。你可以使用它在你的应用上下文之外执行任务。总的想法就是你的应用程序可能需要执行任何消耗资源的任务都可以交给任务队列，让你的应用程序自由和快速地响应客户端请求。
 </code></pre>
 <h1 id="我的尝试">我的尝试</h1>
 <p>最近写异步爬虫想在Flask中应用，找了很多方法，包括流式渲染。后来又接触了celery。celery在很多方面都会用到，flask也不例外。<br>
-在这里我用celery的意图是用celery在后台运行任务<br>
-首先在<code>__init__</code>中初始化celery，选择broker</p>
-<pre><code class="language-python">celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
-celery.conf.update(app.config)
+在这里我用celery的意图是用celery在后台运行任务</p>
+<h2 id="celery配置">celery配置</h2>
+<p>首先在<code>__init__</code>中初始化celery，选择broker</p>
+<pre><code class="language-python">app = Flask(__name__)
+app.config.from_object(celeryconfig)
+celery = Celery(app.name)
+celery.config_from_object(celeryconfig)
 </code></pre>
-<p>我在config.py中设置了broker相关的配置，并在init中加载</p>
+<p>我在celeryconfig.py中设置了broker相关的配置，并在init中加载（redis的安装和部署在这里就不写了）</p>
 <pre><code class="language-python">CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 </code></pre>
+<h2 id="任务定义及执行方法">任务定义及执行方法</h2>
 <p>然后定义一个celery任务</p>
 <pre><code class="language-python">@celery.task()
 def get_topics(group_links):
@@ -77,8 +81,20 @@ def test_api(groupid):
     result = get_topics.delay(links)
     return jsonify(result.get())
 
-    ````
 </code></pre>
+<h2 id="启动redis并用cmd执行celery">启动redis并用cmd执行celery</h2>
+<p>1.启动redis（此处省略）<br>
+2.启动celery</p>
+<pre><code class="language-python">celery worker -A app.celery --loglevel=info
+
+</code></pre>
+<h1 id="失败原因">失败原因</h1>
+<p>运行报错，查了半天发现了一篇文章(https://blog.csdn.net/javali1995/article/details/78475108)</p>
+<blockquote>
+<p>celery4 不支持windows！celery4 不支持windows！celery4 不支持windows！<br>
+celery 3.1.18不支持python36！celery 3.1.18不支持python36！celery 3.1.18不支持python36！</p>
+</blockquote>
+<p>好心烦，celery尝试失败。本来以为看到了希望，对于Flask自己的知识基础还是太薄弱了</p>
 </div>
                               <div class="mdui-divider mdui-m-t-3"></div>
                               <div class="mdui-row-xs-2 mdui-m-t-2">
@@ -142,7 +158,14 @@ def test_api(groupid):
                  <div class="toc-container mdui-float-right">
                 <ul class="markdownIt-TOC">
 <li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFcelery">什么是celery</a></li>
-<li><a href="#%E6%88%91%E7%9A%84%E5%B0%9D%E8%AF%95">我的尝试</a></li>
+<li><a href="#%E6%88%91%E7%9A%84%E5%B0%9D%E8%AF%95">我的尝试</a>
+<ul>
+<li><a href="#celery%E9%85%8D%E7%BD%AE">celery配置</a></li>
+<li><a href="#%E4%BB%BB%E5%8A%A1%E5%AE%9A%E4%B9%89%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95">任务定义及执行方法</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8redis%E5%B9%B6%E7%94%A8cmd%E6%89%A7%E8%A1%8Ccelery">启动redis并用cmd执行celery</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0">失败原因</a></li>
 </ul>
 
               </div>
