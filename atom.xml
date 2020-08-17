@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://1dayluo.github.io</id>
     <title>悠远乡</title>
-    <updated>2020-08-16T14:04:55.021Z</updated>
+    <updated>2020-08-17T15:03:21.068Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://1dayluo.github.io"/>
     <link rel="self" href="https://1dayluo.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://1dayluo.github.io/images/avatar.png</logo>
     <icon>https://1dayluo.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 悠远乡</rights>
+    <entry>
+        <title type="html"><![CDATA[技术分享会 我对于FLASK近期理解的一个稿子]]></title>
+        <id>https://1dayluo.github.io/post/ji-zhu-fen-xiang-hui-wo-dui-yu-flask-jin-qi-li-jie-de-yi-ge-gao-zi/</id>
+        <link href="https://1dayluo.github.io/post/ji-zhu-fen-xiang-hui-wo-dui-yu-flask-jin-qi-li-jie-de-yi-ge-gao-zi/">
+        </link>
+        <updated>2020-08-17T14:56:27.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[使用celery让任务在后台运行（失败，celery不支持windows)]]></title>
         <id>https://1dayluo.github.io/post/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan/</id>
