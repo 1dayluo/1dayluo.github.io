@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://1dayluo.github.io</id>
     <title>悠远乡</title>
-    <updated>2020-08-31T07:46:04.781Z</updated>
+    <updated>2020-09-03T10:16:26.996Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://1dayluo.github.io"/>
     <link rel="self" href="https://1dayluo.github.io/atom.xml"/>
@@ -10,6 +10,40 @@
     <logo>https://1dayluo.github.io/images/avatar.png</logo>
     <icon>https://1dayluo.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 悠远乡</rights>
+    <entry>
+        <title type="html"><![CDATA[Code-Audit-Challenges#php 刷题记录【历史笔记】]]></title>
+        <id>https://1dayluo.github.io/post/code-audit-challengesphp-shua-ti-ji-lu-li-shi-bi-ji/</id>
+        <link href="https://1dayluo.github.io/post/code-audit-challengesphp-shua-ti-ji-lu-li-shi-bi-ji/">
+        </link>
+        <updated>2020-09-03T09:58:00.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p>堆点安全的博文，一直以来是笔记党。把去年8月的刷题笔记发上来。正在做的攻防世界没做啥刷题笔记，就用这篇代替啦（bu<br>
+今年光顾着写代码了，安全啥的给落下了还是要继续努力&gt;-&lt;  （而且发现好久不巩固是会忘记的，又要再次巩固学习一次了）</p>
+</blockquote>
+<p>题目列表</p>
+<ul>
+<li>https://github.com/CHYbeta/Code-Audit-Challenges<br>
+https://blog.szfszf.top/tech/code-audit-challenge-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E7%BB%83%E4%B9%A0%E7%AC%94%E8%AE%B0/</li>
+</ul>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p>堆点安全的博文，一直以来是笔记党。把去年8月的刷题笔记发上来。正在做的攻防世界没做啥刷题笔记，就用这篇代替啦（bu<br>
+今年光顾着写代码了，安全啥的给落下了还是要继续努力&gt;-&lt;  （而且发现好久不巩固是会忘记的，又要再次巩固学习一次了）</p>
+</blockquote>
+<p>题目列表</p>
+<ul>
+<li>https://github.com/CHYbeta/Code-Audit-Challenges<br>
+https://blog.szfszf.top/tech/code-audit-challenge-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E7%BB%83%E4%B9%A0%E7%AC%94%E8%AE%B0/</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Code-Audit-Challenges#php 刷题记录]]></title>
+        <id>https://1dayluo.github.io/post/code-audit-challengesphp-shua-ti-ji-lu/</id>
+        <link href="https://1dayluo.github.io/post/code-audit-challengesphp-shua-ti-ji-lu/">
+        </link>
+        <updated>2020-09-03T09:58:00.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[一篇针对工作后的反思（或许)的碎碎念 ]]></title>
         <id>https://1dayluo.github.io/post/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian/</id>
