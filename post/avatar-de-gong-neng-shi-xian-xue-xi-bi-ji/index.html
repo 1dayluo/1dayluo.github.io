@@ -1,52 +1,109 @@
 <html>
-      <head>
-        <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
-        <meta charset="utf-8">
-        <meta name="referrer" content="never">
-        <title> ☆Avatar的功能实现学习笔记 | 悠远乡</title>
-        <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.11.1/katex.min.css">
-        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
-          <script src="https://1dayluo.github.io/media/scripts/mdui.min.js"></script>
-        <link rel="stylesheet" href="https://at.alicdn.com/t/font_1306644_jwtuc2zzbrd.css">
-        <link href="https://fonts.googleapis.com/css?family=Dancing+Script|Ma+Shan+Zheng&display=swap" rel="stylesheet">
-        <script src="https://cdn.bootcss.com/highlight.js/9.15.10/highlight.min.js"></script>
-        <script src="https://1dayluo.github.io/media/scripts/script.js"></script>
-        <script >hljs.initHighlightingOnLoad();</script>
-        
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title> ☆Avatar的功能实现学习笔记 | 悠远乡</title>
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1599453526404">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title=" ☆Avatar的功能实现学习笔记 | 悠远乡 - Atom Feed" href="https://1dayluo.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
-    </head>
-    <body class="mdui-theme-primary-purple mdui-theme-accent-purple">
-        <header class="index-img mdui-m-b-3" >
-                          <button class="mdui-btn  mdui-btn-icon mdui-btn-dense mdui-color-theme-500 mdui-ripple yinying mdui-m-t-1 mdui-m-l-1" mdui-menu="{target: '#demo-attr-cascade'}"><i class="mdui-icon material-icons">&#xe5d2;</i></button>
-                <ul class="mdui-menu" id="demo-attr-cascade">
-                
-                        <li class="mdui-menu-item">
-                          <a href="/" class="mdui-ripple">首页</a>
-                        </li>
-                
-                        <li class="mdui-menu-item">
-                          <a href="/archives" class="mdui-ripple">归档</a>
-                        </li>
-                
-                        <li class="mdui-menu-item">
-                          <a href="/tags" class="mdui-ripple">标签</a>
-                        </li>
-                
-                        <li class="mdui-menu-item">
-                          <a href="/post/about" class="mdui-ripple">关于</a>
-                        </li>
-                
-                      </ul>
 
-        </header>
-        <div class="mdui-container post">
-                <div class="mdui-row">
-                        <div class="mdui-col-md-8 mdui-col-offset-md-2 ">
-                         <article class="mdui-shadow-10 mdui-p-a-2 post-list">
-                           <div class="mdui-typo-display-1 mdui-m-b-3"> ☆Avatar的功能实现学习笔记</div>
-                           <a  class="index-list-biaoqian ">2020-07-13</a>
-                           <div class="mdui-typo mdui-m-t-3 post-neirong"><p>写在开头:<br>
+
+    <meta name="description" content="写在开头:
+
+以前写的笔记&gt;-&lt;不是很完善.....比如默认avator已经实现了，但是笔记没有后续补充。仅供参考。
+成功的把情侣空间弄成微博后的新的探索喵
+本节实现头像上传，主页头像实现
+笔记大纲包含如下内容：
+- 表单设置
+..." />
+    <meta name="keywords" content="flask,python" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://1dayluo.github.io">
+  <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1599453526404" alt="">
+  </a>
+  <h1 class="site-title">
+    悠远乡
+  </h1>
+  <p class="site-description">
+    (*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+               ☆Avatar的功能实现学习笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-07-13
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://1dayluo.github.io/tag/yJLgLfyyu/" class="post-tag">
+                  # flask
+                </a>
+              
+                <a href="https://1dayluo.github.io/tag/7Wdu5WLBU/" class="post-tag">
+                  # python
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>写在开头:<br>
 <img src="http://ww1.sinaimg.cn/thumbnail/94229e83ly1ggps3dze1wj20iw0btq3c.jpg" alt="" loading="lazy"><br>
 以前写的笔记&gt;-&lt;不是很完善.....比如默认avator已经实现了，但是笔记没有后续补充。仅供参考。</p>
 <p>成功的把情侣空间弄成微博后的新的探索喵<br>
@@ -166,14 +223,36 @@ def avatar_set(username):
 {% endfor %}
 {% endif %}
 </code></pre>
-</div>
-                              <div class="mdui-divider mdui-m-t-3"></div>
-                              <div class="mdui-row-xs-2 mdui-m-t-2">
-  <div class="mdui-col"> <div class="mdui-text-left"><a href="https://1dayluo.github.io/post/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan/">使用celery让任务在后台运行（失败，celery不支持windows)</a></div></div>
- <div class="mdui-col"><div class="mdui-text-right "><a href="https://1dayluo.github.io/post/li-jie-tls/">理解TLS</a></div> </div>
-                                </div>
-                                <div class="mdui-divider mdui-m-t-2"></div>
-   
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%B8%80%E8%A1%A8%E5%8D%95%E8%AE%BE%E7%BD%AE">一.表单设置</a></li>
+<li><a href="#%E4%BA%8C-models%E4%BF%AE%E6%94%B9">二. Models修改</a></li>
+<li><a href="#%E4%B8%89%E8%B7%AF%E7%94%B1%E5%87%BD%E6%95%B0">三.路由函数</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://1dayluo.github.io/post/li-jie-tls/">
+              <h3 class="post-title">
+                理解TLS
+              </h3>
+            </a>
+          </div>
+        
+
+        
           
             <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
@@ -200,96 +279,56 @@ def avatar_set(username):
 
           
         
- <script src="https://1dayluo.github.io/media/scripts/Valine.min.js"></script>
- <div class="comment"></div>
 
-<script>
-      new Valine({
-            el: '.comment',
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
 
+      </div>
+    </div>
 
+    <script>
+      hljs.initHighlightingOnLoad()
 
-            path: window.location.pathname,
-            pageSize: 30,
-            avatar:'mm', 
-       })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-    </script> 
-<script>
-    if(window.location.hash){
-        var checkExist = setInterval(function() {
-           if ($(window.location.hash).length) {
-              $('html, body').animate({scrollTop: $(window.location.hash).offset().top-90}, 1000);
-              clearInterval(checkExist);
-           }
-        }, 100);
-    }
-</script>
-                         </article>
-                 <div class="toc-container mdui-float-right">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E4%B8%80%E8%A1%A8%E5%8D%95%E8%AE%BE%E7%BD%AE">一.表单设置</a></li>
-<li><a href="#%E4%BA%8C-models%E4%BF%AE%E6%94%B9">二. Models修改</a></li>
-<li><a href="#%E4%B8%89%E8%B7%AF%E7%94%B1%E5%87%BD%E6%95%B0">三.路由函数</a></li>
-</ul>
-</li>
-</ul>
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
 
-              </div>
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
 
-                        </div>
-                 </div>
-          
-        </div>
-        <script data-no-instant>
-    (function ($) {
-        $.extend({
-            adamsOverload: function () {
-                $.viewImage({
-                    'target'  : '.post-neirong img',
-                    'exclude' : '.vsmile-icons img , .song-links-item img',
-                    'delay'   : 300
-                });
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
             }
+          } else {
+            link.classList.remove("current");
+          }
         });
-    })(jQuery);
-    jQuery.adamsOverload();
-</script>
-        <footer class="footer mdui-m-t-5 mdui-text-center">
-               <nav class="social-links">
-                      <ul>
-                      
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                      </ul>
-                    </nav>
-                    <div class="copyright">
-                      <p>Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> <br/> Theme <a href="https://github.com/shanbufun/gridea-theme-jia" target="_blank"  title="佳"  >Jia</a> by <a href="https://shanbu.fun/" target="_blank"  title="山卜方" >Shanbufun</a> </p>
-                  </div>
-              </footer>
-    </body>
+      });
+
+    </script>
+  </body>
 </html>

@@ -1,52 +1,96 @@
 <html>
-      <head>
-        <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
-        <meta charset="utf-8">
-        <meta name="referrer" content="never">
-        <title>Code-Audit-Challenges#php 刷题记录【历史笔记】 | 悠远乡</title>
-        <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.11.1/katex.min.css">
-        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
-          <script src="https://1dayluo.github.io/media/scripts/mdui.min.js"></script>
-        <link rel="stylesheet" href="https://at.alicdn.com/t/font_1306644_jwtuc2zzbrd.css">
-        <link href="https://fonts.googleapis.com/css?family=Dancing+Script|Ma+Shan+Zheng&display=swap" rel="stylesheet">
-        <script src="https://cdn.bootcss.com/highlight.js/9.15.10/highlight.min.js"></script>
-        <script src="https://1dayluo.github.io/media/scripts/script.js"></script>
-        <script >hljs.initHighlightingOnLoad();</script>
-        
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Code-Audit-Challenges#php 刷题记录【历史笔记】 | 悠远乡</title>
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1599453526404">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Code-Audit-Challenges#php 刷题记录【历史笔记】 | 悠远乡 - Atom Feed" href="https://1dayluo.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
-    </head>
-    <body class="mdui-theme-primary-purple mdui-theme-accent-purple">
-        <header class="index-img mdui-m-b-3" >
-                          <button class="mdui-btn  mdui-btn-icon mdui-btn-dense mdui-color-theme-500 mdui-ripple yinying mdui-m-t-1 mdui-m-l-1" mdui-menu="{target: '#demo-attr-cascade'}"><i class="mdui-icon material-icons">&#xe5d2;</i></button>
-                <ul class="mdui-menu" id="demo-attr-cascade">
-                
-                        <li class="mdui-menu-item">
-                          <a href="/" class="mdui-ripple">首页</a>
-                        </li>
-                
-                        <li class="mdui-menu-item">
-                          <a href="/archives" class="mdui-ripple">归档</a>
-                        </li>
-                
-                        <li class="mdui-menu-item">
-                          <a href="/tags" class="mdui-ripple">标签</a>
-                        </li>
-                
-                        <li class="mdui-menu-item">
-                          <a href="/post/about" class="mdui-ripple">关于</a>
-                        </li>
-                
-                      </ul>
 
-        </header>
-        <div class="mdui-container post">
-                <div class="mdui-row">
-                        <div class="mdui-col-md-8 mdui-col-offset-md-2 ">
-                         <article class="mdui-shadow-10 mdui-p-a-2 post-list">
-                           <div class="mdui-typo-display-1 mdui-m-b-3">Code-Audit-Challenges#php 刷题记录【历史笔记】</div>
-                           <a  class="index-list-biaoqian ">2020-09-03</a>
-                           <div class="mdui-typo mdui-m-t-3 post-neirong"><blockquote>
+
+    <meta name="description" content="
+堆点安全的博文，一直以来是笔记党。把去年8月的刷题笔记发上来。正在做的攻防世界没做啥刷题笔记，就用这篇代替啦（bu
+今年光顾着写代码了，安全啥的给落下了还是要继续努力&gt;-&lt;  （而且发现好久不巩固是会忘记的，又要再次巩固学习一..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://1dayluo.github.io">
+  <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1599453526404" alt="">
+  </a>
+  <h1 class="site-title">
+    悠远乡
+  </h1>
+  <p class="site-description">
+    (*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Code-Audit-Challenges#php 刷题记录【历史笔记】
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-09-03
+              </span>
+              <span>
+                14 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <blockquote>
 <p>堆点安全的博文，一直以来是笔记党。把去年8月的刷题笔记发上来。正在做的攻防世界没做啥刷题笔记，就用这篇代替啦（bu<br>
 今年光顾着写代码了，安全啥的给落下了还是要继续努力&gt;-&lt;  （而且发现好久不巩固是会忘记的，又要再次巩固学习一次了）</p>
 </blockquote>
@@ -286,14 +330,43 @@ php版本小于5.3.4才可以</p>
 <code>&quot;select * from</code>admin<code>where password='&quot;.md5($pass,true).&quot;'&quot;</code></p>
 <p>关键在md5(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>a</mi><mi>s</mi><mi>s</mi><mo separator="true">,</mo><mi>t</mi><mi>r</mi><mi>u</mi><mi>e</mi><mo>)</mo><mi mathvariant="normal">，</mi><mi mathvariant="normal">若</mi></mrow><annotation encoding="application/x-tex">pass,true)，若</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault">a</span><span class="mord mathdefault">s</span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">u</span><span class="mord mathdefault">e</span><span class="mclose">)</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">若</span></span></span></span>pass的值为ffifdyop，则经过md5转换后的值再经过php转为字符串后会变成'or'6蒥欓!r,b，6的后面是一堆乱七八糟的字符，姑且记为xx吧。则最后的sql查询语句为：</p>
 <p><code>select * from</code>admin<code>where password=''or'6蒥欓!r,b'</code></p>
-</div>
-                              <div class="mdui-divider mdui-m-t-3"></div>
-                              <div class="mdui-row-xs-2 mdui-m-t-2">
-  <div class="mdui-col"> </div>
- <div class="mdui-col"><div class="mdui-text-right "><a href="https://1dayluo.github.io/post/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian/">一篇针对工作后的反思（或许)的碎碎念 </a></div> </div>
-                                </div>
-                                <div class="mdui-divider mdui-m-t-2"></div>
-   
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#challenge1-phpbug-69892">Challenge1 phpBug #69892</a></li>
+<li><a href="#challenge2-php%E5%BC%B1%E7%B1%BB%E5%9E%8Bis_numeric">Challenge2 php弱类型,is_numeric()</a></li>
+<li><a href="#challenge3-php%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E9%97%AE%E9%A2%98">Challenge3 php配置文件写入问题</a></li>
+<li><a href="#challenge5-webshell-waf%E7%BB%95%E8%BF%87">Challenge5 webshell、waf绕过</a></li>
+<li><a href="#challenge6-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8Cwaf%E7%BB%95%E8%BF%87">Challenge6 #命令执行，waf绕过</a></li>
+<li><a href="#challenge7-php%E5%BC%B1%E7%B1%BB%E5%9E%8B">Challenge7 php弱类型</a></li>
+<li><a href="#challenge8-sql%E6%B3%A8%E5%85%A5tricks">Challenge8 SQL注入#tricks</a></li>
+<li><a href="#challenge9">Challenge9</a></li>
+<li><a href="#challenge10-php%E5%BC%B1%E7%B1%BB%E5%9E%8B%E7%BB%95%E8%BF%87">Challenge10 #php弱类型绕过</a></li>
+<li><a href="#challenge11">Challenge11</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://1dayluo.github.io/post/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian/">
+              <h3 class="post-title">
+                一篇针对工作后的反思（或许)的碎碎念 
+              </h3>
+            </a>
+          </div>
+        
+
+        
           
             <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
@@ -320,103 +393,56 @@ php版本小于5.3.4才可以</p>
 
           
         
- <script src="https://1dayluo.github.io/media/scripts/Valine.min.js"></script>
- <div class="comment"></div>
 
-<script>
-      new Valine({
-            el: '.comment',
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
 
+      </div>
+    </div>
 
+    <script>
+      hljs.initHighlightingOnLoad()
 
-            path: window.location.pathname,
-            pageSize: 30,
-            avatar:'mm', 
-       })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-    </script> 
-<script>
-    if(window.location.hash){
-        var checkExist = setInterval(function() {
-           if ($(window.location.hash).length) {
-              $('html, body').animate({scrollTop: $(window.location.hash).offset().top-90}, 1000);
-              clearInterval(checkExist);
-           }
-        }, 100);
-    }
-</script>
-                         </article>
-                 <div class="toc-container mdui-float-right">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#challenge1-phpbug-69892">Challenge1 phpBug #69892</a></li>
-<li><a href="#challenge2-php%E5%BC%B1%E7%B1%BB%E5%9E%8Bis_numeric">Challenge2 php弱类型,is_numeric()</a></li>
-<li><a href="#challenge3-php%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E9%97%AE%E9%A2%98">Challenge3 php配置文件写入问题</a></li>
-<li><a href="#challenge5-webshell-waf%E7%BB%95%E8%BF%87">Challenge5 webshell、waf绕过</a></li>
-<li><a href="#challenge6-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8Cwaf%E7%BB%95%E8%BF%87">Challenge6 #命令执行，waf绕过</a></li>
-<li><a href="#challenge7-php%E5%BC%B1%E7%B1%BB%E5%9E%8B">Challenge7 php弱类型</a></li>
-<li><a href="#challenge8-sql%E6%B3%A8%E5%85%A5tricks">Challenge8 SQL注入#tricks</a></li>
-<li><a href="#challenge9">Challenge9</a></li>
-<li><a href="#challenge10-php%E5%BC%B1%E7%B1%BB%E5%9E%8B%E7%BB%95%E8%BF%87">Challenge10 #php弱类型绕过</a></li>
-<li><a href="#challenge11">Challenge11</a></li>
-</ul>
-</li>
-</ul>
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
 
-              </div>
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
 
-                        </div>
-                 </div>
-          
-        </div>
-        <script data-no-instant>
-    (function ($) {
-        $.extend({
-            adamsOverload: function () {
-                $.viewImage({
-                    'target'  : '.post-neirong img',
-                    'exclude' : '.vsmile-icons img , .song-links-item img',
-                    'delay'   : 300
-                });
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
             }
+          } else {
+            link.classList.remove("current");
+          }
         });
-    })(jQuery);
-    jQuery.adamsOverload();
-</script>
-        <footer class="footer mdui-m-t-5 mdui-text-center">
-               <nav class="social-links">
-                      <ul>
-                      
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                      </ul>
-                    </nav>
-                    <div class="copyright">
-                      <p>Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> <br/> Theme <a href="https://github.com/shanbufun/gridea-theme-jia" target="_blank"  title="佳"  >Jia</a> by <a href="https://shanbu.fun/" target="_blank"  title="山卜方" >Shanbufun</a> </p>
-                  </div>
-              </footer>
-    </body>
+      });
+
+    </script>
+  </body>
 </html>

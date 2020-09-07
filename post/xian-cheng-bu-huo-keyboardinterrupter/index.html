@@ -1,52 +1,98 @@
 <html>
-      <head>
-        <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
-        <meta charset="utf-8">
-        <meta name="referrer" content="never">
-        <title>线程捕获KeyboardInterrupter | 悠远乡</title>
-        <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.11.1/katex.min.css">
-        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
-          <script src="https://1dayluo.github.io/media/scripts/mdui.min.js"></script>
-        <link rel="stylesheet" href="https://at.alicdn.com/t/font_1306644_jwtuc2zzbrd.css">
-        <link href="https://fonts.googleapis.com/css?family=Dancing+Script|Ma+Shan+Zheng&display=swap" rel="stylesheet">
-        <script src="https://cdn.bootcss.com/highlight.js/9.15.10/highlight.min.js"></script>
-        <script src="https://1dayluo.github.io/media/scripts/script.js"></script>
-        <script >hljs.initHighlightingOnLoad();</script>
-        
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>线程捕获KeyboardInterrupter | 悠远乡</title>
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1599453526404">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="线程捕获KeyboardInterrupter | 悠远乡 - Atom Feed" href="https://1dayluo.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
-    </head>
-    <body class="mdui-theme-primary-purple mdui-theme-accent-purple">
-        <header class="index-img mdui-m-b-3" >
-                          <button class="mdui-btn  mdui-btn-icon mdui-btn-dense mdui-color-theme-500 mdui-ripple yinying mdui-m-t-1 mdui-m-l-1" mdui-menu="{target: '#demo-attr-cascade'}"><i class="mdui-icon material-icons">&#xe5d2;</i></button>
-                <ul class="mdui-menu" id="demo-attr-cascade">
-                
-                        <li class="mdui-menu-item">
-                          <a href="/" class="mdui-ripple">首页</a>
-                        </li>
-                
-                        <li class="mdui-menu-item">
-                          <a href="/archives" class="mdui-ripple">归档</a>
-                        </li>
-                
-                        <li class="mdui-menu-item">
-                          <a href="/tags" class="mdui-ripple">标签</a>
-                        </li>
-                
-                        <li class="mdui-menu-item">
-                          <a href="/post/about" class="mdui-ripple">关于</a>
-                        </li>
-                
-                      </ul>
 
-        </header>
-        <div class="mdui-container post">
-                <div class="mdui-row">
-                        <div class="mdui-col-md-8 mdui-col-offset-md-2 ">
-                         <article class="mdui-shadow-10 mdui-p-a-2 post-list">
-                           <div class="mdui-typo-display-1 mdui-m-b-3">线程捕获KeyboardInterrupter</div>
-                           <a  class="index-list-biaoqian ">2020-06-30</a>
-                           <div class="mdui-typo mdui-m-t-3 post-neirong"><p>线程捕获KeyboardInterrupter不能简单用<code>try....except</code>.......来捕获。原因在stackover上说的很明白：This is a Python bug. When waiting for a condition in threading.Condition.wait(), KeyboardInterrupt is never sent.<br>
+
+    <meta name="description" content="线程捕获KeyboardInterrupter不能简单用try....except.......来捕获。原因在stackover上说的很明白：This is a Python bug. When waiting for a conditio..." />
+    <meta name="keywords" content="python" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://1dayluo.github.io">
+  <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1599453526404" alt="">
+  </a>
+  <h1 class="site-title">
+    悠远乡
+  </h1>
+  <p class="site-description">
+    (*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              线程捕获KeyboardInterrupter
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-30
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://1dayluo.github.io/tag/7Wdu5WLBU/" class="post-tag">
+                  # python
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>线程捕获KeyboardInterrupter不能简单用<code>try....except</code>.......来捕获。原因在stackover上说的很明白：This is a Python bug. When waiting for a condition in threading.Condition.wait(), KeyboardInterrupt is never sent.<br>
 以以下代码为例：</p>
 <pre><code class="language-python">import threading
 cond = threading.Condition(threading.Lock())
@@ -135,14 +181,30 @@ with ThreadPool(processes=4) as tp:
 <p>参考如下：<br>
 https://codecalamity.com/threadpools-explained-in-the-deep-end/<br>
 https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-multiprocessing-pool/6191991#6191991</p>
-</div>
-                              <div class="mdui-divider mdui-m-t-3"></div>
-                              <div class="mdui-row-xs-2 mdui-m-t-2">
-  <div class="mdui-col"> <div class="mdui-text-left"><a href="https://1dayluo.github.io/post/li-jie-tls/">理解TLS</a></div></div>
- <div class="mdui-col"></div>
-                                </div>
-                                <div class="mdui-divider mdui-m-t-2"></div>
-   
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E4%BF%A1%E5%8F%B7">设置信号</a></li>
+<li><a href="#%E5%9C%A8%E7%BA%BF%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8timeout">在线程中使用timeout</a>
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0">参考文章</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
           
             <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
@@ -169,99 +231,56 @@ https://stackoverflow.com/questions/1408356/keyboard-interrupts-with-pythons-mul
 
           
         
- <script src="https://1dayluo.github.io/media/scripts/Valine.min.js"></script>
- <div class="comment"></div>
 
-<script>
-      new Valine({
-            el: '.comment',
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
 
+      </div>
+    </div>
 
+    <script>
+      hljs.initHighlightingOnLoad()
 
-            path: window.location.pathname,
-            pageSize: 30,
-            avatar:'mm', 
-       })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-    </script> 
-<script>
-    if(window.location.hash){
-        var checkExist = setInterval(function() {
-           if ($(window.location.hash).length) {
-              $('html, body').animate({scrollTop: $(window.location.hash).offset().top-90}, 1000);
-              clearInterval(checkExist);
-           }
-        }, 100);
-    }
-</script>
-                         </article>
-                 <div class="toc-container mdui-float-right">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E8%AE%BE%E7%BD%AE%E4%BF%A1%E5%8F%B7">设置信号</a></li>
-<li><a href="#%E5%9C%A8%E7%BA%BF%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8timeout">在线程中使用timeout</a>
-<ul>
-<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0">参考文章</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
 
-              </div>
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
 
-                        </div>
-                 </div>
-          
-        </div>
-        <script data-no-instant>
-    (function ($) {
-        $.extend({
-            adamsOverload: function () {
-                $.viewImage({
-                    'target'  : '.post-neirong img',
-                    'exclude' : '.vsmile-icons img , .song-links-item img',
-                    'delay'   : 300
-                });
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
             }
+          } else {
+            link.classList.remove("current");
+          }
         });
-    })(jQuery);
-    jQuery.adamsOverload();
-</script>
-        <footer class="footer mdui-m-t-5 mdui-text-center">
-               <nav class="social-links">
-                      <ul>
-                      
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                            
-                           
-                      </ul>
-                    </nav>
-                    <div class="copyright">
-                      <p>Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> <br/> Theme <a href="https://github.com/shanbufun/gridea-theme-jia" target="_blank"  title="佳"  >Jia</a> by <a href="https://shanbu.fun/" target="_blank"  title="山卜方" >Shanbufun</a> </p>
-                  </div>
-              </footer>
-    </body>
+      });
+
+    </script>
+  </body>
 </html>
