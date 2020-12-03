@@ -9,7 +9,7 @@
 <meta name="description" content="(*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站">
 <meta name="theme-color" content="">
 <title>悠远乡</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1606645096174">
+<link rel="shortcut icon" href="/favicon.ico?v=1606976499652">
 <link rel="stylesheet" href="/media/css/pisces.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -158,19 +158,19 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">7</span>
+        <span class="site-item-stat-count">8</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="">
-        <span class="site-item-stat-count">3</span>
+        <span class="site-item-stat-count">6</span>
         <span class="site-item-stat-name language" data-lan="category">分类</span>
       </a>
     </div>
     <div class="sidebar-item-box">
       <a href="/tags/">
-        <span class="site-item-stat-count">3</span>
+        <span class="site-item-stat-count">6</span>
         <span class="site-item-stat-name language" data-lan="tag">标签</span>
       </a>
     </div>
@@ -203,6 +203,153 @@
         <div class="section-box pisces">
           <section class="section bg-color posts-expand slide-down-in">
             
+  <article class="post-list-box  post box-shadow-wrapper">
+    <div class="article-wrapper bg-color">
+      <section class="post-header">
+  <h1 class="post-title">
+    <a class="post-title-link" href="https://1dayluo.github.io/post/vue-xue-xi-bi-ji/">
+      Vue学习笔记
+    </a>
+  </h1>
+  <div class="post-meta">
+    
+    <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+      <span class="publish-time" data-t="2020-12-03 11:28:18">2020-12-03</span>
+      <span class="post-meta-divider pc-show">|</span>
+    </span>
+    
+    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">分类于</span>
+      
+      
+      <a href="https://1dayluo.github.io/tag/FAvNfDwrs/">
+        <span>vue</span>
+      </a>、
+      
+      
+      
+      <a href="https://1dayluo.github.io/tag/NSNKs-xPEC/">
+        <span>前端</span>
+      </a>、
+      
+      
+      
+      <a href="https://1dayluo.github.io/tag/xbFJ_9c-2t/">
+        <span>全栈</span>
+      </a>
+      
+      
+    </span>
+    <span class="post-meta-divider">|</span>
+    
+    <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span>2<span class="language" data-lan="minute">分钟</span></span>
+    </span>
+    <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-file-word-o"></i>
+      <span>302<span class="pc-show language" data-lan="words">字数</span></span>
+    </span>
+    
+  </div>
+</section>
+      <div class="post-body">
+        
+        
+          <p>通过一天时间了解了一下vue，把一些对于新人来说比较混淆/不清楚的概念总结了一下</p>
+<h1 id="vue基本组件学习记录">Vue基本组件学习记录</h1>
+<h2 id="简单组件sample">简单组件sample</h2>
+<figure data-type="image" tabindex="1"><img src="https://i.loli.net/2020/12/03/LbFE5mSApPRhJXe.png" alt="Image" loading="lazy"></figure>
+<h2 id="局部注册">局部注册</h2>
+<figure data-type="image" tabindex="2"><img src="https://i.loli.net/2020/12/03/vbGenP2js36Mo7V.png" alt="Image" loading="lazy"></figure>
+<h1 id="基础指令">基础指令</h1>
+<h2 id="v-bind">v-bind</h2>
+<p>v-bind解释</p>
+<figure data-type="image" tabindex="3"><img src="https://i.loli.net/2020/12/03/EYJrAj9caf1i6N3.png" alt="Image" loading="lazy"></figure>
+<p>v-bind动态赋值给prop</p>
+<pre><code class="language-html">    &lt;div id='app'&gt;
+    &lt;a v-bind:href=&quot;url&quot;&gt;link&lt;/a&gt;
+    
+    &lt;/div&gt;
+
+
+    &lt;script&gt;
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            url:'http://www.baidu.com/'
+        }
+    })
+
+
+    
+    &lt;/script&gt;
+        
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://i.loli.net/2020/12/03/sovRSWKbf4GMk8O.png" alt="Image" loading="lazy"></figure>
+<h2 id="v-on">v-on</h2>
+<p>监听事件指令：v-on</p>
+<figure data-type="image" tabindex="5"><img src="https://i.loli.net/2020/12/03/uSlih8Vp2r35ad1.png" alt="Image" loading="lazy"></figure>
+<h2 id="v-if">v-if</h2>
+<pre><code class="language-html"> &lt;div id='app'&gt;
+    &lt;h1 v-if=&quot;awesome&quot;&gt;Vue is awesome!&lt;/h1&gt;
+    &lt;h1 v-else&gt;Oh no 😢&lt;/h1&gt;
+    
+    &lt;/div&gt;
+
+
+    &lt;script&gt;
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            awesome:false
+        }
+    })
+
+
+    
+    &lt;/script&gt;
+</code></pre>
+<h1 id="单文件组件">单文件组件</h1>
+<h2 id="项目基础">项目基础</h2>
+<figure data-type="image" tabindex="6"><img src="https://i.loli.net/2020/12/03/gapQD1Sdt94BZYG.png" alt="Image" loading="lazy"></figure>
+<p>然后在你需要创建项目的文件夹路径下输入：vue ui</p>
+<p><strong>然后 创建项目</strong></p>
+<h2 id="目录结构">目录结构</h2>
+<blockquote>
+<p>public 打包后部署到生产环境</p>
+<p>src 开发目录</p>
+<p>src -components 组件目录</p>
+<p>App.vue 入口文件</p>
+<p>helloword.vue 单文件按钮</p>
+</blockquote>
+<h2 id="如何运行">如何运行</h2>
+<p>如图</p>
+<figure data-type="image" tabindex="7"><img src="https://i.loli.net/2020/12/03/ajP96DnRUSKvQMf.png" alt="Image" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://i.loli.net/2020/12/03/Tp3c9nvXFw1lQHe.png" alt="Image" loading="lazy"></figure>
+<p>访问终端显示的地址</p>
+
+        
+        
+        <div class="post-button text-center">
+          <a class="btn language" data-lan="read-more" href="https://1dayluo.github.io/post/vue-xue-xi-bi-ji/" rel="contents">
+            阅读全文 »
+          </a>
+        </div>
+        
+      </div>
+      
+        <footer class="post-footer">
+          <div class="post-eof"></div>
+        </footer>
+      
+    </div>
+  </article>
+
   <article class="post-list-box  post box-shadow-wrapper">
     <div class="article-wrapper bg-color">
       <section class="post-header">
@@ -478,75 +625,6 @@ https://blog.szfszf.top/tech/code-audit-challenge-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8
         
         <div class="post-button text-center">
           <a class="btn language" data-lan="read-more" href="https://1dayluo.github.io/post/avatar-de-gong-neng-shi-xian-xue-xi-bi-ji/" rel="contents">
-            阅读全文 »
-          </a>
-        </div>
-        
-      </div>
-      
-        <footer class="post-footer">
-          <div class="post-eof"></div>
-        </footer>
-      
-    </div>
-  </article>
-
-  <article class="post-list-box  post box-shadow-wrapper">
-    <div class="article-wrapper bg-color">
-      <section class="post-header">
-  <h1 class="post-title">
-    <a class="post-title-link" href="https://1dayluo.github.io/post/li-jie-tls/">
-      理解TLS
-    </a>
-  </h1>
-  <div class="post-meta">
-    
-    <span class="meta-item pc-show">
-      <i class="fa fa-calendar-o"></i>
-      <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2020-06-30 15:52:47">2020-06-30</span>
-      <span class="post-meta-divider pc-show">|</span>
-    </span>
-    
-    <span class="meta-item">
-      <i class="fa fa-folder-o"></i>
-      <span class="pc-show language" data-lan="category-in">分类于</span>
-      
-      
-      <a href="https://1dayluo.github.io/tag/aSxehnhiX/">
-        <span>学习笔记</span>
-      </a>、
-      
-      
-      
-      <a href="https://1dayluo.github.io/tag/7Wdu5WLBU/">
-        <span>python</span>
-      </a>
-      
-      
-    </span>
-    <span class="post-meta-divider">|</span>
-    
-    <span class="meta-item">
-      <i class="fa fa-clock-o"></i>
-      <span>3<span class="language" data-lan="minute">分钟</span></span>
-    </span>
-    <span class="meta-item">
-      <span class="post-meta-divider">|</span>
-      <i class="fa fa-file-word-o"></i>
-      <span>639<span class="pc-show language" data-lan="words">字数</span></span>
-    </span>
-    
-  </div>
-</section>
-      <div class="post-body">
-        
-        
-          
-        
-        
-        <div class="post-button text-center">
-          <a class="btn language" data-lan="read-more" href="https://1dayluo.github.io/post/li-jie-tls/" rel="contents">
             阅读全文 »
           </a>
         </div>
