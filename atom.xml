@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://1dayluo.github.io</id>
     <title>悠远乡</title>
-    <updated>2020-12-03T06:21:45.634Z</updated>
+    <updated>2020-12-03T08:12:30.547Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://1dayluo.github.io"/>
     <link rel="self" href="https://1dayluo.github.io/atom.xml"/>
@@ -26,68 +26,6 @@
 <h2 id="v-bind">v-bind</h2>
 <p>v-bind解释</p>
 <figure data-type="image" tabindex="3"><img src="https://i.loli.net/2020/12/03/EYJrAj9caf1i6N3.png" alt="Image" loading="lazy"></figure>
-<p>v-bind动态赋值给prop</p>
-<pre><code class="language-html">    &lt;div id='app'&gt;
-    &lt;a v-bind:href=&quot;url&quot;&gt;link&lt;/a&gt;
-    
-    &lt;/div&gt;
-
-
-    &lt;script&gt;
-    var vm = new Vue({
-        el:'#app',
-        data:{
-            url:'http://www.baidu.com/'
-        }
-    })
-
-
-    
-    &lt;/script&gt;
-        
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://i.loli.net/2020/12/03/sovRSWKbf4GMk8O.png" alt="Image" loading="lazy"></figure>
-<h2 id="v-on">v-on</h2>
-<p>监听事件指令：v-on</p>
-<figure data-type="image" tabindex="5"><img src="https://i.loli.net/2020/12/03/uSlih8Vp2r35ad1.png" alt="Image" loading="lazy"></figure>
-<h2 id="v-if">v-if</h2>
-<pre><code class="language-html"> &lt;div id='app'&gt;
-    &lt;h1 v-if=&quot;awesome&quot;&gt;Vue is awesome!&lt;/h1&gt;
-    &lt;h1 v-else&gt;Oh no 😢&lt;/h1&gt;
-    
-    &lt;/div&gt;
-
-
-    &lt;script&gt;
-    var vm = new Vue({
-        el:'#app',
-        data:{
-            awesome:false
-        }
-    })
-
-
-    
-    &lt;/script&gt;
-</code></pre>
-<h1 id="单文件组件">单文件组件</h1>
-<h2 id="项目基础">项目基础</h2>
-<figure data-type="image" tabindex="6"><img src="https://i.loli.net/2020/12/03/gapQD1Sdt94BZYG.png" alt="Image" loading="lazy"></figure>
-<p>然后在你需要创建项目的文件夹路径下输入：vue ui</p>
-<p><strong>然后 创建项目</strong></p>
-<h2 id="目录结构">目录结构</h2>
-<blockquote>
-<p>public 打包后部署到生产环境</p>
-<p>src 开发目录</p>
-<p>src -components 组件目录</p>
-<p>App.vue 入口文件</p>
-<p>helloword.vue 单文件按钮</p>
-</blockquote>
-<h2 id="如何运行">如何运行</h2>
-<p>如图</p>
-<figure data-type="image" tabindex="7"><img src="https://i.loli.net/2020/12/03/ajP96DnRUSKvQMf.png" alt="Image" loading="lazy"></figure>
-<figure data-type="image" tabindex="8"><img src="https://i.loli.net/2020/12/03/Tp3c9nvXFw1lQHe.png" alt="Image" loading="lazy"></figure>
-<p>访问终端显示的地址</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>通过一天时间了解了一下vue，把一些对于新人来说比较混淆/不清楚的概念总结了一下</p>
 <h1 id="vue基本组件学习记录">Vue基本组件学习记录</h1>
@@ -99,68 +37,6 @@
 <h2 id="v-bind">v-bind</h2>
 <p>v-bind解释</p>
 <figure data-type="image" tabindex="3"><img src="https://i.loli.net/2020/12/03/EYJrAj9caf1i6N3.png" alt="Image" loading="lazy"></figure>
-<p>v-bind动态赋值给prop</p>
-<pre><code class="language-html">    &lt;div id='app'&gt;
-    &lt;a v-bind:href=&quot;url&quot;&gt;link&lt;/a&gt;
-    
-    &lt;/div&gt;
-
-
-    &lt;script&gt;
-    var vm = new Vue({
-        el:'#app',
-        data:{
-            url:'http://www.baidu.com/'
-        }
-    })
-
-
-    
-    &lt;/script&gt;
-        
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://i.loli.net/2020/12/03/sovRSWKbf4GMk8O.png" alt="Image" loading="lazy"></figure>
-<h2 id="v-on">v-on</h2>
-<p>监听事件指令：v-on</p>
-<figure data-type="image" tabindex="5"><img src="https://i.loli.net/2020/12/03/uSlih8Vp2r35ad1.png" alt="Image" loading="lazy"></figure>
-<h2 id="v-if">v-if</h2>
-<pre><code class="language-html"> &lt;div id='app'&gt;
-    &lt;h1 v-if=&quot;awesome&quot;&gt;Vue is awesome!&lt;/h1&gt;
-    &lt;h1 v-else&gt;Oh no 😢&lt;/h1&gt;
-    
-    &lt;/div&gt;
-
-
-    &lt;script&gt;
-    var vm = new Vue({
-        el:'#app',
-        data:{
-            awesome:false
-        }
-    })
-
-
-    
-    &lt;/script&gt;
-</code></pre>
-<h1 id="单文件组件">单文件组件</h1>
-<h2 id="项目基础">项目基础</h2>
-<figure data-type="image" tabindex="6"><img src="https://i.loli.net/2020/12/03/gapQD1Sdt94BZYG.png" alt="Image" loading="lazy"></figure>
-<p>然后在你需要创建项目的文件夹路径下输入：vue ui</p>
-<p><strong>然后 创建项目</strong></p>
-<h2 id="目录结构">目录结构</h2>
-<blockquote>
-<p>public 打包后部署到生产环境</p>
-<p>src 开发目录</p>
-<p>src -components 组件目录</p>
-<p>App.vue 入口文件</p>
-<p>helloword.vue 单文件按钮</p>
-</blockquote>
-<h2 id="如何运行">如何运行</h2>
-<p>如图</p>
-<figure data-type="image" tabindex="7"><img src="https://i.loli.net/2020/12/03/ajP96DnRUSKvQMf.png" alt="Image" loading="lazy"></figure>
-<figure data-type="image" tabindex="8"><img src="https://i.loli.net/2020/12/03/Tp3c9nvXFw1lQHe.png" alt="Image" loading="lazy"></figure>
-<p>访问终端显示的地址</p>
 ]]></content>
     </entry>
     <entry>
