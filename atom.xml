@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://1dayluo.github.io</id>
     <title>悠远乡</title>
-    <updated>2020-12-04T06:52:01.355Z</updated>
+    <updated>2020-12-17T08:00:54.050Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://1dayluo.github.io"/>
     <link rel="self" href="https://1dayluo.github.io/atom.xml"/>
@@ -10,6 +10,39 @@
     <logo>https://1dayluo.github.io/images/avatar.png</logo>
     <icon>https://1dayluo.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, 悠远乡</rights>
+    <entry>
+        <title type="html"><![CDATA[[刷题]水题-memcache安全相关]]></title>
+        <id>https://1dayluo.github.io/post/shua-ti-shui-ti-memcache-an-quan-xiang-guan/</id>
+        <link href="https://1dayluo.github.io/post/shua-ti-shui-ti-memcache-an-quan-xiang-guan/">
+        </link>
+        <updated>2020-12-17T07:58:59.000Z</updated>
+        <summary type="html"><![CDATA[<p><strong>写在开头：</strong></p>
+<p>忙里偷闲刷的题，所以中间有重启lab导致ip变更的情况。</p>
+<h2 id="questions">Questions</h2>
+<ol>
+<li>Find the version of memcached server using nmap.</li>
+<li>Find the version information using netcat or telnet.</li>
+<li>Find the maximum number of simultaneous incoming connections allowed by the memcached server use available nmap scripts.</li>
+<li>Find the number of current items on the memcached server using memcstat.</li>
+<li>Find the value stored in the key 'flag' from the key value pairs dumped by available Metasploit module.</li>
+<li>Find the name of all keys present on the memcached server using memcdump.</li>
+<li>Find the value stored in key “first_name” using memcached-tool.</li>
+</ol>
+]]></summary>
+        <content type="html"><![CDATA[<p><strong>写在开头：</strong></p>
+<p>忙里偷闲刷的题，所以中间有重启lab导致ip变更的情况。</p>
+<h2 id="questions">Questions</h2>
+<ol>
+<li>Find the version of memcached server using nmap.</li>
+<li>Find the version information using netcat or telnet.</li>
+<li>Find the maximum number of simultaneous incoming connections allowed by the memcached server use available nmap scripts.</li>
+<li>Find the number of current items on the memcached server using memcstat.</li>
+<li>Find the value stored in the key 'flag' from the key value pairs dumped by available Metasploit module.</li>
+<li>Find the name of all keys present on the memcached server using memcdump.</li>
+<li>Find the value stored in key “first_name” using memcached-tool.</li>
+</ol>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Vue学习笔记]]></title>
         <id>https://1dayluo.github.io/post/vue-xue-xi-bi-ji/</id>
