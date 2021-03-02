@@ -8,7 +8,7 @@
 <meta name="keywords" content="悠远乡">
 <meta name="description" content="(*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站">
 <meta name="theme-color" content="#F8CDBA">
-<title>使用celery让任务在后台运行（失败，celery不支持windows) | 悠远乡</title>
+<title>[gruyere|笔记]一个web平台的漏洞学习笔记- | 悠远乡</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1614655139837">
 <link rel="stylesheet" href="/media/css/pisces.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
@@ -38,7 +38,7 @@
 
 
 
-  <meta name="description" content="使用celery让任务在后台运行（失败，celery不支持windows)" />
+  <meta name="description" content="[gruyere|笔记]一个web平台的漏洞学习笔记-" />
   <meta name="keywords" content="" />
 </head>
 
@@ -255,15 +255,19 @@
   <div class="toc-wrapper auto-number auto"
     id="toc_wrapper">
     <ul class="markdownIt-TOC">
-<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFcelery">什么是celery</a></li>
-<li><a href="#%E6%88%91%E7%9A%84%E5%B0%9D%E8%AF%95">我的尝试</a>
+<li>
 <ul>
-<li><a href="#celery%E9%85%8D%E7%BD%AE">celery配置</a></li>
-<li><a href="#%E4%BB%BB%E5%8A%A1%E5%AE%9A%E4%B9%89%E5%8F%8A%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95">任务定义及执行方法</a></li>
-<li><a href="#%E5%90%AF%E5%8A%A8redis%E5%B9%B6%E7%94%A8cmd%E6%89%A7%E8%A1%8Ccelery">启动redis并用cmd执行celery</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E5%89%8D%E9%9C%80%E7%9F%A5">使用前需知</a>
+<ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%8E%B0%E6%96%B9%E6%B3%95">漏洞发现方法</a></li>
+<li><a href="#%E7%99%BD%E7%9B%92%E5%AE%A1%E8%AE%A1%E8%AF%B4%E6%98%8Esource-code">白盒审计说明（source code）</a></li>
+<li><a href="#%E9%87%8D%E7%BD%AE%E6%B2%99%E7%9B%92%E7%8A%B6%E6%80%81reset-button">重置沙盒状态（Reset Button）：</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8Eid">关于id</a></li>
 </ul>
 </li>
-<li><a href="#%E5%A4%B1%E8%B4%A5%E5%8E%9F%E5%9B%A0">失败原因</a></li>
+<li><a href="#%E7%AC%94%E8%AE%B0%E4%BD%8D%E7%BD%AE">笔记位置：</a></li>
+</ul>
+</li>
 </ul>
 
   </div>
@@ -529,8 +533,8 @@
           <div class="section bg-color post post-page">
             <section class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://1dayluo.github.io/post/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan/">
-      使用celery让任务在后台运行（失败，celery不支持windows)
+    <a class="post-title-link" href="https://1dayluo.github.io/post/gruyereorbi-ji-yi-ge-web-ping-tai-de-lou-dong-xue-xi-bi-ji-/">
+      [gruyere|笔记]一个web平台的漏洞学习笔记-
     </a>
   </h1>
   <div class="post-meta">
@@ -538,75 +542,53 @@
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span class="language" data-lan="publish">发布于</span>
-      <span class="publish-time" data-t="2020-08-14 11:51:00">2020-08-14</span>
+      <span class="publish-time" data-t="2021-03-02 11:15:59">2021-03-02</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
-      <span>3<span class="language" data-lan="minute">分钟</span></span>
+      <span>2<span class="language" data-lan="minute">分钟</span></span>
     </span>
     <span class="meta-item">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
-      <span>513<span class="pc-show language" data-lan="words">字数</span></span>
+      <span>391<span class="pc-show language" data-lan="words">字数</span></span>
     </span>
     
   </div>
 </section>
             <div class="post-body next-md-body" id="post_body">
-              <h1 id="什么是celery">什么是celery</h1>
-<pre><code> Celery 是一个异步任务队列。你可以使用它在你的应用上下文之外执行任务。总的想法就是你的应用程序可能需要执行任何消耗资源的任务都可以交给任务队列，让你的应用程序自由和快速地响应客户端请求。
-</code></pre>
-<h1 id="我的尝试">我的尝试</h1>
-<p>最近写异步爬虫想在Flask中应用，找了很多方法，包括流式渲染。后来又接触了celery。celery在很多方面都会用到，flask也不例外。<br>
-在这里我用celery的意图是用celery在后台运行任务</p>
-<h2 id="celery配置">celery配置</h2>
-<p>首先在<code>__init__</code>中初始化celery，选择broker</p>
-<pre><code class="language-python">app = Flask(__name__)
-app.config.from_object(celeryconfig)
-celery = Celery(app.name)
-celery.config_from_object(celeryconfig)
-</code></pre>
-<p>我在celeryconfig.py中设置了broker相关的配置，并在init中加载（redis的安装和部署在这里就不写了）</p>
-<pre><code class="language-python">CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-</code></pre>
-<h2 id="任务定义及执行方法">任务定义及执行方法</h2>
-<p>然后定义一个celery任务</p>
-<pre><code class="language-python">@celery.task()
-def get_topics(group_links):
-    with app.app_context():
-        topics = worker(group_links)
-    return topics
-</code></pre>
-<p>调取任务，其中<code>delay</code>方法相当于<code>apply_async</code>的一种简写方式。如果要用到更多的参数，则需调用<code>apply_async</code></p>
-<pre><code class="language-python">@app.route('/api/group/&lt;groupid&gt;',methods=['POST','GET'])
-def test_api(groupid):
-    base_url = 'https://www.douban.com/group/{}/'
-    links = [ base_url.format(i) for i in eval(groupid) ]
-
-
-    result = get_topics.delay(links)
-    return jsonify(result.get())
-
-</code></pre>
-<h2 id="启动redis并用cmd执行celery">启动redis并用cmd执行celery</h2>
-<p>1.启动redis（此处省略）<br>
-2.启动celery</p>
-<pre><code class="language-python">celery worker -A app.celery --loglevel=info
-
-</code></pre>
-<h1 id="失败原因">失败原因</h1>
-<p>运行报错，查了半天发现了一篇文章(https://blog.csdn.net/javali1995/article/details/78475108)</p>
-<blockquote>
-<p>celery4 不支持windows！celery4 不支持windows！celery4 不支持windows！<br>
-celery 3.1.18不支持python36！celery 3.1.18不支持python36！celery 3.1.18不支持python36！</p>
-</blockquote>
-<p>好心烦，celery尝试失败。本来以为看到了希望，对于Flask自己的知识基础还是太薄弱了<br>
-然后又找到一篇文章：<br>
-https://zhuanlan.zhihu.com/p/30897711<br>
-也是说flask基本上是不支持原生async/await，唯一的解决方案只有celery了。太坑爹了而且celery真的很重。目前也没有linux服务器</p>
+              <p>Web Application Exploits and Defenses (google-gruyere.appspot.com) <br>
+据说是包括了所有web2.0的漏洞</p>
+<h2 id="使用前需知">使用前需知</h2>
+<h3 id="漏洞发现方法">漏洞发现方法</h3>
+<p>you'll use both black-box hacking and white-box hacking</p>
+<h3 id="白盒审计说明source-code">白盒审计说明（source code）</h3>
+<p>http://google-gruyere.appspot.com/code/</p>
+<p>Gruyere is small and compact. Here is a quick rundown of the application code:</p>
+<ul>
+<li>gruyere.py is the main Gruyere web</li>
+<li>serverdata.py stores the default data in the database. There is an administrator account and two default users.</li>
+<li>gtl.py is the Gruyere template language</li>
+<li>sanitize.py is the Gruyere module used for sanitizing HTML to protect the application from security holes.</li>
+<li>resources/... holds all template files, images, CSS, etc.</li>
+</ul>
+<h3 id="重置沙盒状态reset-button">重置沙盒状态（Reset Button）：</h3>
+<p>在沙盒环境变得无法使用时……<br>
+As noted above, each instance is sandboxed so it can't consume infinite resources and it can't interfere with anyone else's instance. Notwithstanding that, it is possible to put your Gruyere instance into a state where it is completely unusable. If that happens, you can push a magic &quot;reset button&quot; to wipe out all the data in your instance and start from scratch. To do this, visit this URL with your instance id:<br>
+https://google-gruyere.appspot.com/resetbutton/123</p>
+<h3 id="关于id">关于id</h3>
+<p>在第一关的时候你会获取一个id。以后的关卡都需要第一次给你的id，如果你需要给别人分享你正在破解的关卡也可以把带id的url分享给别人。</p>
+<p>Your Gruyere instance id is</p>
+<p>558692305032828541672765603645926815579<br>
+注册了个uzks的用户<br>
+http://google-gruyere.appspot.com/558692305032828541672765603645926815579/</p>
+<p>我这里主要采用黑盒审计的方式</p>
+<h2 id="笔记位置">笔记位置：</h2>
+<p>印象笔记导出MD太难了。。。还直接导出pdf共享notion 的连接好啦。一个刷题记录。基本是全刷了。不能刷的多半是讲知识点。<br>
+<strong>🍡链接：</strong></p>
+<p>https://www.notion.so/Gruyere-web2-0-web-securit-fd0c03f4cf4740d9b3ba85f2b02c6d9c</p>
 
             </div>
             
@@ -619,7 +601,7 @@ https://zhuanlan.zhihu.com/p/30897711<br>
     </li>
     <li class="post-copyright-link">
       <strong class="language" data-lan="link">本文链接：</strong>
-      <a href="https://1dayluo.github.io/post/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan/" title="使用celery让任务在后台运行（失败，celery不支持windows)">https://1dayluo.github.io/post/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan/</a>
+      <a href="https://1dayluo.github.io/post/gruyereorbi-ji-yi-ge-web-ping-tai-de-lou-dong-xue-xi-bi-ji-/" title="[gruyere|笔记]一个web平台的漏洞学习笔记-">https://1dayluo.github.io/post/gruyereorbi-ji-yi-ge-web-ping-tai-de-lou-dong-xue-xi-bi-ji-/</a>
     </li>
     <li class="post-copyright-license">
       <strong class="language" data-lan="copyright">版权声明： </strong>
@@ -632,15 +614,11 @@ https://zhuanlan.zhihu.com/p/30897711<br>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="对于Flask的个人理解及安全相关" href="https://1dayluo.github.io/post/ji-zhu-fen-xiang-hui-wo-dui-yu-flask-jin-qi-li-jie-de-yi-ge-gao-zi/">对于Flask的个人理解及安全相关</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="对于Flask的个人理解及安全相关" href="https://1dayluo.github.io/post/ji-zhu-fen-xiang-hui-wo-dui-yu-flask-jin-qi-li-jie-de-yi-ge-gao-zi/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title=" ☆Avatar的功能实现学习笔记" href="https://1dayluo.github.io/post/avatar-de-gong-neng-shi-xian-xue-xi-bi-ji/"> ☆Avatar的功能实现学习笔记</a>
-        <a class="nav-mobile-next" title=" ☆Avatar的功能实现学习笔记" href="https://1dayluo.github.io/post/avatar-de-gong-neng-shi-xian-xue-xi-bi-ji/">下一篇</a>
+        <a class="nav-pc-next" title="[刷题]水题-memcache安全相关" href="https://1dayluo.github.io/post/shua-ti-shui-ti-memcache-an-quan-xiang-guan/">[刷题]水题-memcache安全相关</a>
+        <a class="nav-mobile-next" title="[刷题]水题-memcache安全相关" href="https://1dayluo.github.io/post/shua-ti-shui-ti-memcache-an-quan-xiang-guan/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
