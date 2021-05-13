@@ -9,7 +9,7 @@
 <meta name="description" content="(*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站">
 <meta name="theme-color" content="#F8CDBA">
 <title>对于Flask的个人理解及安全相关 | 悠远乡</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1620886565612">
+<link rel="shortcut icon" href="/favicon.ico?v=1620887487805">
 <link rel="stylesheet" href="/media/css/pisces.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -716,28 +716,54 @@
 </div>
             
             
-  
-    
-      <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<div id="vcomments" style="padding: 10px 0px 0px 0px"></div>
 
-<div id="gitalk-container"></div>
+<style>
+  .v .veditor {
+    min-height: 10rem;
+    background-image: url('');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-color: rgba(255, 255, 255, 0);
+    resize: none;
+  }
 
+  .v .vwrap {
+    border: 1px solid #000 !important;
+  }
+
+  .v .vbtn {
+    padding: .4rem 1.2rem !important;
+    border-color: #fff !important;
+    background-color: #49b1f5 !important;
+    color: #fff !important;
+    font-size: .7rem !important;
+  }
+
+  .v .vcards .vcard .vh .vmeta .vat {
+    padding: 0 .8rem !important;
+    border: 1px solid #00c4b6 !important;
+    border-radius: 5px !important;
+    color: #00c4b6 !important;
+  }
+</style>
 <script>
-  var gitalk = new Gitalk({
-    clientID: '15aa7fb3398e44bb6262',
-    clientSecret: 'bd6200411152ecc8ab15ba312b0b2f2a43e290f5',
-    repo: '1dayluo.github.io',
-    owner: '1dayluo',
-    admin: ['1dayluo'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
-  gitalk.render('gitalk-container')
+  new Valine({
+    el: '#vcomments',
+    appId: 'Op1NdjhkB0LQXy3u6fc72IXK-gzGzoHsz',
+    appKey: 'IfVXE3vPQn95ay99tQnnhl9P',
+    avatar: '',
+    placeholder: '评论',
+    pageSize: '',
+    lang: 'zh-cn',
+    enableQQ: 'true' === 'true',
+    visitor: 'true' === 'false',
+    highlight: 'true' === 'true',
+    avatarForce: 'true' === 'false',
+  });
 </script>
-    
-    
-  
 
           </div>
         </div>
@@ -767,7 +793,7 @@
   
   
   <div class="bg-img">
-    <img src="\media\images\custom-bgImg.png" />
+    <img src="https://sm.ms/image/R7DSo9wIiAezFOG" />
   </div>
   
   
