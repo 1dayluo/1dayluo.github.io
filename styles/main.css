@@ -2163,6 +2163,12 @@ p > code {
     }.bg-color {
       background-color: #FFFFFFcc;
     }
+    .gemini .blog-header, .gemini .sidebar-wrapper, .gemini .article-wrapper, .gemini .post, .gemini .page, .gemini .section, .gemini .section-box, .gemini .sidebar-box, .gemini .friends-section {
+      border-radius: 10px;
+    }
+    .pisces .blog-header, .pisces .sidebar-wrapper, .pisces .article-wrapper, .pisces .section, .pisces .sidebar-box, .pisces .friends-section {
+      border-radius: 10px;
+    }
     .site-meta {
       background: #F8CDBA !important;
     }
