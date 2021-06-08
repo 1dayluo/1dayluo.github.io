@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://1dayluo.github.io</id>
     <title>悠远乡</title>
-    <updated>2021-05-21T06:51:01.636Z</updated>
+    <updated>2021-06-08T09:48:58.786Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://1dayluo.github.io"/>
     <link rel="self" href="https://1dayluo.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://1dayluo.github.io/images/avatar.png</logo>
     <icon>https://1dayluo.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 悠远乡</rights>
+    <entry>
+        <title type="html"><![CDATA[CC Pen Testing|Writeup|Note]]></title>
+        <id>https://1dayluo.github.io/post/cc-pen-testingorwriteupornote/</id>
+        <link href="https://1dayluo.github.io/post/cc-pen-testingorwriteupornote/">
+        </link>
+        <updated>2021-06-08T09:48:19.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Markdown Tips]]></title>
         <id>https://1dayluo.github.io/post/markdown-tips/</id>
@@ -162,12 +169,5 @@ https://blog.szfszf.top/tech/code-audit-challenge-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8
 -  视图<br>
 -   数据库</p>
 ]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[理解TLS]]></title>
-        <id>https://1dayluo.github.io/post/li-jie-tls/</id>
-        <link href="https://1dayluo.github.io/post/li-jie-tls/">
-        </link>
-        <updated>2020-06-30T07:52:47.000Z</updated>
     </entry>
 </feed>

