@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title> Gogs RCE 历史漏洞学习笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title"> Gogs RCE 历史漏洞学习笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-05-25</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/7wis0OAqRY/">
+                    漏洞分析
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                    笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                    靶场
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                    刷题
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <aside>
+💡 This exercise covers how to get code execution against the Git self hosted tool: Gogs.
+</aside>
+<p>备注: gogs的老漏洞学习,非最新的.靶场学习的, 里面提供了复现环境,就不用自己搭建了.</p>
+<h2 id="概括">概括</h2>
+<p>gogs是一种提供能自己服务器上搭建git服务的开源项目,即自助git</p>
+<p>gogs的攻击分为两步:</p>
+<ol>
+<li>绕过验证变为administrator</li>
+<li>使用hook获取命令执行rce</li>
+</ol>
+<h2 id="漏洞分析学习">漏洞分析学习</h2>
+<p>分析主要是看Reference里的文章, 大佬文章写的足够详细了, 我就简单记录一下跟着文章捋的思路和自己的一些梳理. 建议还是看原文, 有更详细的代码分析(学习时写自己的思路笔记才有助于理解不是吗)</p>
+<h3 id="修复的关键代码">修复的关键代码:</h3>
+<pre><code class="language-go">// Read returns raw session store by session ID.
+func (m *Manager) Read(sid string) (RawStore, error) {
+    // No slashes or dots &quot;./&quot; should ever occur in the sid and to prevent session file forgery bug.
+    // See https://github.com/gogs/gogs/issues/5469
+    if strings.ContainsAny(sid, &quot;./&quot;) {
+        return nil, errors.New(&quot;invalid 'sid': &quot; + sid)
+    }
+
+    return m.provider.Read(sid)
+}
+</code></pre>
+<p>利用条件:</p>
+<ol>
+<li>Gogs的配置文件指定session存储方式为文件</li>
+<li>后台逻辑(session.go)没有考虑到过滤 <code>../</code> 等字符</li>
+<li><code>i_like_gogits</code> 可以加载任意文件的内容(同2)</li>
+</ol>
+<p>其中:</p>
+<ul>
+<li>cookie中 <code>i_like_gogits</code> 为对应session文件的文件名, 这里可以改为管理员的session</li>
+</ul>
+<p>而其中session的信息需要人为构造并且找到一个上传点</p>
+<h3 id="人为构造session">人为构造session:</h3>
+<p>session生成是由 <code>EncodeGob</code> 解码则是通过 <code>DecodeGob</code> ,解码对应session然后修改里面的uid为管理员uid和uname, 再由EncodeGob编码.</p>
+<ul>
+<li>encoding session的代码</li>
+</ul>
+<pre><code class="language-go">func EncodeGob(obj map[interface{}]interface{}) ([]byte, error) {
+    for _, v := range obj {
+        gob.Register(v)
+    }
+    buf := bytes.NewBuffer(nil)
+    err := gob.NewEncoder(buf).Encode(obj)
+    return buf.Bytes(), err
+}
+</code></pre>
+<p>User 结构体(<a href="https://github.com/gogs/gogs/blob/be6bb5314ee7d8ed53362d8e6893b061e5210f48/models/user.go#L50-L52">https://github.com/gogs/gogs/blob/be6bb5314ee7d8ed53362d8e6893b061e5210f48/models/user.go#L50-L52</a>)</p>
+<pre><code class="language-go">type User struct {
+    ID        int64
+    LowerName string `xorm:&quot;UNIQUE NOT NULL&quot;`
+    Name      string `xorm:&quot;UNIQUE NOT NULL&quot;`
+    FullName  string
+</code></pre>
+<p>获取session的代码(<a href="https://github.com/gogs/gogs/blob/be6bb5314ee7d8ed53362d8e6893b061e5210f48/routes/user/auth.go#L127-L128">routes/user/auth.go</a>) 涉及到用户身份的有两个值</p>
+<pre><code class="language-go">c.Session.Set(&quot;uid&quot;, u.ID)
+c.Session.Set(&quot;uname&quot;, u.Name)
+</code></pre>
+<h3 id="上传点">上传点</h3>
+<p>Gogs提供了三种方式在服务器上传:</p>
+<ul>
+<li>使用issue tracker提供的上传功能 :</li>
+<li>用git push : 但是受限上传文件类型/内容过滤</li>
+<li>使用upload file在给定repository</li>
+<li></li>
+</ul>
+<p>这里用upload file为例子,当你创建repo的拷贝后, Gogs会将文件放在 <code>/data/gogs/data/tmp/local-repo/[REPO_ID]/[FILENAME]</code> 里, 这里repo_id可以在fork的时候查看链接(链接里子目录名), 对应<a href="https://github.com/gogs/gogs/blob/be6bb5314ee7d8ed53362d8e6893b061e5210f48/models/repo.go#L594-L596">代码</a>. 这里session默认存储路径为 <code>/**data/gogs/data/sessions/</code> *</p>
+<p>构造即在<code>i_like_gogits</code> 中将文件指向相对路径即可</p>
+<figure data-type="image" tabindex="1"><img src="https://i.imgur.com/H7FyjSv.png" alt="" loading="lazy"></figure>
+<h3 id="登录后利用">登录后利用</h3>
+<p>用的git的hook功能. 实现RCE</p>
+<p>git hook以前刷题用到过,见 <a href="https://1dayluo.github.io/post/htbencoding/#git-commitsh">https://1dayluo.github.io/post/htbencoding/#git-commitsh</a><br>
+这里注意看仓库设置里Gogs支持的hook,  我在复现的时候就发现了靶场不支持post-commit的hook</p>
+<h2 id="反思">反思</h2>
+<p>这个漏洞是经典的session管理和文件目录遍历结合的洞, 学习组合拳什么的…包括代码审计遇到类似的也可以(gogs的session管理和php的session管理是一样的机制)</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.anquanke.com/post/id/163575">https://www.anquanke.com/post/id/163575</a></li>
+<li>Pentesterlab: Green</li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/length-extension-attack/">
+              <h3 class="post-title">
+                下一篇：Length Extension Attack
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

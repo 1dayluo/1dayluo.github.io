@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>靶场 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+
+        <div class="current-tag-container">
+          <h2 class="title">
+            <i class="icon icon-pricetags-outline"></i> 靶场
+          </h2> 
+        </div>
+
+        
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/gogs-rce-li-shi-lou-dong-xue-xi-bi-ji/">
+        <h2 class="post-title"> Gogs RCE 历史漏洞学习笔记</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2023-05-25</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                学习笔记
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/7wis0OAqRY/">
+                漏洞分析
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                笔记
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                刷题
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/htbencoding/">
+        <h2 class="post-title"> HTB：Encoding</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2023-04-23</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                刷题
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                HTB
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/htbforgot/">
+        <h2 class="post-title">HTB:Forgot</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2023-03-09</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                学习笔记
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                刷题
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                HTB
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/htb-weather-App/">
+        <h2 class="post-title"> [HTB] 又一道writeup:Weather | 收获颇多</h2>
+      </a>
+      <div class="post-abstract">
+        <h1 id="weather-app">Weather App</h1>
+<p>这道题值得慢慢啃,如果有缘看到我这篇writeup的话,建议你实在啃不下再看(或者只看卡住的地方)</p>
+<h2 id="题目分析">题目分析</h2>
+<p>不管用burp抓包,还是分析源代码.均可以看到,天气的获取以POST方式请求了<code>/api/weather</code> 接口(源代码见<code>/static/js/main.js</code> )</p>
+<p>看源代码进行审计的时候,还发现了在<code>/static/host-unreachable.jpg</code> 下的一个图片</p>
+
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2021-12-22</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                刷题
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                HTB
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/hkZZrvn-OU4/">
+                web
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/htbphonebook-or-writeup/">
+        <h2 class="post-title">[HTB]phonebook | writeup</h2>
+      </a>
+      <div class="post-abstract">
+        <p>输入错误的用户名和密码,发现提示权限失败的message是通过url传输的,构造payload引起alert的弹窗</p>
+<p>payload : <a href="http://178.62.5.61:31279/login?message=%3Cimg%20src=1%20onerror=alert(123)%3E"><code>http://178.62.5.61:31279/login?message=&lt;img src=1 onerror=alert(123)&gt;</code></a></p>
+<p>但是还是需要登陆的,在登陆页面输入wildcards的'<em>'(用户名和密码均是).因为没有前面的过滤,直接把</em>传递到后台,所以就能登陆进去了.</p>
+<p>进行code review.发现请求了一个/search 的api,如果成功,就显示search后的结果(以table的方式)</p>
+
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2021-12-15</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                刷题
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                HTB
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/hkZZrvn-OU4/">
+                web
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/htb-templated-or-writeup/">
+        <h2 class="post-title">[HTB] Templated | writeup</h2>
+      </a>
+      <div class="post-abstract">
+        <h1 id="templated">Templated</h1>
+<p>是ssti漏洞.</p>
+<p>但是之前学习burpsuite下的题目的时候,没有学到这个.之前了解过概念.于是我专门回顾和学习了一下jinja2</p>
+<p>尝试访问不存在的路径:</p>
+<pre><code>payload : /xyz
+
+response : 发现会回显xyz在页面中
+</code></pre>
+
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2021-12-15</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                刷题
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                HTB
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/hkZZrvn-OU4/">
+                web
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/burpsuite-labauthentication-bypass-via-encryption-oracle/">
+        <h2 class="post-title">【Burpsuite】 lab#Authentication bypass via encryption oracle</h2>
+      </a>
+      <div class="post-abstract">
+        <p>提取其中的一篇笔记进行记录。</p>
+<h1 id="labauthentication-bypass-via-encryption-oracle">lab#Authentication bypass via encryption oracle</h1>
+<p>This lab contains a logic flaw that exposes an encryption oracle to users. To solve the lab, exploit this flaw to gain access to the admin panel and delete Carlos.</p>
+<p>You can log in to your own account using the following credentials: <code>wiener:peter</code></p>
+<p>跟以前的lab一样，admin panel还是在/admin下</p>
+
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2021-09-13</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/d172iE0ZZd2/">
+                PortSwigger
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/Aslioh1Izg4/">
+                burp
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/cc-pen-testingorwriteupornote/">
+        <h2 class="post-title">CC Pen Testing|Writeup|Note</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2021-06-08</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/9gwSmtuvzO2/">
+                THM
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/gruyereorbi-ji-yi-ge-web-ping-tai-de-lou-dong-xue-xi-bi-ji-/">
+        <h2 class="post-title">[gruyere|笔记]一个web平台的漏洞学习笔记-</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2021-03-02</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+
+<div class="pagination-container">
+  
+  
+</div>
+
+
+      </div>
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

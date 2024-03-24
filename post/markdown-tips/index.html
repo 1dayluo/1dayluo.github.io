@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Markdown Tips | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Markdown Tips</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-05-14</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>也许是Tips吧~＞︿＜ 是最近自己写项目整理发现比较方便的一些方法（todo，制表，之类的就不列了）</p>
+<p>*废物的废物更新系列（</p>
+<h2 id="一览">一览</h2>
+<p>好像blog不支持<code>[toc]</code> ，所以这里列举一下这次用到的：</p>
+<ul>
+<li>跳转</li>
+<li><a href="#%E7%9E%84%E7%82%B9">瞄点</a></li>
+<li>注脚</li>
+</ul>
+<h3 id="跳转">跳转</h3>
+<p><strong>用法</strong>：</p>
+<p>我一般用于本地dictionary的跳转,跳转到其他md文档里</p>
+<p><strong>语法说明</strong></p>
+<p>语法<code>[][link's name]</code></p>
+<p>例如:</p>
+<p><code>[project1][project_1]</code></p>
+<p>然后在文末补充：</p>
+<p><code>[project_1]: ./file/README.md	&quot;tcp/ip&quot;</code></p>
+<h3 id="瞄点">瞄点</h3>
+<p><strong>用法</strong>:</p>
+<p><a href="#%E4%B8%80%E8%A7%88">点我测试（￣︶￣）↗　</a></p>
+<p><strong>语法说明</strong></p>
+<p>其实和md的普通连接一样的语法，只是在后面记录链接的地方加一个<code>#</code>和对应的标题。这里的示例语法是：<code>[点我测试（￣︶￣）↗　](#一览)</code></p>
+<h3 id="注脚">注脚</h3>
+<p><strong>用法</strong>：</p>
+<p>夏天最喜欢的水果 <sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup></p>
+<p><strong>语法说明</strong></p>
+<p>其实就是<code>夏天最喜欢的水果 [^1]</code></p>
+<p>P.S:好像只有typora是支持自定义脚注的，不支持自定义脚注的，默认脚注会从1开始编排</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>🍉 <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/gruyereorbi-ji-yi-ge-web-ping-tai-de-lou-dong-xue-xi-bi-ji-/">
+              <h3 class="post-title">
+                下一篇：[gruyere|笔记]一个web平台的漏洞学习笔记-
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

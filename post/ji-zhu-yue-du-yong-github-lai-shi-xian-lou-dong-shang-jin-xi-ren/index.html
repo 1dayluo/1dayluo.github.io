@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>[技术阅读]用github来实现漏洞赏金猎人 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">[技术阅读]用github来实现漏洞赏金猎人</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-07-28</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/ZSxJIWHH2y/">
+                    技术阅读
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/_QCbFAJ4g2b/">
+                    工具篇
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="github-for-bug-bounty-hunters-edoverflow">GitHub for Bug Bounty Hunters-edoverflow</h1>
+<p>原文链接：<a href="https://edoverflow.com/2017/github-for-bugbountyhunters/">GitHub for Bug Bounty Hunters</a></p>
+<p>备注：翻译中出现的”我“均指文章作者</p>
+<h2 id="mass-cloning">Mass Cloning</h2>
+<p><a href="https://github.com/mazen160/GithubCloner">mazen160/GithubCloner</a></p>
+<pre><code class="language-bash">python githubcloner.py --org organization -o /tmp/output
+</code></pre>
+<h2 id="static-analysis">Static Analysis</h2>
+<p>建议使用你渗透目标的软件并用涉及到的主要特性与功能。这里作者称为&quot;Jobert setp&quot;。因为Jobert会在每次找漏洞前花30分钟来理解和用project。</p>
+<h2 id="manual-analysis">Manual analysis</h2>
+<p>“learn to make it, then break it”</p>
+<p>如果你对一门编程语言有了解，那么你会知道在安全范围内哪些能做哪些不能做。</p>
+<p>当你理解了你的目标和它的结构，就可以grep了。搜索相关的关键字进行检测</p>
+<p>以下是我第一次评估关注的关键字：</p>
+<ul>
+<li>API and key. (Get some more endpoints and find API keys.)</li>
+<li>token</li>
+<li>secret</li>
+<li>TODO</li>
+<li>password</li>
+<li>vulnerable 😜</li>
+<li>http:// &amp; https://</li>
+</ul>
+<p>以及以下术语（出现的时候很可能是开发人员搞砸一些东西的场景）</p>
+<ul>
+<li>CSRF</li>
+<li>random</li>
+<li>hash</li>
+<li>MD5,SHA-1,SHA-2,etc</li>
+<li>HMAC</li>
+</ul>
+<p>当你去找确定的漏洞时，一定要明确是指定的哪个语言（<strong>查询关键字</strong>）。例如，当我找java下的timing leak时，I know that Arrays.equals() and HMAC combined causes that issue.</p>
+<p>另一个重要的步骤是看<strong>历史提交记录（old commits.）</strong></p>
+<p>开发人员认位他们移除了身份验证，但是实际上都还在提交记录中。</p>
+<h2 id="tools">Tools</h2>
+<p>注意：不能将扫描器的发现复制粘贴到你的报告中，你会得到很多误报。因此你必须在可能产生问题的地方上人工确认是否存在漏洞。</p>
+<p>代码审计可配合以下网址使用:<a href="https://rules.sonarsource.com/">https://rules.sonarsource.com/</a></p>
+<h3 id="python">python</h3>
+<p>1.代码审计工具</p>
+<p>python类项目代码审计用<a href="https://github.com/openstack-archive/bandit">Bandit</a></p>
+<pre><code class="language-bash">bandit -r path/to/your/code -ll
+</code></pre>
+<p>2.查询python modules的bug</p>
+<p>检查requirements.txt中是否有过期的包</p>
+<h3 id="检查依赖关系">检查依赖关系</h3>
+<p><a href="http://snyk.io/">Snyk.io</a> is a wonderful tool for checking dependencies.</p>
+<h3 id="检查敏感信息">检查敏感信息</h3>
+<p><a href="https://github.com/michenriksen/gitrob">Gitrob</a></p>
+<pre><code class="language-bash">gitrob analyze acme,johndoe,janedoe
+</code></pre>
+<h3 id="检查">检查</h3>
+<p>For finding high entropy strings (API keys, tokens, passswords, etc.)you can use <a href="https://github.com/trufflesecurity/truffleHog">truffleHog</a>.</p>
+<pre><code class="language-bash">truffleHog https://github.com/dxa4481/truffleHog.git
+</code></pre>
+<h3 id="all-in-one">All-in-one</h3>
+<p>整合</p>
+<p><a href="https://github.com/anshumanbh/git-all-secrets">https://github.com/anshumanbh/git-all-secrets</a></p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/cc-pen-testingorwriteupornote/">
+              <h3 class="post-title">
+                下一篇：CC Pen Testing|Writeup|Note
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

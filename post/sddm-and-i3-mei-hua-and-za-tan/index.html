@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>sddm &amp; i3 美化 &amp; 杂谈 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">sddm &amp; i3 美化 &amp; 杂谈</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-11-19</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/yz_2VE_t2g9/">
+                    Linux
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h2 id="关于sddm">关于sddm</h2>
+<h3 id="sddm主题">sddm主题</h3>
+<ol>
+<li>
+<p>去arch aur官网，搜索sddm-theme即可，然后列出来的可以去github（<br>
+Git Clone URL什么的）看一下样式。</p>
+</li>
+<li>
+<p>看新下的主题名称：<code>ls /usr/share/sddm/themes/</code></p>
+</li>
+<li>
+<p>到<code>/etc/sddm.conf.d</code>下新建一个.conf文件（这里的文件出现的配置选项会默认覆盖sddm的default.conf下的配置项）,这里将Current后的值设为对应的主题名称</p>
+</li>
+</ol>
+<pre><code class="language-shell">[General]
+HalyCommand=/usr/bin/systemctl poweroff
+RebootCommand=/usr/bin/systemctl reboot
+[Theme]
+Current=astronaut
+</code></pre>
+<p>需要重启一下才能生效</p>
+<h2 id="关于i3">关于i3</h2>
+<p>一个不错的翻译项目： https://zjuyk.site/i3wm-userguide-zh/%E4%BB%8B%E7%BB%8D.html</p>
+<h3 id="壁纸">壁纸</h3>
+<p>feh --bg-scale {path-to-picture}</p>
+<p>推荐壁纸源（非二次元主题）： /earthporn 一个subreddit</p>
+<h3 id="barpolybar">bar：polybar</h3>
+<p>i3bar太丑了，这里我用的polybar</p>
+<p>插件：</p>
+<ul>
+<li>i3-volume （https://github.com/hastinbe/i3-volume/wiki/Installation#polybar）</li>
+</ul>
+<p>i3配置polybar<br>
+exec_always --no-startup-id {对polybar的launch.sh路径}</p>
+<h3 id="音量">音量</h3>
+<p>绑定音量按键</p>
+<pre><code class="language-shell">bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% &amp;&amp; $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% &amp;&amp; $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle &amp;&amp; $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle &amp;&amp; $refresh_i3status
+</code></pre>
+<h3 id="亮度">亮度</h3>
+<p>需要下载:</p>
+<ul>
+<li>light-git(aur)</li>
+</ul>
+<p>i3配置文件（~/.config/i3/config）绑定按键</p>
+<pre><code class="language-shell">bindsym XF86MonBrightnessUp exec light -A 10 # increase screen brightness
+bindsym XF86MonBrightnessDown exec light -U 10 # decrease screen brightness
+</code></pre>
+<h2 id="毛玻璃特效picom">毛玻璃特效:picom</h2>
+<h3 id="基础">基础</h3>
+<ol>
+<li>下载：picom-jonaburg-git (https://github.com/jonaburg/picom)</li>
+<li>拷贝配置： <code>cp /etc/xdg/picom.conf.example ~/.config/picom/picom.conf </code> （没有目录创建目录）</li>
+<li>i3配置： <code>exec --no-startup-id picom -b</code></li>
+</ol>
+<h3 id="定制化配置">定制化配置</h3>
+<ol>
+<li>使用 <code>xprop</code> 命令查看WM_CLASS(STRING) 的内容，然后在opacity-rule下新增（如果有，则修改。像kitty这个terminal显示在这里配置没有太大的改观）</li>
+</ol>
+<pre><code>&quot;90:name      = '{your-class}' &amp;&amp; focused&quot;,
+&quot;30:name      = '{your-class}' &amp;&amp; !focused&quot;,
+</code></pre>
+<ol start="3">
+<li>设置毛玻璃的效果强度： blur-strength</li>
+<li>设置bar是否需要毛玻璃特效：在blur-background-exclude下对应 “window_type&quot; = 'dock'&quot; （如果你下了picom-jonaburg-git，这里应该默认有，选择注释or取消注释）</li>
+</ol>
+<h2 id="关于锁屏">关于锁屏</h2>
+<h3 id="锁屏i3lock配置锁屏">锁屏：i3lock配置锁屏：</h3>
+<p>需要下载：</p>
+<ul>
+<li>i3lock-color(aur)</li>
+<li>xidlehook</li>
+<li>xautolock</li>
+<li>imagemagick</li>
+<li>scrot</li>
+</ul>
+<ol>
+<li>
+<p>创建~/.bin/scripts</p>
+</li>
+<li>
+<p>将 ~/.bin/scripts 加入环境变量，这里我是fish，用fish_add_path -p</p>
+</li>
+<li>
+<p>scripts脚本如下：</p>
+</li>
+</ol>
+<pre><code class="language-shell">#!/bin/bash
+rm /tmp/screenshot.png
+scrot /tmp/screenshot.png
+convert /tmp/screenshot.png -blur 0x20 /tmp/screenshotblur.png
+convert /tmp/screenshotblur.png /home/n3k0/picture/i3-lock/lock.png -gravity center -composite -matte /tmp/screenlock.png
+i3lock -i /tmp/screenlock.png
+</code></pre>
+<p>命令吗，scrot负责截图，convert用于模糊处理和叠加一个lock.png图像。这里我自己用Picsart编辑了一张lock图片嘻嘻</p>
+<ol start="4">
+<li>设置自动锁屏，脚本如下（这里命名它为locker）</li>
+</ol>
+<pre><code class="language-shell">#!/bin/sh
+exec xautolock -detectsleep -time 10 -locker &quot;/home/n3k0/.bin/scripts/lock.sh&quot; -notify 30 -notifier &quot;ntify-send -u critical -t 10000 -- 'LOCKING screen in 30 seconds'&quot; &amp;
+exec xidlehook --not-when-fullscreen --timer 1200 &quot;systemctl suspend&quot; -
+</code></pre>
+<p>其中<br>
+xautolock负责定时锁屏和锁屏前提示<br>
+xidlehook负责休眠会在计算机空闲20分钟后，检查有无全屏播放的（比如正在看电影动漫），没有就会执行systemctl suspend命令（其中 - 是因为xidlehook会期待一个用户输入，<code>-</code> 一定要有）</p>
+<ol start="5">
+<li>加入到i3自动启动<br>
+在放入i3的config文件前，这里我又编辑了个脚本（i3-auto)，用于放全部的 exec_always 类型的脚本，包括fcitix，feh，polybar等<br>
+大概长这样</li>
+</ol>
+<pre><code class="language-shell">fcitx &amp;
+feh --bg-scale /home/n3k0/picture/i3 &amp;
+polystart.sh &amp;
+locker.sh &amp;
+</code></pre>
+<p>编辑配置文件 ~/.config/i3/config, 在i3的config文件配置加一行 exec_always --no-startup-id i3-auto 如果这里没有像我这样，那你就把i3-auto换为刚刚的locker.sh</p>
+<ol start="6">
+<li>绑定锁屏按键<br>
+bindsym $mod+Ctrl+l exec --no-startup-id lock.sh</li>
+</ol>
+<p>预览（我的锁屏样式嘻嘻，中间为自己P的图片www！～）</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2022_11/screenlock.png" alt="" loading="lazy"></figure>
+<h2 id="外接屏幕">外接屏幕</h2>
+<p>需要安装</p>
+<ul>
+<li>xorg-xrandr</li>
+<li>Arandr (可视化)</li>
+</ul>
+<h2 id="kitty">Kitty</h2>
+<p>用了这个dotfile：https://github.com/Jguer/dotfiles</p>
+<p>样式预览</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2022_11/2022-11-19-23-42-19-kitty.png" alt="" loading="lazy"></figure>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/20220714-hui-tou-kan-wang-qian-zou/">
+              <h3 class="post-title">
+                下一篇：20220714 回头看,往前走
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

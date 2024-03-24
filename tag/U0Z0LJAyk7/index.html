@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>XSS | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+
+        <div class="current-tag-container">
+          <h2 class="title">
+            <i class="icon icon-pricetags-outline"></i> XSS
+          </h2> 
+        </div>
+
+        
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/xss-jin-jie-xue-xi-fen-xiang-yi/">
+        <h2 class="post-title">XSS进阶学习分享（一）</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2023-02-07</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                学习笔记
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                笔记
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/U0Z0LJAyk7/">
+                XSS
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/RsVeNwQ62C/">
+                知识点巩固
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie/">
+        <h2 class="post-title">XSS水题篇：关于DOM Colbbering一些个人理解</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2023-02-01</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                学习笔记
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/U0Z0LJAyk7/">
+                XSS
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/ZSxJIWHH2y/">
+                技术阅读
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+      <a href="https://1dayluo.github.io/post/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie/">
+        <div class="feature-container" style="background-image: url('https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_2/Untitled.png')">
+        </div>
+      </a>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/guan-yu-opener-de-xue-xi-ji-li-yong/">
+        <h2 class="post-title">关于opener的学习及利用</h2>
+      </a>
+      <div class="post-abstract">
+        <h1 id="windowopener-学习">window.opener 学习</h1>
+<p>[15:40]</p>
+<p>关于window.opener的补充学习：</p>
+<p><a href="https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-2-7810ebfccc1d%5D(https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-2-7810ebfccc1d)"></a></p>
+<p>还是从part1开始读起吧（</p>
+<p>学习的过程偶尔会发愁，遇到很多英文，我还是一个头两个大。但是还是啃吧）：</p>
+<p>part1：<a href="https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-1-c6be37701cab">https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-1-c6be37701cab</a></p>
+<p>和视频补充学习：<a href="https://www.youtube.com/watch?v=veXDFx2qJBk">https://www.youtube.com/watch?v=veXDFx2qJBk</a></p>
+<p><strong>part1介绍的内容：</strong></p>
+<ul>
+<li>opener 变量 以及如何与同源政策相关联。</li>
+<li>该变量如何呗滥用以实现接近客户端重定向</li>
+</ul>
+<p><strong>part2介绍的内容：</strong></p>
+<ul>
+<li>在part1概念的基础上探讨新型XSS向量</li>
+</ul>
+<p><strong>part3介绍的内容：</strong></p>
+<ul>
+<li>来混淆一些有趣的跨窗口<code>eval</code> 函数 从而在第四部分讨论通用XSS的问题</li>
+</ul>
+<h1 id="part-1">Part 1</h1>
+<h2 id="introducing-the-windowopener-variable">Introducing the window.opener variable</h2>
+<p>open 函数通常被用于在弹出的窗口中打开一个URL。这个函数经常被不良的网站打开烦人或恶意的广告，但是同样也有合法的使用。当你调用open函数，浏览器自动在新窗口中赋值一个变量指向打开该窗口的源窗口。这个变量自然地称作”opener‘</p>
+
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2021-08-27</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/U0Z0LJAyk7/">
+                XSS
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/ZSxJIWHH2y/">
+                技术阅读
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+
+<div class="pagination-container">
+  
+  
+</div>
+
+
+      </div>
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

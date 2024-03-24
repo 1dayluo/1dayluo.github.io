@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title> ☆Avatar的功能实现学习笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title"> ☆Avatar的功能实现学习笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-07-13</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/Y9X8jL1qdWL/">
+                    flask
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/lIHDfEZJ-Th/">
+                    python
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>写在开头:<br>
+<img src="http://ww1.sinaimg.cn/thumbnail/94229e83ly1ggps3dze1wj20iw0btq3c.jpg" alt="" loading="lazy"><br>
+以前写的笔记&gt;-&lt;不是很完善.....比如默认avator已经实现了，但是笔记没有后续补充。仅供参考。</p>
+<p>成功的把情侣空间弄成微博后的新的探索喵<br>
+本节实现头像上传，主页头像实现<br>
+笔记大纲包含如下内容：<br>
+- 表单设置<br>
+-  路由设置<br>
+-  视图<br>
+-   数据库</p>
+<!-- more -->
+<h2 id="一表单设置">一.表单设置</h2>
+<pre><code class="language-python">class UploadAvatar(FlaskForm):
+    avatar = FileField('avatar',validators=[FileRequired('文件未选择'),FileAllowed(['jpg', 'png'], 'Images only!')])
+    submit = SubmitField('Submit')
+</code></pre>
+<p><code>Flask-WTF</code> 提供了 <code>FileField</code> 类来处理文件上传，它在表单提交后， 自动从 <code>flask.request.files</code> 抽取数据。 <code>FileField</code> 的 data 属性是一个<code> Werkzeug FileStorage</code> 实例。<br>
+例如：</p>
+<pre><code class="language-python">from werkzeug import secure_filenamefrom flask_wtf.file import FileField
+
+
+class PhotoForm(Form):
+    photo = FileField('Your photo')
+
+
+@app.route('/upload/', methods=('GET', 'POST'))def upload():
+    form = PhotoForm()
+    if form.validate_on_submit():
+        filename = secure_filename(form.photo.data.filename)
+    else:
+        filename = None
+    return render_template('upload.html', form=form, filename=filename)
+</code></pre>
+<p>那么 <code>secure_filename() </code>函数具体做了那些事呢？现在的问题是，有一个信条叫做“永远别相信你用户的输入” ，这句话对于上传文件的文件名也是同样有效的。<br>
+<b>Remember to set the enctype of the HTML form to multipart/form-data, otherwise request.files will be empty.</b><br>
+因为这句话，所以templates要有所更改，查看对应的章节</p>
+<h2 id="二-models修改">二. Models修改</h2>
+<p>我在这里对用户增加了avatar的方法，返回是头像对应的地址</p>
+<pre><code class="language-python">def user_avatar(self):
+    return './static/avatar/{}'.format(self.avatar)
+</code></pre>
+<p>同时我对数据库结构进行了更改，我增加了这一分类</p>
+<p><code>avatar = db.Column(db.String(120))</code></p>
+<p>注意方法和column不能重名，否则迁移数据库会识别不到更改。<br>
+修改完数据库后,用migrate进行迁移</p>
+<pre><code class="language-python">flask db migrate  -m &quot;avatar&quot;
+flask db upgrade
+</code></pre>
+<p>后期优化：<br>
+考虑增加default(已完成)</p>
+<h2 id="三路由函数">三.路由函数</h2>
+<p>获取到表单上传的文件，用<code>flask</code>的<code>request</code>：</p>
+<pre><code>   ` f = form.photo.data`
+</code></pre>
+<p>对文件名进行检测：</p>
+<pre><code class="language-python">
+from werkzeug.utils import secure_filename
+filename = secure_filename(f.filename)
+
+
+@login_required
+@app.route('/&lt;username&gt;/avatar', methods=['GET','POST'])
+def avatar_set(username):
+    username = current_user.username
+    form = UploadAvatar()
+    if form.validate_on_submit():
+        file = form.avatar.data
+        print(file)
+        filename = secure_filename(file.filename)
+        if file and allowed_file(file):
+            upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            set_avatar(current_user.id, filename)
+            return redirect(url_for('index'))
+
+
+    return render_template('upload_avatar.html', title='上传你的头像把',form=form)
+</code></pre>
+<p><code>set_avatar</code>是设置头像的函数，我放在了operation.py中=-=，如下：<br>
+后期可以考虑优化，例如上传图片对图片名称进行过滤并保存其md5至数据库和本体</p>
+<pre><code class="language-python">def set_avatar(cur_user,upload_path):
+    user = User.query.get(cur_user)
+    user.avatar = upload_path
+    db.session.commit()
+    return user
+</code></pre>
+<p>四 模板<br>
+前端还没美化，只是功能实现，凑乎看把<br>
+(一）上传头像的模板处<br>
+红体字是必须的，否则会提示文件不存在</p>
+<pre><code class="language-html">&lt;form action=&quot;&quot; method=&quot;post&quot; novalidate enctype=&quot;multipart/form-data&quot;&gt;
+
+
+{{ form.hidden_tag() }}
+&lt;p&gt;
+    {{ form.avatar.label }}
+
+    {{ form.avatar(size=32) }}
+    {% for error in form.avatar.errors %}
+    &lt;span style=&quot;color: red;&quot;&gt;[{{ error }}]&lt;/span&gt;
+    {% endfor %}
+&lt;/p&gt;
+&lt;p&gt;{{ form.submit() }}&lt;/p&gt;
+</code></pre>
+<p>(二）主页模板</p>
+<pre><code class="language-html">{% if current_user.is_anonymous or not current_user.is_authenticated %}
+    &lt;h1&gt;Hi&lt;/h1&gt;
+    &lt;p&gt;快点去注册啦！oao&lt;/p&gt;
+{% else %}
+&lt;h1&gt;Hi, {{ user.username }}!&lt;/h1&gt;
+
+
+{% for post in posts %}
+&lt;div&gt;
+    &lt;img src=&quot;{{ current_user.user_avatar() }}&quot; alt=&quot;user's avatar&quot; height=&quot;100&quot; width=&quot;100&quot; /&gt;
+    &lt;p&gt;{{ post.author.username }} says:&lt;/p&gt;
+    &lt;p&gt;&lt;b&gt;{{ post.body }}&lt;/b&gt; —— {{ post.timestamp }}&lt;/p&gt;&lt;/div&gt;
+{% endfor %}
+{% endif %}
+</code></pre>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/li-jie-tls/">
+              <h3 class="post-title">
+                下一篇：理解TLS
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

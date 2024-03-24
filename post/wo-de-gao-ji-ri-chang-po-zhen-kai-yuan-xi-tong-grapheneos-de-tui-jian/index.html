@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>我的「搞机」日常（破真）  - 开源系统GrapheneOS的推荐 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">我的「搞机」日常（破真）  - 开源系统GrapheneOS的推荐</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-11-26</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h2 id="开端">开端</h2>
+<p>关于我是怎么突然想到需要搞机想法，说（一）来（篇）话（水）长（文）系列（？）</p>
+<p>如果从手机算起的话（<s>不算高中生涯的尝试给自己ipod越狱，最后第二次越狱变砖没敢告诉我爹这件事的话</s>），首先最初的搞机男票票送我的多亲2觉得原生系统用起来卡顿，想解锁重装，安第三方ROM。当年看的教程指路：https://listed.to/p/xchVAPt0nB（重装后依旧是良好的遥控器w），那个时候就又一次燃起了信心，突然想再多玩几次</p>
+<p>但，我是个很懒的用户，虽然很早买了一加手机，可最开始没有进行刷机，后来想到数据迁移，数据备份一堆的事情又很麻烦，就一直不了了之，直到后来，看到了一个subreddit的论坛....</p>
+<p>在好奇心的趋势下，我开始了解如何拥有第一个属于自己的开源系统手机</p>
+<h3 id="aosp-derivatives">AOSP Derivatives</h3>
+<p>AOSP，即Android Open Soure Project，是由google领导的开源移动操作系统，具体介绍可以看官方：</p>
+<p>https://www.privacyguides.org/android/</p>
+<blockquote>
+<p>Most phones sold with Android are modified to include invasive integrations and apps such as Google Play Services, so you can significantly improve your privacy on your mobile device by replacing your phone's default installation with a version of Android without these invasive features</p>
+</blockquote>
+<p>所以为了摆脱Android系统的捆绑，实现个人隐私，我们可以安装一些开源的操作系统，可选的开源操作系统有：</p>
+<ul>
+<li>
+<p>GrapheneOS</p>
+</li>
+<li>
+<p>DivestOS</p>
+</li>
+</ul>
+<p>这里推荐使用GrapheneOS,它实现了一些额外的安全加固（<a href="https://en.wikipedia.org/wiki/Hardening_(computing)">security hardening</a> ）和隐私实现：GrapheneOS also comes with full firmware updates and signed builds, so verified boot is fully supported.</p>
+<p>具体的全部安全特性可查看：<a href="https://grapheneos.org/features">Features overview | GrapheneOS</a></p>
+<p>同时它也支持沙盒化的Google Play（关于如何以匿名用户，不用google框架下载google play商店的app我会在后文写出）。</p>
+<h2 id="选择手机">选择手机</h2>
+<p>因为官方指南中提到“Google Pixel phones are the only devices that currently meet GrapheneOS's <a href="https://grapheneos.org/faq#device-support">hardware security requirements</a>.“，所以我选择了Google pixel，因为经济原因，不考虑买最新的pixel。看了很多评测视频，总结如下：</p>
+<ul>
+<li>
+<p>pixel 4 系列是性价比最高的机型 ，便宜（</p>
+</li>
+<li>
+<p>pixel 5 系列支持5G，支持指纹解锁，若是主用机则可考虑</p>
+</li>
+</ul>
+<p>购买我选择了某海鲜市场，这里注意，一定要避开运营商版本的，例如Verizon版的。买了运营商版本的，基本等于白买，是无法开启OEM锁的。</p>
+<p>这里我第一次踩坑，买了5发现OEM打不开，又买了4xl （<s>而且想到日用机被什么微信和健康宝被迫绑定</s>)</p>
+<p>手感的话，pixel 5 其实对于手小的我来说更好，手感体验也更好，同时支持指纹解锁。</p>
+<h2 id="开装系统">开装系统</h2>
+<p>装系统推荐使用GrapheneOS的web installer，真的特别简单，简单点几下就可以</p>
+<p>注意安装前一定要确保：</p>
+<ul>
+<li>OEM可开</li>
+<li>BL（bootloader）可解</li>
+<li>最好是c2c线，如果没有，一定要保证一根质量不错的a2c线</li>
+</ul>
+<p>指南见：<a href="https://grapheneos.org/install/web">Web installer | Install | GrapheneOS</a></p>
+<h3 id="安装完成后">安装完成后</h3>
+<p>首先推荐一个网站叫做 Alternativeto ，用于提供可以替换的同类型网站/APP</p>
+<p>还有其他一些推荐的，例如：</p>
+<ul>
+<li>
+<p>Aurora store ：</p>
+<ul>
+<li>会提供一个匿名帐号。可下google play内的任意app，下载前可设置”伪装“，伪装成任一机型和语言</li>
+</ul>
+</li>
+<li>
+<p>andOTP：</p>
+<ul>
+<li>手机两步验证</li>
+</ul>
+</li>
+<li>
+<p>NewPipe：</p>
+<ul>
+<li>开源youtube客户端，感觉比youtube好用很多。目前用好像不支持帐号登录，但是支持”订阅“</li>
+</ul>
+</li>
+<li>
+<p>F-Droid</p>
+<ul>
+<li>开源app应用商店，这个搞机的貌似都知道</li>
+</ul>
+</li>
+</ul>
+<h2 id="reference">Reference:</h2>
+<ul>
+<li>
+<p><a href="https://www.privacyguides.org/android/">Android - Privacy Guides</a></p>
+</li>
+<li>
+<p><a href="https://grapheneos.org/install/web">Web installer | Install | GrapheneOS</a></p>
+</li>
+<li>
+<p>https://www.youtube.com/watch?v=hrDUOtWXGv8</p>
+</li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/jwt-crack-zong-jie/">
+              <h3 class="post-title">
+                下一篇：JWT Crack总结 （一）
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

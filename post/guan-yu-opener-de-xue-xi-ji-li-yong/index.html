@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>关于opener的学习及利用 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">关于opener的学习及利用</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-08-27</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/U0Z0LJAyk7/">
+                    XSS
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/ZSxJIWHH2y/">
+                    技术阅读
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="windowopener-学习">window.opener 学习</h1>
+<p>[15:40]</p>
+<p>关于window.opener的补充学习：</p>
+<p><a href="https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-2-7810ebfccc1d%5D(https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-2-7810ebfccc1d)"></a></p>
+<p>还是从part1开始读起吧（</p>
+<p>学习的过程偶尔会发愁，遇到很多英文，我还是一个头两个大。但是还是啃吧）：</p>
+<p>part1：<a href="https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-1-c6be37701cab">https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-1-c6be37701cab</a></p>
+<p>和视频补充学习：<a href="https://www.youtube.com/watch?v=veXDFx2qJBk">https://www.youtube.com/watch?v=veXDFx2qJBk</a></p>
+<p><strong>part1介绍的内容：</strong></p>
+<ul>
+<li>opener 变量 以及如何与同源政策相关联。</li>
+<li>该变量如何呗滥用以实现接近客户端重定向</li>
+</ul>
+<p><strong>part2介绍的内容：</strong></p>
+<ul>
+<li>在part1概念的基础上探讨新型XSS向量</li>
+</ul>
+<p><strong>part3介绍的内容：</strong></p>
+<ul>
+<li>来混淆一些有趣的跨窗口<code>eval</code> 函数 从而在第四部分讨论通用XSS的问题</li>
+</ul>
+<h1 id="part-1">Part 1</h1>
+<h2 id="introducing-the-windowopener-variable">Introducing the window.opener variable</h2>
+<p>open 函数通常被用于在弹出的窗口中打开一个URL。这个函数经常被不良的网站打开烦人或恶意的广告，但是同样也有合法的使用。当你调用open函数，浏览器自动在新窗口中赋值一个变量指向打开该窗口的源窗口。这个变量自然地称作”opener‘</p>
+<!-- more -->
+<p>其中之一的opener变量的合法使用是让单点登录函数无需离开当前页面。这个过程像这样：</p>
+<p>（Notion不支持gif，见原始网页）</p>
+<figure data-type="image" tabindex="1"><img src="https://i.loli.net/2021/08/27/MhPyvB1ex254aJw.png" alt="Untitled" loading="lazy"></figure>
+<p>上面的动画有一组有趣的事情值得注意：</p>
+<ol>
+<li><code>oepner</code>变量在被右边弹出窗口的第一个域名时就被赋值了（opener指向原始window），并一直<strong>持续</strong>到新页面的加载（‘https://singlesignonprov…’ -&gt; ‘http://xss.vg?token=abc…’) 这不同于大多数javascript的变量：通常他们不会持续到当前窗口加载新页面。</li>
+<li>单点登陆重定向到original domain是在利<code>opener</code> 变量与original window交互之前的。The single sign-on provider redirects back to the original domain before utilising the opener variable to communicate with the original window</li>
+</ol>
+<p>为什么单点登陆不提供简单的<code>opener</code>变量去发送登陆token重定向到original window，像<code>opener.token</code> ?因为这个违背同源政策。</p>
+<h2 id="the-same-origin-policy-and-pop-up-windows">The same origin policy and pop-up windows</h2>
+<p>要利用opener变量在另一个window中进行更改，任何windows都要满足以下三个检查：</p>
+<ol>
+<li>Same domain (e.g. tsscyber.com.au)</li>
+<li>Same URL scheme (e.g. HTTP, HTTPS, FTP etc)</li>
+<li>Same port (usually 80 for HTTP and 443 for HTTPS)</li>
+</ol>
+<p>如果你跳过了三个检查你就跳过了同源政策，浏览器将允许javascript去在windows之间执行（同样的检查被用于javascript与iframes或其他嵌入内容进行交互）</p>
+<p>例如，假设你是一个坏家伙，你构建了一个恶意网站（<a href="http://xss.vg/">http://xss.vg:80</a> in this example)，当有人浏览你的网站时，Javascript将打开弹出的窗口，然后将受害者的gmail账户加载进opener。你的恶意javascript尝试用<code>opener.document.body.innerHTML</code> 读取受害者的邮件或类似的事情。</p>
+<p>不幸的是，用<code>opener</code>变量读去gmail所在窗口的数据违背了全部的三个同源政策。而且浏览器安全控制将阻止未授权的访问。</p>
+<h2 id="same-origin-check-example"><strong>Same origin check example</strong></h2>
+<p><em>http://xss.vg:80</em> <strong>VS</strong> <em>https://mail.google.com:443</em></p>
+<ol>
+<li>Domain: xss.vg != mail.google.com</li>
+<li>URL Scheme: HTTP != HTTPS</li>
+<li>Port: 80 != 443</li>
+</ol>
+<h2 id="safecross-domain-operations">’Safe‘cross-domain operations</h2>
+<p>你能够读取修改跨域窗口这很明显是一个安全问题，这有一组函数和方法是由浏览器提供的尽管同源检查是失败的。以下是我所知道的安全跨域 操作/函数：</p>
+<ol>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/blur">blur</a> — shifts focus away from the window</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/close">close</a> — closes the window (but only if it was opened by JavaScript)</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/closed">closed</a> — indicates if the windows was closed</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/focus">focus</a> — focuses the window (but doesn’t always focus the window…)</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/frames">frames</a> — same as <em>opener</em></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/length">length</a> — the number of iframes in the <em>opener</em></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/location">location</a> — write-only access to the <em>opener’s</em> URL</li>
+<li>opener — the <em>opener’s opener</em> (or null if it doesn’t have one)</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/parent">parent</a> — gets the <em>opener’s</em> parent window (which might be itself)</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage</a> — the safe way to do cross origin communication</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/self">self</a> — I’m not entirely sure on the usage of this one. Is apparently useful for web workers</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/top">top</a> — the <em>opener’s</em> top window (which might be itself)</li>
+</ol>
+<p>Of these 12 safe cross-domain operations/variables, number 7: ‘location’ and the ability to access the opener’s iframes is of particular interest.</p>
+<h2 id="messing-with-cross-origin-locations">Messing with cross-origin locations</h2>
+<p>首先潜在的问题需要想到的是通过将opener的location值改为javascript或者Data URI来获得写权限。我们上面的例子中，以下命令达到了同样的效果：</p>
+<pre><code class="language-jsx">opener.secretValue
+opener.location = 'javascript:window.secretValue' //note the use of window.secretValue here as opposed to opener.secretValue as the goal is for the JavaScript to run in the context of the opener's window
+</code></pre>
+<p>注意，这里location是<code>window.scretValue</code>而不是<code>opner.scretValue</code>  是因为当前javascript运行的上下文在opener的窗口（原）</p>
+<p>幸运的是浏览器已经想到这个变量而且这个命令会造成安全性报错。等同于的功能用URI实现像这样：</p>
+<pre><code class="language-jsx">opener.location = 'data:text/html,&lt;script&gt;window.secretValue&lt;/script&gt;'
+</code></pre>
+<p>但是，这里有两个问题。</p>
+<p>第一，URI结构造成了opener指向的window去重载导致所有用户定义的变量重置为了<code>undefined</code>  （例如，window.secretValue丢失了）。将当前窗口的上下文的域名变为弹出窗口的上下文（this is opposed to a JavaScript URI which doesn’t always cause the window to reload/change context）</p>
+<p>第二，大多浏览器禁用顶层窗口被导航到URI数据。如果你尝试这个导航在Chrome不会发生任何事情（一个报错信息会在console中打印），在firefox中造成了窗口关闭（也许是bug）</p>
+<p>你仍然被允许用data URIs在被嵌入的目标中（例如一个iframe）。由于我们可以访问<code>opener.length</code>  ，我们可以知道我们打开的窗口是否包含任何iframes。你可以用index来获得iframe，例如 <code>var openersFirstIframe = opener[0]</code>  将会获得opner所在窗口的第一个iframe。然而，尝试跨域设置iframe的location会因为浏览器的安全规则拒绝。除非你在opner本身所在或者是它的parent。</p>
+<p>即使浏览器已阻止了XSS利用location的能力，你仍然可以导航opener去任何你想去的域名（例如<code>opner.location='http://xss.vg'</code> ) 这是一种客户端的重定向，恶意网站能够劫持另一个window/tab的导航来强迫用户浏览制定网站（有趣的是，在写这个的时候，chrome禁止了在用户导航到另一个页面后，改变opener的location。这一步在我看来是朝着正确的方向）</p>
+<p>我见过有程序用半合法化的方式去绕过弹出限制，看起来弹出窗口阻止程序对于弹出窗口的合法（或是否垃圾邮件）性有一些启发式看法。所以一些网站加载自己到弹出窗口中，而将原始窗口导航到广告网站。这个欺骗了弹出窗口组织程序，因为弹出的窗口不包含垃圾信息，但原始网站有。</p>
+<h2 id="the-story-so-far">The story so far</h2>
+<p>到目前为止我们已经讨论了弹出窗口和opener变量。我们看到了浏览器实现了安全控制：基于同源控制阻止javascript执行发生在windows之间。除了a poor person’s client side open redirect issue，opener变量看起来能够安全使用且避免邪恶用途。part2将扩展我们的知识：如何我们用新的变量实现XSS。</p>
+<h1 id="part2">part2</h1>
+<p>tldr;<code>opener.location.*</code> 和 <code>onhashchange</code> 事件都是XSS向量。都存在于旧版本的reveal.js中。</p>
+<p>这是四部分中的第二部分：探索与弹出窗口相关连的安全概念和javascript opner变量。这部分假设你已阅读过第一部分。在第一部分我们总结了唯一的安全问题与opener相关连的是poor-mans 客户端开放重定向。</p>
+<h2 id="openerlocation-dom-xss">opener.location DOM XSS</h2>
+<p>我们的目标是滥用我们对于location变量的控制去欺骗客户端javascript以执行我们控制js命令。一个很明显的且有名的方式是location值能够在 application以不安全的方式注入它的值时被 滥用。例如，以下的javascript片段创建了一个a标签：源自window的当前location</p>
+<pre><code class="language-jsx">document.body.innerHTML = &quot;&lt;a href='&quot; + window.location + &quot;/nextPage'&gt;unsafe!&lt;/a&gt;&quot;
+</code></pre>
+<p>特制的URL能够实现XSS，例如</p>
+<pre><code class="language-jsx">http://xss.vg/'onClick='alert(1)
+</code></pre>
+<p>将会被DOM树呈现：</p>
+<pre><code class="language-jsx">&lt;a href=&quot;http://xss.vg/&quot; onClick=&quot;alert(1)&quot; nextpage=&quot;&quot;&gt;unsafe!&lt;/a&gt;
+</code></pre>
+<p>要注意到href标签如何变成<code>http://xss.vg</code> 以<code>onClick</code></p>
+<p>javascript handler被作为额外的标签属性被注入进去的。(If this makes no sense to you I suggest you go and read up about XSS Basics and DOM based XSS).</p>
+<p>如果我们改变了这段javascript片段为opener呢？它仍然存在漏洞么？</p>
+<pre><code class="language-jsx">document.body.innerHTML = &quot;&lt;a href='&quot; + opener.location + &quot;/nextPage'&gt;unsafe!&lt;/a&gt;&quot;
+</code></pre>
+<p>当我们用我们的恶意URL尝试上面的片段，我们获取了关于opener变量不存在的报错。</p>
+<figure data-type="image" tabindex="2"><img src="https://i.loli.net/2021/08/27/nCvJDWT69LzOYxS.png" alt="Untitled" loading="lazy"></figure>
+<p>解决这个问题我们需要确保javascript尝试使用它之前去定义opener变量。最明显的方法是用open函数填充变量以加载恶意URL。但，</p>
+<ul>
+<li>不具备执行javascript能力的有易受攻击页面上如何运行open方法</li>
+<li>如何欺骗受害者访问我们的控制的页面，以及如何从我们自己的网站调用open方法</li>
+</ul>
+<p>但是这些也行不通，因为易受攻击的网站尝试去从我们的网站读location的值时，这个行为会因为违背同源政策而被浏览器阻止。（bad site是opener，然后对方网站读取opener.location)</p>
+<p>这里有两个方法能够解决我们的同源政策问题。</p>
+<p>用<code>_self</code>  关键字能够让我们打开恶意链接时，让opener指向我们自己的窗口。</p>
+<p><code>_self</code> 标签将导致URL被当前窗口加载并会填充opner变量。当易受攻击的javascript遇到<code>opener.location</code> 变量时就相当于是<code>window.location</code> 。于是我们的XSS攻击像这样：</p>
+<pre><code class="language-jsx">open(&quot;http://xss.vg/'onClick='alert(1)&quot;, &quot;_self&quot;)
+</code></pre>
+<p>这个策略在chrome和firefox中有用，edge无用，在edge下，即使用<code>_self</code> 加载了新页面但是也不会填充opener变量。在edge下生效，需要一些小技巧（混淆）</p>
+<p>我们的目标不是完全的绕过同源政策，this would be a zero day in the browser’s security model。相反，我们需要对窗口进行一些设置使得他们满足同源政策。我们需要：</p>
+<ul>
+<li>bad site open bad site（满足同源政策）、</li>
+<li>修改opener所在的location为payload</li>
+<li>修改opener定义处所在窗口的location目标域名（到此步满足同源政策）</li>
+</ul>
+<h2 id="onhashchange-event-xss">onhashchange event XSS</h2>
+<p>有一个经常被客户端的javascript使用的URL元素是<code>location.hash</code> ，如果我们尝试给跨域窗口设置hash，浏览器安全控制将介入并阻止我们。</p>
+<figure data-type="image" tabindex="3"><img src="https://i.loli.net/2021/08/27/z9dtGSx5Vq4MemQ.png" alt="Untitled" loading="lazy"></figure>
+<p>如果我们间接地将hash值包含在完整的URL中我们可以设置hash，像这样：</p>
+<pre><code class="language-jsx">opener.location = &quot;http://xss.vg/#HashValueHere&quot;;
+</code></pre>
+<p>关于hash片段，一个有趣的是，当它是URL的一部分时，改变它并不能触发页面重载。</p>
+<p>以下三个url后两个都会导致页面重载。第一个会触发onhashchange事件。</p>
+<pre><code class="language-jsx">location = location + &quot;#first&quot; //doesn't trigger a page reload, will focus the element with the id 'first' if it exists and trigger an onhashchange event
+location = location + &quot;/oops&quot; //causes the page to reload as the pathname has changed
+location = location + &quot;?oops&quot; //causes the page to reload as the search (query string) has changed
+</code></pre>
+<p>如果我们在opener的location做同样的事情会怎么样呢？</p>
+<p>如下，最后一个会触发onhanshchange。只有第一个会被阻止报错。</p>
+<pre><code class="language-jsx">opener.location = opener.location + &quot;#first&quot; //error, we aren't allowed to read the value of opener.location
+opener.location = &quot;http://vulnsite/&quot; //this is ok
+opener.location = &quot;http://vulnsite/#hash change&quot; //triggers onhashchange event on the opener's window!
+</code></pre>
+<p>一些网站会监控hash值，以在application中作出对应的逻辑判断。例如，在gmail中，gmail会在实现查询邮件的时候用hash值</p>
+<figure data-type="image" tabindex="4"><img src="https://i.loli.net/2021/08/27/ne1Fl3Asvqt8OpM.png" alt="Untitled" loading="lazy"></figure>
+<p>能够在gmail进行跨域搜索并不会让攻击者能够做任何邪恶的事情。但，这个并不是XSS。虽然一个域的javascript会导致另一个域的做一些事情，但我们无法在gmail域中执行一些额外的javascript命令。下面是一个简单的script片段，将会导致你的gmail实现跨域改变hash</p>
+<pre><code class="language-jsx">index = 0; 
+setInterval(function() {  
+    var hash = 'you+have+been+hacked++++++';  
+    var url = &quot;https://mail.google.com/mail/u/0/#search/&quot; + hash.substr(0, index++ % hash.length);  
+    open(url,'gmailPopup') 
+},1000)
+</code></pre>
+<p><code>open(url,'gmailPopup')</code> 函数的第二个参数gmailPopup是用来给弹出窗口命名的。通过此参数，浏览器会首先检查是否有叫gmailPopup的窗口存在，如果存在，会设置location的值为第一个参数下的url而不是创建一个新的弹出窗口。这个很重要，如果每次都创建新的弹出窗口，每个窗口都会有不同的hash值。而只有一个窗口意味着你只需改变一个现存窗口的hash值。</p>
+<p>为什么我们要改变hash值而不是加载有特定hash值的窗口？因为这样我们能够用我们控制的hash值在window中触发<code>onhashchange</code> 事件。思考以下javascript片段：用hash值的改变去聚焦页面的不同元素：</p>
+<pre><code class="language-jsx">location.hash = &quot;&quot;;
+$(window).on('hashchange', function() {
+  $(location.hash.split('#')[1]).focus();
+});
+</code></pre>
+<p>对于以上的代码，只改变location（[<code>http://vulnerable/#](http://vulnerable/#)&lt;img src=x onerrer=alert() /&gt;</code> ）是不够的，还需要触发hash值的改变。你可以像这样：</p>
+<pre><code class="language-jsx">var payload = &quot;#&lt;img src=x onerror=alert()/&gt;&quot;;
+open(vulnerablePage, &quot;popup&quot;)
+//give the vulnerable page a few seconds to fully load before changing the hash value
+setTimeout(function() { open(vulnerablePage + payload, &quot;popup&quot;);
+    }, 2000);
+</code></pre>
+<p>这变得更加有趣，因为甚至很多开发者都会忽略掉这个安全问题。</p>
+<h2 id="example-of-unsafe-opener-usage-revealjs">Example of unsafe opener usage — Reveal.js</h2>
+<p>在这个阶段你可能在想：这样的代码真的存在么？我也是这样想的，然后通过谷歌搜索发现旧版的<code>reveal.js</code> 有着基于DOM的XSS问题：通过使用<code>opener.location</code> 变量在presenter notes functionality (versions prior to v2.6.0).以下是这个易受攻击的代码行：</p>
+<p><a href="https://github.com/hakimel/reveal.js/blob/4164200474e2af27803dc7683054f5443743c8a9/plugin/notes/notes.html#L142">https://github.com/hakimel/reveal.js/blob/4164200474e2af27803dc7683054f5443743c8a9/plugin/notes/notes.html#L142</a></p>
+<pre><code class="language-jsx">document.write( '&lt;iframe width=&quot;1280&quot; height=&quot;1024&quot; id=&quot;current-slide&quot; src=&quot;'+ window.opener.location.href +'&quot;&gt;&lt;/iframe&gt;' );
+</code></pre>
+<p>对于这段代码，XSS攻击有一些难度：我们需要逃逸src属性下的双引号（“）。</p>
+<p>在URL编码中，双引号是 %22,同样的，&lt;和&gt;也是要编码。URL像这样</p>
+<pre><code class="language-jsx">http://xss.vg/&quot;&gt;&lt;/iframe&gt;&lt;script&gt;alert()&lt;/script&gt;
+</code></pre>
+<p>在HTML中会变成这样：</p>
+<pre><code class="language-jsx">&lt;iframe width=&quot;1280&quot; height=&quot;1024&quot; id=&quot;current-slide&quot; src=&quot;http://xss.vg/%22%3e%3c/iframe%3e%3cscript%3ealert()%%3c/script3e&quot;&gt;&lt;/iframe&gt;
+</code></pre>
+<p>这是XSS安全的。然而，同一时间，我发现了这个问题<code>**hash</code> 在chrome和edge中是不会被URL编码的。**</p>
+<p>所以以下的url</p>
+<pre><code class="language-jsx">http://xss.vg/#&quot;&gt;&lt;/iframe&gt;&lt;script&gt;alert()&lt;/script&gt;
+</code></pre>
+<p>将会变成</p>
+<pre><code class="language-jsx">&lt;iframe width=&quot;1280&quot; height=&quot;1024&quot; id=&quot;current-slide&quot; src=&quot;http://xss.vg/#&quot;&gt;&lt;/iframe&gt;&lt;script&gt;alert()&lt;/script&gt;&quot;&lt;/iframe&gt;
+</code></pre>
+<p>alert()的XSS会被出发。在写作的同一时间，chrome改变了hash不进行编码的问题。但是edge和explorer仍然存在这个问题。</p>
+<h2 id="the-story-so-far-2">The story so far</h2>
+<p>目前为止，我们讨论了弹出窗口和opener变量。我们看到浏览器一些安全控制像同源政策去阻止javascript在两个窗口之间执行。但是</p>
+<p><code>opener.location</code> 变量能够被用于XSS向量，而且出发onhashChange事件。第三部分：Join me in part three (coming soon) as we play around with cross-window eval.</p>
+<p>然后发现并没有part3，作者鸽了。。。pAq</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/guan-yu-mu-lu-bian-li-lou-dong-zhong-fei-biao-zhun-bian-ma-c02f-he-c0af-jun-neng-dai-biao-qie-jun-zai-lou-dong-zhong-sheng-xiao-de-yuan-li-tan-suo/">
+              <h3 class="post-title">
+                下一篇： 关于目录遍历漏洞中，非标准编码%C0%2F和%C0%AF均能代表/，且均在漏洞中生效的原理探索
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

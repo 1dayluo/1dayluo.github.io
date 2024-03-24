@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>java RMI（Remote Method Invocation） | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">java RMI（Remote Method Invocation）</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-04-15</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>笔记来源：</p>
+<ul>
+<li><a href="https://is4b3lla3.github.io/2020/06/27/Java%20RMI%E5%AD%A6%E4%B9%A0/#%E8%BF%9C%E7%A8%8B%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8">https://is4b3lla3.github.io/2020/06/27/Java RMI学习/#远程方法调用</a></li>
+</ul>
+<p>文章中jndi的部分就不做笔记了，打算改天单独学习一下。</p>
+<h2 id="基础">基础</h2>
+<h3 id="基础概念">基础概念</h3>
+<ol>
+<li>
+<p>Java RMI（java Remote Method invocation)： 实现远程过程调用的应用程序编程接口，可远程调用服务器上的对象</p>
+</li>
+<li>
+<p>RMI：允许在一个java虚拟机的对象，调用 运行在另一个java虚拟机上的对象。两个虚拟机可以是：</p>
+<ol>
+<li>相同计算机不同进程</li>
+<li>网络上不同计算机</li>
+</ol>
+</li>
+<li>
+<p>RMI传输对象是通过序列化方式进行编码传输的（可能存在反序列化漏洞)</p>
+</li>
+<li>
+<p>RMI的基础是接口，RMI定义接口和具体实现是分开的</p>
+</li>
+</ol>
+<h3 id="rmi包含部分">RMI包含部分（？</h3>
+<p>RMI能远程调用方法，包含：</p>
+<ol>
+<li>远程服务的接口定义</li>
+<li>远程服务接口的具体实现</li>
+<li>存根（Stub）和骨架（Skeleton）文件</li>
+<li>一个允许远程服务的服务器</li>
+<li>一个RMI命名服务，它允许客户端去发现这个远程服务</li>
+<li>类文件的提供者（一个HTTP或FTP服务器）</li>
+<li>一个需要这个远程服务的客户端程序</li>
+</ol>
+<h3 id="rmi注册表">RMI注册表</h3>
+<p>JDK提供了一个RMI注册表（RMIRegistry，是一个远程对象），默认监听 <code>1099</code> 端口。</p>
+<p>其中，</p>
+<p>服务端：向RMI注册表中注册远程对象</p>
+<p>客户端：向RMI注册表查询某个远程对象的名称，来获取远程对象的 <code>Stub</code></p>
+<p><strong>启动方式：</strong></p>
+<ul>
+<li>使用代码启动RMIRegistry</li>
+<li>使用 <code>rmiregisry</code> 命令</li>
+</ul>
+<p><strong>如何注册远程对象？</strong></p>
+<p>需要RMI URIL 和 远程对象的引用</p>
+<h3 id="stub-和-skeleton-的定义"><code>Stub</code> 和 <code>Skeleton</code> 的定义</h3>
+<p>确保已知RMI注册表的概念，实现 <code>Stub</code> 和 <code>Skeleton</code> 的前提是远程对象必须实现 <code>java.rmi.server.UniCastRemoteObject</code> 类</p>
+<p><strong>基础概念</strong></p>
+<p><code>stub</code> 的概念： 远程对象把自身的拷贝以Socket的形式传给客户端，这个拷贝成为 <code>stub</code> （存根），可以用于服务端通信</p>
+<p><code>Skeleton</code> 的概念：服务端本身已存在的远程对象。可以用于接受客户端请求，并调用远程方法相应客户端的请求。</p>
+<p><strong><code>stub</code> 的获取</strong></p>
+<p>客户端向RMI注册表查询某个远程对象名称，从而获取远程对象的 <code>stub</code></p>
+<p><strong>相关的通讯：</strong></p>
+<p>如图，个人理解为：stub在客户端，skeleton在服务端，然后与另一端通讯时必须要通过stub/skeleton，相当于代理的作用。</p>
+<figure data-type="image" tabindex="1"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled20220415.png" alt="Untitled" loading="lazy"></figure>
+<h3 id="rmi通讯协议">RMI通讯协议</h3>
+<p>通信协议为RMP(java Remote Message Protocol），协议要求客户端，服务端都用java编写，在RMI中通过<strong>序列化方式</strong>进行编码传输</p>
+<p>总结一下</p>
+<p>远程服务器：</p>
+<ul>
+<li>代码实现：
+<ul>
+<li>实现具体java方法</li>
+<li>提供接口</li>
+</ul>
+</li>
+<li>RMI注册表：
+<ul>
+<li>向RMI注册表中注册远程对象</li>
+</ul>
+</li>
+</ul>
+<p>客户端：</p>
+<ul>
+<li>代码实现：
+<ul>
+<li>根据接口定义，提供相应参数</li>
+</ul>
+</li>
+<li>RMI注册表：
+<ul>
+<li>向RMI注册表查询对象名称，获取对象 <code>Stub</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="构造一个java-rmi-之-服务端">构造一个java RMI 之 服务端</h2>
+<p>这里的示例为RMI直接绑定远程对象，除此之外还可以用RMI通过 <code>References</code> 绑定一个外部的远程对象（当前名称目录系统之外的对象）</p>
+<p>客户端lookup() 查找远程对象时，客户端会获取 <code>object</code> <code>factory</code> 。jndi+rmi就是外部实体调远程对象</p>
+<h3 id="定义接口接口实现-服务端">定义接口&amp;接口实现 : 服务端</h3>
+<p>Step 1：<strong>定义远程接口</strong></p>
+<p>服务端，自定义一个远程接口 <code>clock.java</code></p>
+<pre><code class="language-java">import java.rmi.Remote
+import java.rmi.RemoteException
+
+public interface Clock extends Remote{
+	String Hello() throws RemoteException;
+}
+</code></pre>
+<p>在这里，我们：</p>
+<ul>
+<li>定义远程服务接口（interface)</li>
+<li>远程接口把必须继承 <code>Remote</code></li>
+<li>远程方法必须抛出  <code>RemoteException</code></li>
+</ul>
+<p>Step 2：<strong>远程接口的实现</strong></p>
+<p>远程对象必须直接或间接实现服务端接口，示例代码如下：</p>
+<pre><code class="language-java">import java.rmi.RemoteException
+
+public class ClockImpl implements Clock {
+	@overide
+	public String Hello() throws RemmoteException {
+		return &quot;Hello RMI&quot;;
+	}
+	//无参构造方法
+	public ClockImpl() throws RemoteException {}
+}
+</code></pre>
+<h3 id="rmi注册表的构造-服务端">RMI注册表的构造 ： 服务端</h3>
+<p><strong>Step1： 使用</strong> <code>RMIRegistry</code> 向远程服务获取stub</p>
+<p>使用 <code>LocateRegistry.getRegistry()</code> 给指定的主机和端口本地创建一个 <code>Stub</code> 对象作为 <code>Registry</code>远程对象的代理。</p>
+<pre><code class="language-java">Clock impl = new ClockTmpl();
+LocateRegistry.createRegistry(1099); //服务端监听端口
+Registry registry = LocateRegistry.getRegistry(); //服务端远程通信端口
+registry.bind(&quot;Clock&quot;,stub);
+
+</code></pre>
+<p><strong>Step 2：继承/构造方法中调用 <code>UnicastRemoteObject</code> 类</strong></p>
+<p><code>UnicastRemoteObject</code> 类主要用于系统动态生成stub和skeleton代理，如果没有继承 <code>UnicastRemoteObject</code> ，可在构造方法中继承：</p>
+<pre><code class="language-java">public ClockImpl() throws RemoteException{
+    UnicastRemoteObject.exportObject(this, 1099);
+    }
+</code></pre>
+<p>使用new触发构造方法，其中红框圈住的为Step1部分的代码</p>
+<p>![Untitled](https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled 120220415.png)</p>
+<p><strong>Step3：</strong> 启动远程服务所在jvm线程</p>
+<h2 id="构造一个java-rmi-之-客户端">构造一个java RMI 之 客户端</h2>
+<p>客户端代码如下；</p>
+<p>![Untitled](https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled 220220415.png)</p>
+<p>对于客户端而言，服务端返回值也可能是一些子类的对象实例，而客户端并没有这些子类的class文件</p>
+<h2 id="jndi-rmi">JNDI &amp; RMI</h2>
+<p>JNDI( Java Naming and Directory Interface) 应用程序接口，用于为开发查找各和访问各种资源提供了统一的通用接口。可以用来定位网络中的物理设备。**JNDI底层支持RMI（**可以将RMI URL作为参数传入）</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/aws/">
+              <h3 class="post-title">
+                下一篇：AWS 
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

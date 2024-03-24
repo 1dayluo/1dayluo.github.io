@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Struts2 s2-001 学习笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Struts2 s2-001 学习笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-04-09</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                    笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/ixnl6xCyBJ/">
+                    java漏洞
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="struts2-s2-001-学习笔记">Struts2 s2-001 学习笔记</h1>
+<p>notion阅读版:https://cubic-brace-c93.notion.site/Struts2-s2-001-1629a6906fba4d7f96659221cff4481a</p>
+<p>希望我的学习经验能对和我一样想入门的java小白起到帮助~</p>
+<h2 id="部署调试">部署&amp;调试</h2>
+<aside>
+💡 需要提前配好IDEA下载jar依赖：File -> Setting ->Maven ->Importing：选中Automatically download中的两个多选框Sources和Documentation
+</aside>
+<p>❗备注：前两种remote及docker部署方式有坑，尚未解决</p>
+<h3 id="部署漏洞环境">部署漏洞环境</h3>
+<p>我使用vulhub，到struts2目录下 <code>docker-compose up -d</code></p>
+<p>调试我使用的IDEA，第一次使用这个工具，不是很熟悉。做了一些笔记。</p>
+<h3 id="普通远程调试">普通远程调试</h3>
+<p><strong>直接configuration创建remote</strong></p>
+<p>远程调试的条件:</p>
+<ol>
+<li>本地需要拥有代码文件（注意lib下的jar文件需要导入）</li>
+<li>远程java版本与project Structure内的java版本保持一致</li>
+<li>修改java程序启动命令，增加调试支持</li>
+</ol>
+<p>如果是docker内部的还需要：</p>
+<ol>
+<li>开放调试端口</li>
+<li>docker中拖出的class或jar添加为库（？</li>
+<li>查看启动命令：进入docker容器，使用 <code>ps</code> 等找到java程序启动方法。或者使用 <code>docker-compose up -d</code> 后使用 <code>docker ps --no-trunc</code> 查看默认启动命令</li>
+<li>修改启动对应docker配置</li>
+</ol>
+<p>这个子标题下我的参考/笔记：</p>
+<blockquote>
+<p>一篇不错的博文<br>
+<a href="https://ares-x.com/2020/04/20/IDEA%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95Docker%E4%B8%AD%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%96%B9%E6%B3%95/">https://ares-x.com/2020/04/20/IDEA远程调试Docker中程序的方法/</a></p>
+</blockquote>
+<h3 id="补充关于docker镜像调试">补充关于：Docker镜像调试</h3>
+<p><strong>直接configuration创建docker</strong></p>
+<aside>
+💡 **JAVA_TOOL_OPTIONS**:For Java versions prior to 8 the variable was called **JAVA_OPTS**
+</aside>
+<p>也可以直接IDEA连docker镜像调试（需要本地有代码+dockerfile）</p>
+<ul>
+<li>开放远程调试端口</li>
+<li>配置：docker文件设置允许JWDP（<em>Java Debug Wire Protocol</em><br>
+）的选项,eg: <code>ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</code></li>
+</ul>
+<p>以下是我的参考/笔记</p>
+<blockquote>
+<p>一份官方文档：<a href="https://www.jetbrains.com/help/idea/docker.html#interacting-with-containers">https://www.jetbrains.com/help/idea/docker.html#interacting-with-containers</a><br>
+一篇不错的博文：<br>
+<a href="https://medium.com/swlh/remote-debugging-a-java-application-running-in-docker-container-with-intellij-idea-efe54cd77f02">https://medium.com/swlh/remote-debugging-a-java-application-running-in-docker-container-with-intellij-idea-efe54cd77f02</a></p>
+</blockquote>
+<h3 id="本地调试">本地调试</h3>
+<p>需要在本地安装tomcat，然后configuration添加tomcat，选择tomcat server</p>
+<p>要注意的一些配置：</p>
+<ul>
+<li>java version：1.8</li>
+<li>IDEA需要提前配置好Tomcat和Maven环境</li>
+<li>Configuration选择自己本地的tomcat路径</li>
+<li>tld文件如果没有被识别出来，需要配置tomcat下的 <code>[catalin.properties](http://catalin.properties)</code> (文章点击<a href="https://blog.nowcoder.net/n/0f9f61f7a722490d9ac157adca1803d2">这里</a>）如果没有生效(看<a href="https://blog.chiyu.monster/?p=83">这篇</a>文章），需要解压缩文件并配置web.xml</li>
+</ul>
+<p>步骤/踩的坑：</p>
+<ol>
+<li>File -&gt; Project Structure 设置 Project SDK</li>
+<li>Modules → Import Module 把目录以Maven Module来添加</li>
+<li>Modules → 选择刚创建的Module，新建 <code>Framework</code> 下的web</li>
+<li>configuration tomcat → Deployment → 添加Artifacts</li>
+</ol>
+<p>虽然踩了坑 但是最后终于解决了🥲 debug好耶</p>
+<p>参考：</p>
+<blockquote>
+<p><a href="https://cloud.tencent.com/developer/article/1598043">https://cloud.tencent.com/developer/article/1598043</a><br>
+这个相对全而且是针对Struts2的<br>
+<a href="https://kingx.me/Struts2-S2-052.html">https://kingx.me/Struts2-S2-052.html</a><br>
+如果环境有问题看这篇文章参考细节：<br>
+<a href="https://www.jianshu.com/p/a787a3689d68">https://www.jianshu.com/p/a787a3689d68</a></p>
+</blockquote>
+<h2 id="小白学基础">小白学基础</h2>
+<h3 id="基础关于目录">基础：关于目录</h3>
+<ul>
+<li>javaweb下WEB-INF目录：是javaweb的安全目录（只有服务端能够访问）
+<ul>
+<li>WEB-INF/classes：源代码位置</li>
+<li>WEB-INF/lib: 存放需要的jar文件，例如数据库驱动</li>
+<li>META-INF：在用jar打包时自动生成</li>
+</ul>
+</li>
+</ul>
+<h3 id="基础tld">基础：tld</h3>
+<p>学习大纲</p>
+<ol>
+<li>什么是tld文件</li>
+<li>tld文件结构，以及<tag-class>，<short-name></li>
+<li>tld文件在jsp文件中的对应，uri，自定义标签（short-name)</li>
+<li>针对<tag-class>，对应的标签处理类： <code>TagSupport</code> , <code>BodyTagSupport</code></li>
+<li>继承 <code>TagSupport</code> 或 <code>BodyTagSupport</code> 后要重写的方法
+<ol>
+<li><code>TagSupport</code> : <em>doStartTag</em>,处理<strong>头标签</strong>，返回int （可以在这里构造将要输出到页面的代码）
+<ol>
+<li>为 <code>EVAL_BODY_INCLUDE</code> （1） 时：正常加载标签的body</li>
+<li>为 <code>SKIP_BODY</code> (0) 时： 不会加载标签，返回后执行 <code>doEndTag()</code> 方法</li>
+<li>为 <code>EVAL_BODY_BUFFERED</code> （2）时：尽在处理类继承了 <code>BodyTagSupport</code> 时可以使用，返回后java构造 <code>BodyContent</code> 对象，把标签的body载入这个对象</li>
+</ol>
+</li>
+<li><code>TagSupport</code> : <em>doEndTag</em>,处理<strong>尾标签</strong>，返回int（也可以在这里构造将要输出到页面的代码）
+<ol>
+<li>为 <code>EVAL_PAGE</code>  (6) ,返回表示加载此标签之后的页面代码</li>
+<li>为 <code>SPKIP_PAGE</code> (5),返回表示不再继续加载此标签之后的页面代码，直接将已处理完发送客户端</li>
+</ol>
+</li>
+<li><code>TagSupport</code> : <em>doAfterTag</em>,返回int （ <code>doStartTag</code> 返回 <code>EVAL_BODY_INCLUDE</code> &amp;&amp; 加载完标签的body 后加载）
+<ol>
+<li>为 <code>EVAL_BODY_AGAIN</code> (5) 再一次加载body之后会执行</li>
+<li>为 <code>SKIP_BODY</code> 同 <em>doStartTag</em></li>
+</ol>
+</li>
+<li><code>BodyTagSupport</code> : doInitBody,没有代码,没有返回值</li>
+</ol>
+</li>
+<li><strong>是否能修改body是 <code>BodyTagSupport</code> 和 <code>TagSupport</code> 最大的区别</strong></li>
+<li>使用自定义标签</li>
+</ol>
+<p>关于tld下处理tag-class类下方法的调用顺序的图例:</p>
+<figure data-type="image" tabindex="1"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220409a_00.png" alt="Untitled" loading="lazy"></figure>
+<p>参考学习的文章：</p>
+<blockquote>
+<p>《<strong><strong>使用 tld 文件自定义 jsp 标签库_lkforce</strong></strong>》<br>
+<a href="https://blog.csdn.net/lkforce/article/details/85003068">https://blog.csdn.net/lkforce/article/details/85003068</a></p>
+</blockquote>
+<h3 id="基础使用maven进行依赖管理">基础：使用maven进行依赖管理</h3>
+<ul>
+<li>先配置IDEA使用maven自动下载依赖：
+<ul>
+<li><code>File -&gt; Setting -&gt;Maven -&gt;Importing</code>：选中 <code>Automatically download</code>中的两个多选框Sources和Documentation</li>
+</ul>
+</li>
+<li>使用快捷键（ctrl+alt+shift+u）可以一览整个项目的依赖</li>
+</ul>
+<h3 id="基础调试tips">基础：调试Tips</h3>
+<p>查找方法：</p>
+<p>使用 <code>ctrl+F12</code> 就可以在当前类中查找方法啦~~</p>
+<h3 id="基础关于struts2的altsyntax特性">基础:关于Struts2的altSyntax特性</h3>
+<aside>
+💡 `altSyntax` 特性是默认开启的
+</aside>
+<p>什么是 <code>altSyntax</code> 特性？</p>
+<p>允许表单中提交包含OGNL表达式的字符串（通常通过文本字段传达，例如 <code>&lt;s:textfile&gt;</code> ），且可对包含OGNL的表达式进行递归计算</p>
+<p><code>altSyntax</code> 在哪里配置？</p>
+<p>该属性设置在struts2文件的 <code>defaultproperties</code> 中</p>
+<h2 id="struts2-分析实战">Struts2 分析实战</h2>
+<aside>
+💡 需要使用IDEA在要调试的jar包右键选择”Add as Library“
+</aside>
+<p>jsp文件</p>
+<pre><code class="language-jsx">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot;
+    pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+&lt;title&gt;S2-001&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;S2-001 Demo&lt;/h2&gt;
+&lt;p&gt;link: &lt;a href=&quot;https://struts.apache.org/docs/s2-001.html&quot;&gt;https://struts.apache.org/docs/s2-001.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;s:form action=&quot;login&quot;&gt;
+	&lt;s:textfield name=&quot;username&quot; label=&quot;username&quot; /&gt;
+	&lt;s:textfield name=&quot;password&quot; label=&quot;password&quot; /&gt;
+	&lt;s:submit&gt;&lt;/s:submit&gt;
+&lt;/s:form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>使用了自定义标签textfield，可以看到对应的标签是 <code>textfield</code> ，查看对应的tld文件下垓标签</p>
+<p>对应的tld文件位于 <code>WEB-INF/lib/struts2-core-2.0.8.jar/META-INF/struts-tags/tld</code>  下：</p>
+<pre><code class="language-jsx">&lt;name&gt;textfield&lt;/name&gt;
+&lt;tag-class&gt;org.apache.struts2.views.jsp.ui.TextFieldTag&lt;/tag-class&gt;
+&lt;body-content&gt;JSP&lt;/body-content&gt;
+&lt;description&gt;&lt;![CDATA[Render an HTML input field of type text]]&gt;&lt;/description&gt;
+</code></pre>
+<p>对应 <code>label</code> 参数的地方：</p>
+<pre><code class="language-jsx">&lt;attribute&gt;
+      &lt;name&gt;label&lt;/name&gt;
+      &lt;required&gt;false&lt;/required&gt;
+      &lt;rtexprvalue&gt;true&lt;/rtexprvalue&gt;
+      &lt;description&gt;&lt;![CDATA[Label expression used for rendering a element specific label]]&gt;&lt;/description&gt;
+&lt;/attribute&gt;
+</code></pre>
+<p>看tag-class标签，知道对应的标签处理类为 <code>org.apache.struts2.views.jsp.ui.TextFieldTag</code> 。</p>
+<p>这里S2-001 产生问题的主要原因在于body后的处理类中，即 <code>doEndTag</code> .第一次学习s2，为了知识点全面，所以阅读了多篇文章，以细为主。看漏洞产生的原因可以直接调h3:”body后处理类“</p>
+<h3 id="body前处理类">body前处理类</h3>
+<p>针对之前tld章节的学习和调用顺序的学习（<a href="https://www.notion.so/Struts2-s2-001-1629a6906fba4d7f96659221cff4481a">点此</a>），会在body前执行 <code>doStartTag</code> 方法，但 <code>TextFieldTag</code> 没有此方法，查看调用链</p>
+<figure data-type="image" tabindex="2"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220409a_01.png" alt="Untitled" loading="lazy"></figure>
+<p>最后调用的点是：</p>
+<p><code>org.apache.struts2.views.jsp.ComponentTagSupport#doStartTag</code></p>
+<p>❗备注：这里也可以使用 <code>ctrl+F12</code> 来进行搜索 <code>doStartTag</code>  和<code>doEndTag</code></p>
+<p>查看对应的代码：</p>
+<pre><code class="language-jsx">public int doStartTag() throws JspException {
+        this.component = this.getBean(this.getStack(), (HttpServletRequest)this.pageContext.getRequest(), (HttpServletResponse)this.pageContext.getResponse()); //这里的component对象实际上是TextField对象
+        Container container = Dispatcher.getInstance().getContainer();
+        container.inject(this.component);
+        this.populateParams(); #用于初始化属性
+        boolean evalBody = this.component.start(this.pageContext.getOut());
+        if (evalBody) {
+            return this.component.usesBody() ? 2 : 1;
+        } else {
+            return 0;
+        }
+    }
+</code></pre>
+<p>其中由于TextField对象没有实现该方法，而调用默认方法（ <code>org.apache.struts2.components.Component</code> )为下图红框圈住的地方</p>
+<figure data-type="image" tabindex="3"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220409a_02.png" alt="Untitled" loading="lazy"></figure>
+<p>其中，中间的 <code>populateParams</code> 用于初始化属性(这里定义了doEndStart的 <code>value</code> ）</p>
+<p>最后默认方法 <code>this.component.useBody()</code> 返回的是 <code>false</code> ，所以 <code>doStartTag</code> 返回的是1，对应的常量为 <code>EVAL_BODY_INCLUDE</code></p>
+<h3 id="body后处理类">body后处理类</h3>
+<aside>
+💡 breakpoints来进行断点管理，目的是为了给一些中断加条件前提。快捷键 ctrl+shift+F8
+</aside>
+<p>如图 <code>TextFieldTag</code> 没有实现 <code>doEndTag</code> 的方法，所以还是调用的默认方法。</p>
+<figure data-type="image" tabindex="4"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220409a_03.png" alt="Untitled" loading="lazy"></figure>
+<p>对应的默认方法代码如下：</p>
+<pre><code class="language-jsx">public int doEndTag() throws JspException {
+        this.component.end(this.pageContext.getOut(), this.getBody());
+        this.component = null;
+        return 6;
+    }
+</code></pre>
+<p>跟进 <code>this.component.end</code></p>
+<p>备注：IDEA这里调试模式下用 <code>F7</code> 跟进， 不然非调试模式下按 <code>ctrl</code> 没法跟进到对应类下的 <code>end</code> 方法</p>
+<p>其中，解析 <code>%{name}</code> 表达式的函数是 <code>protected Object findValue(String expr, Class toType)</code></p>
+<pre><code class="language-jsx">if (this.altSyntax() &amp;&amp; toType == String.class) { // 满足条件1 ，进入if语句
+            return TextParseUtil.translateVariables('%', expr, this.stack);
+        } else {
+            if (this.altSyntax() &amp;&amp; expr.startsWith(&quot;%{&quot;) &amp;&amp; expr.endsWith(&quot;}&quot;)) {
+                expr = expr.substring(2, expr.length() - 1);
+            }
+
+            return this.getStack().findValue(expr, toType);
+        }
+    }
+altSyntax方法
+</code></pre>
+<p>其中 <code>this.altSyntax</code> 反映了struts2下名为<code>altSyntax</code>的特性，该特性允许在表单中提交OGNL表达式的字符串（点击<a href="https://www.notion.so/Struts2-s2-001-1629a6906fba4d7f96659221cff4481a">这里</a>查看有关基础）</p>
+<p>跟进 <code>findValue</code> 下的 <code>TextParseUtil.translateVariables</code></p>
+<p>（s2-001 问题核心在 <code>translateVariables</code> 中）</p>
+<pre><code class="language-jsx">while(true) {
+            int start = expression.indexOf(open + &quot;{&quot;);
+            int length = expression.length();
+            int x = start + 2;
+            int count = 1;
+
+            while(start != -1 &amp;&amp; x &lt; length &amp;&amp; count != 0) {
+                char c = expression.charAt(x++);
+                if (c == '{') {
+                    ++count;
+                } else if (c == '}') {
+                    --count;
+                }
+            }
+
+            int end = x - 1; //end 为}前的位置
+            if (start == -1 || end == -1 || count != 0) {
+                return XWorkConverter.getInstance().convertValue(stack.getContext(), result, asType);
+            }
+
+            String var = expression.substring(start + 2, end); // var这里为{ 和 } 之间的内容
+            Object o = stack.findValue(var, asType);  // 这里要跟进
+            if (evaluator != null) {
+                o = evaluator.evaluate(o);
+            }
+
+            String left = expression.substring(0, start);
+            String right = expression.substring(end + 1);
+            if (o != null) {
+                if (TextUtils.stringSet(left)) {
+                    result = left + o;
+                } else {
+                    result = o;
+                }
+
+                if (TextUtils.stringSet(right)) {
+                    result = result + right;
+                }
+
+                expression = left + o + right;
+            } else {
+                result = left + right;
+                expression = left + right;
+            }
+        }
+    }
+</code></pre>
+<p>如上代码所示（关键部分已加备注），我们再接着跟进 <code>doEndTag</code> → <code>end</code> → <code>translateVariables</code>  → <code>findValue</code></p>
+<p>findValue的代码</p>
+<pre><code class="language-jsx">com.opensymphony.xwork2.util.OgnlValueStack#findValue
+public Object findValue(String expr, Class asType) {
+        Object var4;
+        try {
+            Object value;
+            if (expr != null) {
+                if (this.overrides != null &amp;&amp; this.overrides.containsKey(expr)) {
+                    expr = (String)this.overrides.get(expr);
+                }
+
+                value = OgnlUtil.getValue(expr, this.context, this.root, asType); //获取value
+                if (value != null) {
+                    var4 = value;
+                    return var4;
+                }
+
+                var4 = this.findInContext(expr);
+                return var4;
+            }
+
+            value = null;
+            return value;
+        } catch (OgnlException var9) {
+            var4 = this.findInContext(expr);
+        } catch (Exception var10) {
+            this.logLookupFailure(expr, var10);
+            var4 = this.findInContext(expr);
+            return var4;
+        } finally {
+            OgnlContextState.clear(this.context);
+        }
+
+        return var4;
+    }
+</code></pre>
+<p>其中传入 <code>findValue</code> 的：</p>
+<ul>
+<li>参数1 为<code>var</code> ，变量值为 <code>%{exp}</code> 内的表达式</li>
+<li>参数2为 <code>asType</code> , 值为 <code>String.class</code></li>
+</ul>
+<p>关键在于代码中 <code>Ogn1Util.getValue(expr, this.context, this.root, asType)</code></p>
+<p>跟进  <code>doEndTag</code> → <code>end</code> → <code>translateVariables</code>  → <code>findValue</code> → <code>getValue</code></p>
+<pre><code class="language-jsx">com.opensymphony.xwork2.util.OgnlUtil#getValue
+public static Object getValue(String name, Map context, Object root, Class resultType) throws OgnlException {
+        return Ognl.getValue(compile(name), context, root, resultType); // expr编译为一个AST Tree
+    }
+
+ognl.Ognl#getValue
+public static Object getValue(Object tree, Map context, Object root, Class resultType) throws OgnlException {
+        OgnlContext ognlContext = (OgnlContext)addDefaultContext(root, context);
+        Object result = ((Node)tree).getValue(ognlContext, root);//调用了AST Tree的方法
+        if (resultType != null) {
+            result = getTypeConverter(context).convertValue(context, root, (Member)null, (String)null, result, resultType);
+        }
+
+        return result;
+    }
+</code></pre>
+<p>这里会把expr编译为一个AST Tree，且在 <code>Object result = ((Node)tree).getValue(ognlContext, root);</code> 这行中调用了AST Tree的 <code>getValue</code> 方法，并传入了ognl表达式</p>
+<h3 id="参考补充">参考&amp;补充</h3>
+<p>参考及补充：</p>
+<blockquote>
+<p>分析的知识学习的这位师傅的文章《安全客的Struts2 s2-001的分析》<br>
+<a href="https://www.anquanke.com/post/id/254808#h2-2">https://www.anquanke.com/post/id/254808#h2-2</a><br>
+Apache Struts 2 Wiki(solution):<br>
+<a href="https://cwiki.apache.org/confluence/display/WW/S2-001">https://cwiki.apache.org/confluence/display/WW/S2-001</a><br>
+第二遍阅读学习时计划参考的文章：<br>
+<a href="https://blog.csdn.net/mole_exp/article/details/122550317">https://blog.csdn.net/mole_exp/article/details/122550317</a></p>
+</blockquote>
+<h2 id="调试实战下的一些其他笔记">调试实战下的一些其他笔记</h2>
+<h3 id="使用行断点">使用行断点</h3>
+<p>在 <code>evaluateParams</code> 下总是不小心错过调试点，于是我在 <code>expr</code> 这里使用 breakpoints 增加了行断点，并只捕获 <code>username</code> 下的截断。</p>
+<figure data-type="image" tabindex="5"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220409a_04.png" alt="Untitled" loading="lazy"></figure>
+<h3 id="关于translatevariables下踩的坑">关于translateVariables下踩的坑</h3>
+<p>还有这里，必须要 <code>force step into</code> （alt+shift+F7），只是 <code>step into</code> 是进不去的</p>
+<figure data-type="image" tabindex="6"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220409a_05.png" alt="Untitled" loading="lazy"></figure>
+<h3 id="ast-tree处getvalue处的分析">AST Tree处（getValue)处的分析</h3>
+<figure data-type="image" tabindex="7"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220409a_06.png" alt="Untitled" loading="lazy"></figure>
+<p>在 <code>ognl.Ognl.getValue</code> 下看到tree被初始化为</p>
+<figure data-type="image" tabindex="8"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220409a_07.png" alt="Untitled" loading="lazy"></figure>
+<p>这里result会被赋值为计算后的值</p>
+<p>参考</p>
+<blockquote>
+<p>调试教程推荐：<br>
+<a href="https://www.aneasystone.com/archives/2017/09/java-debugging.html">https://www.aneasystone.com/archives/2017/09/java-debugging.html</a></p>
+</blockquote>
+<h2 id="其它reference">其它Reference</h2>
+<ul>
+<li><a href="https://seaii-blog.com/index.php/2019/12/29/90.html">https://seaii-blog.com/index.php/2019/12/29/90.html</a> (Struts2漏洞调试笔记)</li>
+<li>安全客关于OGNL的学习： <a href="https://www.anquanke.com/post/id/254808">https://www.anquanke.com/post/id/254808</a></li>
+<li>先知下关于OGNL的学习：<a href="https://xz.aliyun.com/t/10482">https://xz.aliyun.com/t/10482</a></li>
+</ul>
+<p><a href="https://pentester.land/list-of-bug-bounty-writeups.html">https://pentester.land/list-of-bug-bounty-writeups.html</a></p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/lesslesszseanos-methodogygreatergreater-xue-xi-bi-ji/">
+              <h3 class="post-title">
+                下一篇：《zseano&#39;s methodogy》学习笔记
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

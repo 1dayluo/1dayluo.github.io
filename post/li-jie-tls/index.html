@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>理解TLS | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+            <div class="feature-container" style="background-image: url('http://pic.netbian.com/uploads/allimg/200627/004311-15931897916db2.jpg')">
+            </div>
+          
+          <h2 class="post-title">理解TLS</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-06-30</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/lIHDfEZJ-Th/">
+                    python
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h2 id="为什么需要tls">为什么需要TLS</h2>
+<p>前提：每个线程都有TLS<br>
+如果我们要在多线程中对全局变量(<code>Global Variable</code>)进行操作，除了保护多个线程对该变量内存读写不会有影响（加锁)，同时也要保证在单个线程在某些不可控状态下对其进行修改时，程序不会因此发生产生影响，例如崩溃。<br>
+那么，我们不定义全局变量，将其定义为局部变量，但是即使是局部变量在函数调用的时候，传递该参数又很麻烦。例如</p>
+<pre><code class="language-python">def process_student(name):
+    std = Student(name)
+    # std是局部变量，但是每个函数都要用它，因此必须传进去：
+    do_task_1(std)
+    do_task_2(std)
+
+def do_task_1(std):
+    do_subtask_1(std)
+    do_subtask_2(std)
+
+def do_task_2(std):
+    do_subtask_2(std)
+    do_subtask_2(std)
+</code></pre>
+<p>在用全局变量和局部变量都会产生如此窘迫的情况下，产生了TLS的概念。同时也是为了代码更加的整洁/布局合理（搞技术的老毛病，完美主义+强迫症?)</p>
+<h2 id="什么是threadlocal变量">什么是ThreadLocal变量</h2>
+<p>ThreadLocal变量，也就是线程本地变量，它会为每个使用该变量的线程维护一个变量的副本，在某个线程中，对该变量的修改，只会改变自己的副本，不会影响其他的线程的副本。<br>
+例如(这个例子可能不是很好），我在实际应用场景中有如下需求，我要在单条线程中处理和保存一个变量，类型为<code>list</code> ，并且在每次当前线程中的<code>for</code>循环中我会对这个list进行操作。这样我避免了每次在 <code>process_id</code>函数的位置都不得不传入last_id变量。</p>
+<pre><code class="language-python">import  threading
+import multiprocessing
+import signal
+import time
+
+last_id = threading.local()
+def process_id(id):
+    last_id.val.append(id)
+    return last_id
+
+def key_processing(id):
+    if id is not None :
+        filter = {'_id':{'$gte': id}}
+    else:
+        filter = {}
+    last_id.val = []
+    for i in range(20):
+        # save_id = i + 2
+        save_id = process_id(i)
+        print(save_id.val)
+
+
+def init_worker():
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+def main():
+    pool = multiprocessing.Pool(3, init_worker)
+    idlist = [ i for i in range(10)]
+    try:
+        results = []
+        for id in idlist:
+            results.append(pool.apply_async(key_processing, (id,)))
+            # results.append(pool.apply_async(coroutine_process, (key_processing,id,)))
+        pool.close()
+        while True:
+            if all(r.ready() for r in results):
+                print(&quot;All processes completed&quot;)
+                return
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        print(&quot;Caught KeyboardInterrupt, terminating workers&quot;)
+        pool.terminate()
+        pool.join()
+    finally:
+
+        pass
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+<p>这样做的好处除了在比案例更复杂的场景使代码看起来规范，整齐外，在PEP266中有提，ThreadLocal变量是可以减少指令加速运算的，因为全局变量往往需要更多的指令。</p>
+<h2 id="参考文章">参考文章</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/60126952">深入理解Python的TLS机制和Threading.local()</a><br>
+<a href="http://timd.cn/python-thread-local/">python-thread-local</a></p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/xian-cheng-bu-huo-keyboardinterrupter/">
+              <h3 class="post-title">
+                下一篇：线程捕获KeyboardInterrupter
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

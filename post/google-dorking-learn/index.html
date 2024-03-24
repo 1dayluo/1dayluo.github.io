@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Google Dorking Learn | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Google Dorking Learn</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-02-01</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                    笔记
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="google-dorking-learn">Google Dorking Learn</h1>
+<p>Learn from: https://exposingtheinvisible.org/guides/google-dorking/</p>
+<h2 id="to-dork-or-not-dork">To dork or not dork</h2>
+<p>在一些信息监控严格的国家，google dork的内容可能用于针对你。所以建议用Tor来进行google dork。</p>
+<p>由于有的地方可能会因为你使用Tor标记你为敏感在线，则可以使用带有可插拔传输的混淆的Tor Bridge</p>
+<p>如果不能使用Tor,可以考虑使用“a privacy-aware search engine“， 例如：DuckDuckGo。</p>
+<h2 id="how-it-works">How it works</h2>
+<blockquote>
+<p>a googleDorker can locate hidden login pages, error messages that give away too much information and files that a website administrator might not realise are publicly accessible.</p>
+</blockquote>
+<h3 id="知识点">知识点</h3>
+<p>搜索更具体的信息：</p>
+<ul>
+<li>
+<p>使用像“inurl”, “intext”, “site”, “feed”, “language”的关键词，后跟冒号</p>
+</li>
+<li>
+<p>使用引号包围要搜索的text,让搜索引起仅搜索被包起来的text</p>
+</li>
+<li>
+<p>使用全大些的“OR”在search term间，会返回包含任意一个的结果。</p>
+</li>
+<li>
+<p>如果search item包含多个词汇，用双引号括起来.见例3</p>
+</li>
+<li>
+<p>Dorks也可以和一般的搜索词匹配，见例4</p>
+</li>
+<li>
+<p>你可以用多个operator,而顺序是无所谓的。</p>
+</li>
+</ul>
+<h3 id="例子">例子</h3>
+<ol>
+<li><code>site:tacticaltech.org filetype:pdf</code></li>
+</ol>
+<p>This googleDork will search https://tacticaltech.org for all PDF files hosted under that domain name.</p>
+<ol start="2">
+<li><code>inurl:exposing inbody:invisible</code></li>
+</ol>
+<p>出现在url的页面，查找出现在body中的词</p>
+<ol start="3">
+<li>
+<p><code>intext:exposing intitle:“the invisible”</code></p>
+</li>
+<li>
+<p><code>exposing feed:rss</code> or <code>exposing site:tacticaltech.org filetype:pdf</code></p>
+</li>
+</ol>
+<p>​     在这里&quot;exposing&quot;是一般的搜索词，而“site”和“filetype”搜索匹配范围。</p>
+<h2 id="dorking-for-dummies">Dorking for Dummies</h2>
+<h3 id="example-1fding-budgets-on-the-us-homeland-security">Example 1:Fding budgets on the US Homeland Security</h3>
+<p>The “filetype” operator does not recognise different versions of the same or similar formats (i.e. <em>doc</em> vs. <em>docx, xls</em> vs. <em>xlsx</em> vs. <em>csv</em>), so each of these formats must be dorked separately:</p>
+<p><code>budget filetype:xlsx OR budget filetype:csv</code></p>
+<p>duckduckgo要使用不同的关键词，如下(用ext代替filetype)：</p>
+<p><code>budget site:dhs.gov ext:xls</code></p>
+<h3 id="example-2-finding-passwords">Example 2: Finding passwords</h3>
+<p>Try the following dorks in different search engines:</p>
+<pre><code>password filetype:doc site:Your site
+
+password filetype:docx site:Your site
+
+password filetype:pdf site:Your site
+
+password filetype:xls site:Your site
+</code></pre>
+<h2 id="dork-it-youself">Dork It Youself</h2>
+<p>最新可参考：https://www.boxpiper.com/posts/google-dork-list</p>
+<p>2015年的google-dorks-list：https://gist.github.com/heiswayi/641201f3bac04168108a</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Dork</th>
+<th style="text-align:left">Description</th>
+<th style="text-align:left">Google</th>
+<th style="text-align:left">DuckDuckGo</th>
+<th style="text-align:left">Yahoo</th>
+<th style="text-align:left">Bing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">cache:[url]</td>
+<td style="text-align:left">Shows the version of the web page from the search engine’s cache.</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">related:[url]</td>
+<td style="text-align:left">Finds web pages that are similar to the specified web page.</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">info:[url]</td>
+<td style="text-align:left">Presents some information that Google has about a web page, including similar pages, the cached version of the page, and sites linking to the page.</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">site:[url]</td>
+<td style="text-align:left">Finds pages only within a particular domain and all its subdomains.</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">intitle:[text] or allintitle:[text]</td>
+<td style="text-align:left">Finds pages that include a specific keyword as part of the indexed title tag. <em>You must include a space between the colon and the query for the operator to work in Bing.</em></td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">allinurl:[text]</td>
+<td style="text-align:left">Finds pages that include a specific keyword as part of their indexed URLs.</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">meta:[text]</td>
+<td style="text-align:left">Finds pages that contain the specific keyword in the meta tags.</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">filetype:[file extension]</td>
+<td style="text-align:left">Searches for specific file types.</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">intext:[text], allintext:[text], inbody:[text]</td>
+<td style="text-align:left">Searches text of page. <em>For Bing and Yahoo the query is inbody:[text]. For DuckDuckGo the query is intext:[text]. For Google either intext:[text] or allintext:[text] can be used.</em></td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">inanchor:[text]</td>
+<td style="text-align:left">Search link anchor text</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">location:[iso code] or loc:[iso code], region:[region code]</td>
+<td style="text-align:left">Search for specific region. <em>For Bing use location:[iso code] or loc:[iso code] and for DuckDuckGo use region:[iso code].An iso location code is a short code for a country for example, Egypt is eg and USA is us.</em> [<em>https://en.wikipedia.org/wiki/ISO_3166-1</em></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">contains:[text]</td>
+<td style="text-align:left">Identifies sites that contain links to filetypes specified (i.e. contains:pdf)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">altloc:[iso code]</td>
+<td style="text-align:left">Searches for location in addition to one specified by language of site (i.e. pt-us or en-us)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">feed:[feed type, i.e. rss]</td>
+<td style="text-align:left">Find RSS feed related to search term</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">hasfeed:[url]</td>
+<td style="text-align:left">Finds webpages that contain both the term or terms for which you are querying and one or more RSS or Atom feeds.</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">ip:[ip address]</td>
+<td style="text-align:left">Find sites hosted by a specific ip address</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+</tr>
+<tr>
+<td style="text-align:left">language:[language code]</td>
+<td style="text-align:left">Returns websites that match the search term in a specified language</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">book:[title]</td>
+<td style="text-align:left">Searches for book titles related to keywords</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">maps:[location]</td>
+<td style="text-align:left">Searches for maps related to keywords</td>
+<td style="text-align:left">✓</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">linkfromdomain:[url]</td>
+<td style="text-align:left">Shows websites whose links are mentioned in the specified url (with errors)</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">✓</td>
+</tr>
+</tbody>
+</table>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/geng-xin-liao-blog-nei-de-htb-de-wen-zhang-she-zhi-jia-mi/">
+              <h3 class="post-title">
+                下一篇：更新了blog内的htb的文章,设置加密
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

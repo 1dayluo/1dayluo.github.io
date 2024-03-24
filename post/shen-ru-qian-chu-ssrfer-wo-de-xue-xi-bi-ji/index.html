@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>深入浅出SSRF（二）：我的学习笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">深入浅出SSRF（二）：我的学习笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-11-30</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                    笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/zZTzpgyiG3k/">
+                    SSRF
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>困困更blog……<br>
+之前拿着本来要发blog的文章去“换”了一个会员...其实我不太喜欢闭源小圈子分享（虽然能换积分/社区认同），我还是喜欢自己博客发，要么不发....小透明的坚持，等找工作/需要交换资源需要再说= = 目前还是一个能自闭就自闭的宅宅一枚<br>
+一写blog才知道自己语言表达有多差，尽请谅解。顺便强调 学习笔记 。都是学别人的呜呜，我只是整理在了一起，做个整理工。</p>
+<h2 id="xsspdfssrf">XSS+PDF==SSRF</h2>
+<p>来自：<a href="https://docs.google.com/presentation/d/1JdIjHHPsFSgLbaJcHmMkE904jmwPM4xdhEuwhy2ebvo/htmlpresent">https://docs.google.com/presentation/d/1JdIjHHPsFSgLbaJcHmMkE904jmwPM4xdhEuwhy2ebvo/htmlpresent</a></p>
+<p>通常pdf生成不是直接生成的，需要通过一些微调。</p>
+<blockquote>
+<p>The attack strategy used will depend on what conversion system is in use in the application, but these can be broken into two categories: Headless browsers and HTML renderers.</p>
+</blockquote>
+<p>补充：之前还遇到pdf根据yml文件生成，构造恶意yml文件，从而导致任意命令执行（Ruby漏洞）</p>
+<h3 id="headless-browsers-html-renderers">Headless Browsers &amp; HTML Renderers</h3>
+<p><strong>Headless Browsers</strong></p>
+<p>常见的headless browsr有：</p>
+<ul>
+<li>wkhtmlpdf ： Webkit implementation</li>
+<li>headless chrome
+<ul>
+<li>Unlike wkhtmltopdf, it cares if you try to load an http resource inside an https page</li>
+<li>JS engine cares about SOP(Same-Origin Policy)</li>
+</ul>
+</li>
+</ul>
+<p><strong>HTML Renderers</strong></p>
+<p>不同于普通浏览器引擎，渲染器直接解析html和css来工作，不需要任何javascript</p>
+<p>WeasyPrint is a great example of this class of HTML-&gt;PDF converters (more later)</p>
+<h3 id="构想">构想：</h3>
+<p><strong>XSS → SSRF via wkhtmltopdf</strong></p>
+<p>payload</p>
+<pre><code class="language-bash">&lt;iframe src=”http://169.254.169.254/user-data”&gt;
+</code></pre>
+<p><strong>XSS via escaping style tag</strong></p>
+<p>we are allowed to customize the fonts and styling of the generated PDF</p>
+<ul>
+<li>Confirm it renders HTML within the PDF Generator</li>
+<li>Can it fetch anything from a remote host”?</li>
+</ul>
+<p>payload like this</p>
+<pre><code class="language-bash">&lt;style&gt;&lt;iframe src=”http://169.254.169.254/user-data”&gt;
+</code></pre>
+<h3 id="根据pdf-generaterer-构造payload-之-weasyprint">根据pdf generaterer 构造payload 之 WeasyPrint：</h3>
+<p>以上构想，weasyprint pdf生成器不会渲染iframe下的链接。weasyprint 仅支持渲染：</p>
+<ul>
+<li>img</li>
+<li>embed</li>
+<li>object</li>
+<li>link</li>
+</ul>
+<p>这里用link构造payload</p>
+<pre><code class="language-bash">&lt;link rel=attachment href=”file:///etc/passwd”&gt;
+</code></pre>
+<h2 id="cve">CVE</h2>
+<ul>
+<li>JIRA CVE-2017-9506
+<ul>
+<li><s>这个例子搜的话，有一篇对应的文章是将DOD（美国防部）下的三大主网之一的NIPRNet下出现的ssrf</s> 什么的我才不会说</li>
+</ul>
+</li>
+</ul>
+<h2 id="how-to-prevent">How to prevent</h2>
+<ul>
+<li>Whitelisting</li>
+<li>Blacklisting
+<ul>
+<li>如果内网地址加入了黑名单,可以用指向该内网地址的域名来跳过防御</li>
+</ul>
+</li>
+<li>Restricted Content-Type,extensions,or characters -Only allows a particular file type</li>
+<li>No response</li>
+</ul>
+<h2 id="ssrf-tools">SSRF Tools</h2>
+<h3 id="httprebind">HTTPRebind</h3>
+<p>Rebinding attacks can be very valuable for SSRF, but they require a lot of setup work, tweaking, and programming. HTTPRebind combines a DNS server with an HTTP server to automatically handle all of this for you.</p>
+<ul>
+<li>Usable against any headless browser</li>
+<li>Takes only seconds to run due to DNS cache flushing</li>
+<li>Automatically pulls critical data from GCP, AWS, and Azure</li>
+</ul>
+<p>Get the source at <a href="https://www.google.com/url?q=https://github.com/daeken/httprebind&amp;sa=D&amp;source=editors&amp;ust=1669802685477614&amp;usg=AOvVaw0ZOeVy2tBaGWcMI47AFqyE">https://github.com/daeken/httprebind</a></p>
+<h3 id="ssrftest">SSRFTest</h3>
+<p>This tool lets you quickly do a first-pass test for SSRF. It will record incoming requests for your different targets as well as automatically attempt to access and dump data from EC2 metadata service.</p>
+<p>The optimal targets for SSRFTest’s automated functionality are real headless browsers living in the cloud, but it’s a useful starting point for any SSRF exploitation.</p>
+<p>Get the code at <a href="https://www.google.com/url?q=https://github.com/daeken/SSRFTest&amp;sa=D&amp;source=editors&amp;ust=1669802685480299&amp;usg=AOvVaw36eed8jzuiS_G8FLPo1Ho5">https://github.com/daeken/SSRFTest</a> or use the public instance at [https://ssrftest.com/</p>
+<h2 id="reference">Reference</h2>
+<p>Udemy</p>
+<ul>
+<li><a href="https://www.udemy.com/course/intro-to-bug-bounty-by-nahamsec/learn/lecture/24998004#overview">https://www.udemy.com/course/intro-to-bug-bounty-by-nahamsec/learn/lecture/24998004#overview</a></li>
+</ul>
+<p>Medium</p>
+<ul>
+<li><a href="https://vickieli.medium.com/bypassing-ssrf-protection-e111ae70727b">https://vickieli.medium.com/bypassing-ssrf-protection-e111ae70727b</a></li>
+<li><a href="https://infosecwriteups.com/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a">https://infosecwriteups.com/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a</a></li>
+</ul>
+<p>PPT</p>
+<ul>
+<li>Google doc
+<ul>
+<li>[https://docs.google.com/presentation/d/1JdIjHHPsFSgLbaJcHmMkE904jmwPM4xdhEuwhy2ebvo/htmlpresent</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/shen-ru-qian-chu-ssrf-wo-de-xue-xi-bi-ji/">
+              <h3 class="post-title">
+                下一篇：深入浅出SSRF（一） ： 我的学习笔记
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Symfony RCE 分析 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Symfony RCE 分析</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-04-16</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/7wis0OAqRY/">
+                    漏洞分析
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/xzEJIiyn4G/">
+                    PHP
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>笔记与总结，笔记/参考见文末。阅读exp代码的心得忽略。</p>
+<h2 id="概括">概括</h2>
+<p>Symfony framwork为一个PHP application，并且用于许多知名CMS中，包括Drupal，Joomla!,eZPlatform,Bolt并且经常用于自定义网站。<br>
+当访问 /_fragment 的时候，构造特定payload会产生RCE。关键在于请求用HMAC进行加密，其加密密钥被存储在synfony配置下的secret值中（可被破解），其中破解方式包括：尝试默认值，离线暴力破解，简单绕过安全检查。</p>
+<blockquote>
+<p>This is mainly due to not putting enough emphasis on its importance in the documentation or installation guides.</p>
+</blockquote>
+<h2 id="版本差异">版本差异</h2>
+<ol>
+<li>
+<p><code>Symfony &lt; 4</code>: 会在请求 <code>/_fragment</code> 前，访问 <code>/_internal</code> , <code>/_proxy</code> （关联CVE：CVE-2012-6432, CVE-2014-5245,CVE-2015-4050）</p>
+</li>
+<li>
+<p><code>&gt;4</code> : 安装时会生成secret，并且 <code>/_fragment</code> 默认禁止访问。</p>
+</li>
+</ol>
+<p>漏洞挖掘两个思路：一个是注意探测同时采用weak的 <code>secret</code> 和可访问的 <code>/_fragment</code> ，另一个是通过其他已知漏洞获取 <code>secret</code> 然后访问<code>/_fragment</code></p>
+<h2 id="代码分析">代码分析</h2>
+<h3 id="漏洞产生点">漏洞产生点：</h3>
+<pre><code class="language-php"># ./vendor/symfony/http-kernel/EventListener/FragmentListener.php
+
+class FragmentListener implements EventSubscriberInterface
+{
+    public function onKernelRequest(RequestEvent $event)
+    {
+        $request = $event-&gt;getRequest();
+
+        # [1]
+        if ($this-&gt;fragmentPath !== rawurldecode($request-&gt;getPathInfo())) {
+            return;
+        }
+
+        if ($request-&gt;attributes-&gt;has('_controller')) {
+            // Is a sub-request: no need to parse _path but it should still be removed from query parameters as below.
+            $request-&gt;query-&gt;remove('_path');
+
+            return;
+        }
+
+        # [2]
+        if ($event-&gt;isMasterRequest()) {
+            $this-&gt;validateRequest($request);
+        }
+
+        # [3]
+        parse_str($request-&gt;query-&gt;get('_path', ''), $attributes);
+        $request-&gt;attributes-&gt;add($attributes);
+        $request-&gt;attributes-&gt;set('_route_params', array_replace($request-&gt;attributes-&gt;get('_route_params', []), $attributes));
+        $request-&gt;query-&gt;remove('_path');
+    }
+}
+</code></pre>
+<p>前提提要：</p>
+<ol>
+<li>
+<p><code>FragmentListener:onKernelRequest</code>会伴随每个请求运行</p>
+</li>
+<li>
+<p>一些内部变量由Symfony维护而不是用户定义，其中之一就是 <code>_controller</code> (决定Symfony来调度哪个控制器)</p>
+</li>
+<li>
+<p>开头不以 <code>_</code> 的名字是被送入控制器的参数</p>
+</li>
+</ol>
+<p>然后看上面代码，在<strong>检验请求有效性</strong>后（ <code>this-&gt;validateRequest(request); )</code> 将urldecode的 <code>_path</code> 放入 <code>$attributes</code> 变量中。</p>
+<p><code>_path</code> 举例：</p>
+<pre><code>/_fragment?_path=_controller%3DSomeClass%253A%253AsomeMethod%26firstMethodParam%3Dtest1%26secondMethodParam%3Dtest2&amp;_hash=...
+</code></pre>
+<p>还原后：</p>
+<pre><code>_controller=SomeClass::someMethod&amp;firstMethodParam=test1&amp;secondMethodParam=test2
+</code></pre>
+<p>这里的SomeClass::someMethod可以替换成其它命令。</p>
+<p>注意 <code>_path</code>下的 <code>_hash</code>,后续会针对该值进行验证。</p>
+<h3 id="校验请求this-validaterequest">校验请求：<code>$this-&gt;validateRequest</code></h3>
+<p>这里的 <code>$this-&gt;validateRequest</code> 会从两个方面校验 <code>$request</code> :</p>
+<ul>
+<li>
+<p>请求方式是否安全：<code>$request-&gt;isMethodSafe()</code></p>
+</li>
+<li>
+<p>请求是否签名（Signed）：<code>$this-&gt;signer-&gt;checkRequest($request)</code></p>
+</li>
+</ul>
+<p>以上二者有校验失败时，均会抛出 <code>AccessDeniedHttpException</code> 异常</p>
+<p>检查签名的涉及代码</p>
+<pre><code class="language-php">class UriSigner
+{
+    public function checkRequest(Request $request): bool
+    {
+        $qs = ($qs = $request-&gt;server-&gt;get('QUERY_STRING')) ? '?'.$qs : '';
+
+        // we cannot use $request-&gt;getUri() here as we want to work with the original URI (no query string reordering)
+        return $this-&gt;check($request-&gt;getSchemeAndHttpHost().$request-&gt;getBaseUrl().$request-&gt;getPathInfo().$qs);
+    }
+
+    /**
+     * Checks that a URI contains the correct hash.
+     *
+     * @return bool True if the URI is signed correctly, false otherwise
+     */
+    public function check(string $uri)
+    {
+        $url = parse_url($uri);
+        if (isset($url['query'])) {
+            parse_str($url['query'], $params);
+        } else {
+            $params = [];
+        }
+
+        if (empty($params[$this-&gt;parameter])) {
+            return false;
+        }
+
+        $hash = $params[$this-&gt;parameter];
+        unset($params[$this-&gt;parameter]);
+
+        # [2]
+        return hash_equals($this-&gt;computeHash($this-&gt;buildUrl($url, $params)), $hash);
+    }
+
+    private function computeHash(string $uri): string
+    {
+        # [1]
+        return base64_encode(hash_hmac('sha256', $uri, $this-&gt;secret, true));
+    }
+
+    private function buildUrl(array $url, array $params = []): string
+    {
+        ksort($params, SORT_STRING);
+        $url['query'] = http_build_query($params, '', '&amp;');
+
+        $scheme = isset($url['scheme']) ? $url['scheme'].'://' : '';
+        $host = isset($url['host']) ? $url['host'] : '';
+        $port = isset($url['port']) ? ':'.$url['port'] : '';
+        $user = isset($url['user']) ? $url['user'] : '';
+        $pass = isset($url['pass']) ? ':'.$url['pass'] : '';
+        $pass = ($user || $pass) ? &quot;$pass@&quot; : '';
+        $path = isset($url['path']) ? $url['path'] : '';
+        $query = isset($url['query']) &amp;&amp; $url['query'] ? '?'.$url['query'] : '';
+        $fragment = isset($url['fragment']) ? '#'.$url['fragment'] : '';
+
+        return $scheme.$user.$pass.$host.$port.$path.$query.$fragment;
+    }
+}
+</code></pre>
+<p>在 <code>check</code> 里，会返回字符串比较的结果( <code>hash_equal</code> ) ，而这里比较的对象为 <code>$this-&gt;computeHash</code> 的结果（传入参数为：用<code>buildUrl</code> 将传入参数后的 <code>$url</code> 重构/reconstructs输出后的结果）与 <code>$hash = params[$this-&gt;parameter];</code> 下的已有的 <code>$hash</code> 进行比较</p>
+<p>P.S 这里的URL参数为 <code>_hash</code> GET parameter</p>
+<pre><code class="language-php">return hash_equals($this-&gt;computeHash($this-&gt;buildUrl($url, $params)), $hash);
+</code></pre>
+<p>而 <code>computeHash</code> 本身是base64编码了经由 <code>hash_hmac</code>方法生成的散列值（算法sha256,密钥为 <code>$this-&gt;secret</code></p>
+<pre><code class="language-php">    private function computeHash(string $uri): string
+    {
+        # [1]
+        return base64_encode(hash_hmac('sha256', $uri, $this-&gt;secret, true));
+    }
+</code></pre>
+<p>所以正常情况下，<code>_hash</code> 对应的值的生成逻辑如下（假设这里的APP_SECRET为正确的secret）- 前提是知道secret：</p>
+<pre><code class="language-python">import base64, hmac, hashlib
+print(base64.b64encode(hmac.HMAC(b'{{APP_SECRET}}', b'http://localhost:8000/_fragment', hashlib.sha256).digest()))
+# 假设Return : b'lNweS5nNP8QCtMqyqrW8HIl4j9JXIfscGeRm/cmFOh8='
+</code></pre>
+<p>然后访问url： <code>http://localhost:8000/_fragment?_hash=lNweS5nNP8QCtMqyqrW8HIl4j9JXIfscGeRm/cmFOh8=</code> 会发现原本403的网页变为404 （ 因为没有其他指定请求属性，无法找到Controller）</p>
+<p>如果要设置 <code>system($command)</code> 则如下：</p>
+<pre><code class="language-textile"> page=&quot;http://localhost:8000/_fragment?_path=_controller%3Dsystem%26command%3Did%26return_value%3Dnull&quot;
+</code></pre>
+<p>此时返回 <code>500</code> 并且显示代码执行成功。</p>
+<h2 id="secret">secret</h2>
+<p>secret是什么？它是一个字符串，它用于Symfony框架的一些加密和验证操作，如创建cookie或防止CSRF的令牌。秘密值应该是随机生成的，并且不应该被泄露给任何人</p>
+<p>获取secret的方式有以下几种</p>
+<ul>
+<li>
+<p>读取文件</p>
+<ul>
+<li>
+<p><code>app/config/parameters.yml</code></p>
+</li>
+<li>
+<p><code>.env</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p>phpinfo</p>
+<ul>
+<li><code>$server['APP_SECRET']</code></li>
+</ul>
+</li>
+<li>
+<p>SSRF / IP spoofing (CVE-2014-5245) ： &lt; 2.5.3, 请求来自于受信任的代理，会被认为是安全的而无需secret</p>
+</li>
+<li>
+<p>默认值/常见值: <code>ThisTokenIsNotSoSecretChangeIt</code> （更多参考<a href="https://github.com/ambionics/symfony-exploits/blob/main/secret_fragment_exploit.py">symfony-exploits/secret_fragment_exploit.py at main · ambionics/symfony-exploits · GitHub</a> 下给出的一些常见secret）</p>
+</li>
+<li>
+<p>Bruteforce:</p>
+<ul>
+<li>
+<p>可行性：</p>
+<ol>
+<li>
+<p>一些人喜欢用特定密码</p>
+</li>
+<li>
+<p>secret也用于csrf加密</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="exp编写">exp编写</h2>
+<p>参考github上的 ：<a href="https://github.com/ambionics/symfony-exploits/blob/main/secret_fragment_exploit.py">symfony-exploits/secret_fragment_exploit.py at main · ambionics/symfony-exploits · GitHub</a></p>
+<p>重要的几点：</p>
+<ol>
+<li>
+<p>HMAC计算是用的 <strong>full url</strong>, 如果服务器使用了反向代理，则需要内部URL（internel URL），并且internel可能是HTTP协议而不是HTTPS</p>
+</li>
+<li>
+<p>HMAC历史版本加密方式为SHA-1,现在是SHA-256</p>
+</li>
+</ol>
+<p>还有就是检测的方式为：无效hash访问 <code>_/fragment</code> 返回403,有效则返回500</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>https://www.ambionics.io/blog/symfony-secret-fragment</li>
+<li><a href="https://github.com/ambionics/symfony-exploits/blob/main/secret_fragment_exploit.py">symfony-exploits/secret_fragment_exploit.py at main · ambionics/symfony-exploits · GitHub</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/htbvessel/">
+              <h3 class="post-title">
+                下一篇：HTB:Vessel
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

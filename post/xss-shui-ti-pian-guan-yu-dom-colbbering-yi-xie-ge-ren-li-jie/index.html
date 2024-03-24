@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>XSS水题篇：关于DOM Colbbering一些个人理解 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+            <div class="feature-container" style="background-image: url('https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_2/Untitled.png')">
+            </div>
+          
+          <h2 class="post-title">XSS水题篇：关于DOM Colbbering一些个人理解</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-02-01</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/U0Z0LJAyk7/">
+                    XSS
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/ZSxJIWHH2y/">
+                    技术阅读
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>遇到一个DOM Colbbering题目<br>
+题目</p>
+<pre><code class="language-jsx">function escape(input) {
+    // let's do a post redirection
+    try {
+        // pass in formURL#formDataJSON
+        // e.g. http://httpbin.org/post#{&quot;name&quot;:&quot;Matt&quot;}
+        var segments = input.split('#');
+        var formURL = segments[0];
+        var formData = JSON.parse(segments[1]);
+
+        var form = document.createElement('form');
+        form.action = formURL;
+        form.method = 'post';
+
+        for (var i in formData) {
+            var input = form.appendChild(document.createElement('input'));
+            input.name = i;
+            input.setAttribute('value', formData[i]);
+        }
+
+        return form.outerHTML + '                         \n\
+&lt;script&gt;                                                  \n\
+    // forbid javascript: or vbscript: and data: stuff    \n\
+    if (!/script:|data:/i.test(document.forms[0].action)) \n\
+        document.forms[0].submit();                       \n\
+    else                                                  \n\
+        document.write(&quot;Action forbidden.&quot;)               \n\
+&lt;/script&gt;                                                 \n\
+        ';
+    } catch (e) {
+        return 'Invalid form data.';
+    }
+}
+</code></pre>
+<p>本打算使用：</p>
+<pre><code class="language-jsx">javascript:prompt(1)#{&quot;name&quot;:&quot;Matt&quot;}
+</code></pre>
+<p>但是会forbidden</p>
+<p>这里禁止了所有的javascript和vbscript脚本执行。</p>
+<p>这里name和对应的value的attribute属性可以被重写，比如将name改为action，这样就可以通过 <code>input</code> 标签来破坏form的action属性（由于DOM clobbering）<br>
+后发现这里用DOM Clobbering解决：</p>
+<pre><code class="language-jsx">javascript:prompt(1)#{&quot;action&quot;:1}
+</code></pre>
+<p>先来一段console：</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_2/Untitled.png" alt="" loading="lazy"></figure>
+<p>*注意 我这里写成actions是为了直接在沙盒下调出console方便调试。</p>
+<p>由于DOM 存在可破坏性，所以document.forms[0].action 会寻找除了form自带action外，所有form下name为action的内容。从而跳过了判断。但这是依据什么标准呢？为什么会有这种情况出现呢？为了继续探索DOM clobbering，而不是停留在一道题的了解下，我又去进行了搜索：</p>
+<p><a href="https://blog.huli.tw/2021/01/23/dom-clobbering/">淺談 DOM Clobbering 的原理及應用</a></p>
+<p>huli大佬这里form的利用姿势还提到了一个用form和a结合的方法。基于对huli大佬文章的阅读我来对这个题目的DOM  clobbering的原理进行一些推论，首先，关联form标签，huli大佬提到了两个标准特性：</p>
+<p>第一个：这里我们知道了form标签下存在属性可覆盖性（可能描述不准确，请看原文）。</p>
+<pre><code class="language-jsx">`form[name]`
+
+Returns the form control (or, if there are several, a `[RadioNodeList](https://html.spec.whatwg.org/multipage/common-dom-interfaces.html#radionodelist)` of the form controls) in the form with the given [ID](https://dom.spec.whatwg.org/#concept-id) or `[name](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-name)` (excluding image buttons for historical reasons); or, if there are none, returns the `[img](https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element)` element with the given ID.
+Once an element has been referenced using a particular name, that name will continue being available as a way to reference that element in this method, even if the element's actual [ID](https://dom.spec.whatwg.org/#concept-id) or `[name](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fe-name)` changes, for as long as the element remains in the [tree](https://dom.spec.whatwg.org/#concept-tree).
+If there are multiple matching items, then a `[RadioNodeList](https://html.spec.whatwg.org/multipage/common-dom-interfaces.html#radionodelist)` object containing all those elements is returned.
+</code></pre>
+<p>这里写的即使原始的ID或name被修改，也会将之前的element保存在tree里。同时，还存在RadioNodeList，负责处理多个匹配到的items</p>
+<p>第二个标准提到的就是：HTMLCollection</p>
+<pre><code class="language-jsx">The namedItem(key) method steps are:
+
+If key is the empty string, return null.
+
+Return the first element in the collection for which at least one of the following is true:
+
+it has an ID which is key;
+it is in the HTML namespace and has a name attribute whose value is key;
+or null if there is no such element.
+</code></pre>
+<p>那么这里用到的是哪一个呢？我的猜想是这里用到的是HTMLCollection特性，由于没有特定说明id的原因，所以默认form和内层标签为同一id，<code>document.forms[0].action</code> 取到的为form内层的action。<br>
+最后，dom clobbering的应用场景是什么呢？我的理解是，如果javascript的过滤过于“严密”，或者没有javascript注入的地方，就可以利用dom clobbering来用html标签的注入，来改变js的内容或跳过js的判断。</p>
+<p>这里我关于文章里的”层级“的理解不是很深入再加上我前端知识学的还尚浅，后续希望遇到类似的实际场景进行探索和理解修正。也欢迎各位评论区指正，非常感谢。</p>
+<h2 id="referenceresource">Reference&amp;Resource：</h2>
+<ul>
+<li>参考：<a href="https://blog.huli.tw/2021/01/23/dom-clobbering/">https://blog.huli.tw/2021/01/23/dom-clobbering/</a></li>
+<li>扩展阅读：<a href="https://portswigger.net/research/dom-clobbering-strikes-back">https://portswigger.net/research/dom-clobbering-strikes-back</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/xin-zhu-ti-cute-notes-and-jian-ming-er-ci-kai-fa-zhi-bei/">
+              <h3 class="post-title">
+                下一篇：新主题：Cute-Notes &amp; 简明二次开发指北
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

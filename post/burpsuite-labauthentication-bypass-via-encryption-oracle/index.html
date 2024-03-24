@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>【Burpsuite】 lab#Authentication bypass via encryption oracle | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">【Burpsuite】 lab#Authentication bypass via encryption oracle</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-09-13</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/np12zpe3Rf/">
+                    靶场
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/d172iE0ZZd2/">
+                    PortSwigger
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/Aslioh1Izg4/">
+                    burp
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>提取其中的一篇笔记进行记录。</p>
+<h1 id="labauthentication-bypass-via-encryption-oracle">lab#Authentication bypass via encryption oracle</h1>
+<p>This lab contains a logic flaw that exposes an encryption oracle to users. To solve the lab, exploit this flaw to gain access to the admin panel and delete Carlos.</p>
+<p>You can log in to your own account using the following credentials: <code>wiener:peter</code></p>
+<p>跟以前的lab一样，admin panel还是在/admin下</p>
+<!-- more -->
+<p>这是正常留言后的response:</p>
+<blockquote>
+<p>HTTP/1.1 302 Found<br>
+Location: /post/comment/confirmation?postId=5<br>
+Connection: close<br>
+Content-Length: 0</p>
+</blockquote>
+<p>这是邮箱未能按照标准格式填写的response：</p>
+<blockquote>
+<p>HTTP/1.1 302 Found<br>
+Location: /post?postId=5<br>
+Set-Cookie:notification=WOHlxrFhpplZ1%2fQ5TWpuQyHzzOiVO1DQGs8KHVqCrLpaSoyIZRKmFilgJy2tA39b; HttpOnly<br>
+Connection: close<br>
+Content-Length: 0</p>
+</blockquote>
+<p>会看到有notification字段被加密</p>
+<p>再根据首页内容，发现提示字段为“Invalid email address: <a href="http://abc.burp.com/">abc.burp.com</a>”</p>
+<p>Invalid email address: 是23个字符</p>
+<p>输入邮箱为1，发现是：</p>
+<pre><code class="language-jsx">WOHlxrFhpplZ1%2fQ5TWpuQ%2fBqnHLRiWCSos7j6Nv%2fWYY%3d
+</code></pre>
+<p>有%2类似的符号</p>
+<p>然后对有提示”invalid ......&quot;字段的网页（/post?postId=5）进行抓包，发现可以解密notification。</p>
+<p>接着找和notification有同样加密，且是重要方法的功能。进行登录，发现登录后，request的header是这样的：</p>
+<blockquote>
+<p>Cookie: stay-logged-in=xDZcp9Br4a3%2fPrkhd1EvK4RakVxTy4Wxc%2fYWI3LHHYU%3d; session=yAg2MXqtmpKLAjooSbhD14CqzTKhUeVI</p>
+</blockquote>
+<p>可以观察到stay-logged-in和notification的加密方式很像</p>
+<p>如果用同一种加密方式的话，就可以：</p>
+<ul>
+<li>/post?postId={} 对于notification的response的回显当作decrypt</li>
+<li>/my-account 的stay-logged-in当作encrypt</li>
+<li>/post/comment 下的notificatoin也可以当作encrypt</li>
+</ul>
+<p>将ENCRYPT下的stay-logged-in，放到DECRYPT的notification下。解得：</p>
+<pre><code class="language-jsx">xkYNlEW%2b2VVQoO83%2b91YWTkxxWy2cegjd1%2f4BNWnd%2fs%3d;
+</code></pre>
+<p>为：</p>
+<pre><code class="language-jsx">wiener:1630929464302
+</code></pre>
+<hr>
+<pre><code>                               失败的尝试
+</code></pre>
+<p>构造：</p>
+<p>administrato:1630929464302  到ENCRYPT下，</p>
+<p>然后将构造的放入stay-logged-in中，去掉session。</p>
+<p>还是不行，应该是我对application这块的encryption oracle的漏洞理解不够深刻。</p>
+<p>继续滚回去看官方视频题解，发现自己的误区了，DECRYPT利用param的notification加密的文字是：</p>
+<p>“Invalid email address: administrator:1630929464302”</p>
+<p>除了账户基本信息被加密外，也加密了前面的“invalid email address:”</p>
+<hr>
+<pre><code>                           解决
+</code></pre>
+<p>Invalid email address: 包括23个字符，发送全句加密到decode，</p>
+<p>进行URL decode → base64 decode →在base64 decode下delete bytes输入23.</p>
+<p>然后再反向加密回去。</p>
+<p>base64 encode → URL encode</p>
+<p>为了检验自己自定义加密后的文字是否正确，再在repeater下标记为DECRYPT的标签尝试decrypt。结果发现500，提示：</p>
+<p>“javax.crypto.IllegalBlockSizeException: Input length must be multiple of 16 when decrypting with padded cipher</p>”</p>
+<p>必须是16的倍数。这块又学习了一下，原来是采用的分组算法，必须得保证前面的组都是16的倍数，最后一组会自动在结尾padding。所以16×2-23，需要在administrato前填9个字符给前面的组进行加密。administrato以后作为最后一组。</p>
+<p>此时，encrypt一下加了9个字符的administrator:1630929464302。</p>
+<p>然后再把notification放入decode中和刚刚一样操作。然后放入DECRYPT检测，如图，检测成功www</p>
+<p>最终加密是：</p>
+<p>%46%34%4a%37%48%67%4e%54%43%37%43%66%4e%37%43%2f%79%58%53%6e%53%56%31%7a%59%4f%36%4c%36%74%45%44%4c%4e%6a%36%6f%51%62%52%2f%41%41%3d</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/guan-yu-opener-de-xue-xi-ji-li-yong/">
+              <h3 class="post-title">
+                下一篇：关于opener的学习及利用
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

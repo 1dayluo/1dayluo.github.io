@@ -1,0 +1,750 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Javascript Prototype Pollution 学习笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Javascript Prototype Pollution 学习笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-05-26</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/XeUA_h891Iz/">
+                    javascript
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/T5kNdXqcRXf/">
+                    prototype pollution
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>笔记中英文混杂,问就是懒得翻译.学习笔记都是二次吸收,原始文章见Resource&amp;Reference处. 笔记只是留给自己学习反复查阅和理解的......尽可能写的对自己来说全面一些.</p>
+<p><s>其实学了也还不会找gadget,我都想要不要去学下前端开发了_(:3_|/_)</s> 今天也是被自己菜到抑郁的一天呢!</p>
+<h2 id="intro">Intro</h2>
+<p>Prototype Pollution is a vulnerability that allows attackers to exploit the rules of the JavaScript programming language, by injecting properties into existing JavaScript language construct prototypes</p>
+<p>：Properties on the <code>Object.prototype</code> are then inherited by all the JavaScript objects through the prototype chain</p>
+<ul>
+<li>JavaScript allows all Object attributes to be altered，This includes their magical attributes such as <code>__**proto__</code>** , <code>constructor</code> and <code>prototype</code></li>
+</ul>
+<h3 id="impact">impact</h3>
+<ul>
+<li>Denial of Service: by triggering JavaScript exceptions</li>
+<li>RCE: by tampering with the application source code to force the code path that the attacker injects</li>
+<li>XSS:</li>
+</ul>
+<h2 id="base-knowledege">Base Knowledege</h2>
+<h3 id="理解object"><strong>理解object</strong></h3>
+<p>最简单的object：</p>
+<pre><code class="language-jsx">var obj = {};
+</code></pre>
+<p>该object有一些 <code>property</code> :</p>
+<ul>
+<li><code>obj.__proto__</code></li>
+<li><code>obj.constructor</code></li>
+<li><code>obj.toString</code></li>
+<li>….</li>
+</ul>
+<p>In JavaScript, functions can be treated like normal variablesIn JavaScript, functions can be treated like normal variables</p>
+<p>so object  methods are definede as properties, like this:</p>
+<pre><code class="language-jsx">var o = {name: 'Ivan', surname: 'Ivanov'}
+o.foo = function() {
+console.log(&quot;foobar&quot;)
+}
+</code></pre>
+<pre><code class="language-jsx">&gt; o.foo()
+&lt; foobar
+&lt; undefined
+</code></pre>
+<p>进一步理解：</p>
+<p>The concept of a class in JavaScript starts with a function. The function itself serves as the constructor of the class</p>
+<pre><code class="language-jsx">function MyClass() { 
+} 
+ 
+var inst = new MyClass();
+</code></pre>
+<p>这里Function被所有在原型（proptotype)上声明的“MyClass”实例所使用，且原型在运行时被修改。这意味着任何时候都能够修改一个class的prototype（增加，修改，删除）</p>
+<p>回头看最开始的（最简单的object），可以理解为该object的构造函数其实是 <code>Object</code> ，而例如 <code>toString</code> 则是 <code>Object</code> 上的prototype。</p>
+<h3 id="property-access">Property access</h3>
+<aside>
+💡 What’s good to note is that in JavaScript there is no distinction between a property and an instance function
+</aside>
+<p>获取property的方法参考:<a href="https://www.notion.so/Javascript-Prototype-Pollution-232f17fb812543ff9749b1257cee191e">https://www.notion.so/Javascript-Prototype-Pollution-232f17fb812543ff9749b1257cee191e#6856032c4ccf42368be8f7e3e9447c4c</a></p>
+<ul>
+<li>obj.name</li>
+<li>obj[”name”]</li>
+</ul>
+<h3 id="object-prototype">Object prototype</h3>
+<p>Let’s call  <code>toString()</code> method</p>
+<pre><code class="language-jsx">&gt; o.toString()
+&lt; &quot;[object Object]&quot;
+</code></pre>
+<aside>
+💡 check the prototype of object o,call use Object.getOwnPropertyNames()
+</aside>
+<p><strong>Where did the <code>tostring</code> method come from?</strong></p>
+<p>Almost any entity is an object that includes arrays, functions, and even class definition!</p>
+<p><strong>property</strong> <code>[[Prototype]]</code></p>
+<p>How can you use them to implement such a convenient feature of the classes as inheritance? You can select a special property that each object will have. It will contain a reference to the parent. Let's call this property <code>[[Prototype]]</code></p>
+<p>what if we don't want to inherit all the properties and methods from the parent,Let's select a special property from the parent from which the properties and methods will be inherited and call it <code>prototype</code>!</p>
+<p>When you access an object property via <a href="http://o.name/">o.name</a> or o['name'] actually does the following:</p>
+<ol>
+<li>The JavaScript engine searches for the <code>name</code> property in the <code>o</code> object.</li>
+<li>If the property is present, it is returned. Otherwise, the prototype of the <code>o</code> object is taken and the property is searched for in it!</li>
+</ol>
+<p>So it turns out that the <code>toString()</code> method is actually defined in <code>Object.prototype</code></p>
+<pre><code class="language-jsx">&gt; o.__proto__
+&lt; {constructor: ƒ, __defineGetter__: ƒ, __defineSetter__: ƒ, hasOwnProperty: ƒ, __lookupGetter__: ƒ, …}
+&gt; o.__proto__.__proto__
+&lt; null
+</code></pre>
+<p>一直到null的这条prototypes的链条称为原型链</p>
+<p>📢 By the way, the word “prototype” in JavaScript can refer to at least three different things, depending on the context:</p>
+<ul>
+<li>Internal property [[Prototype]]. It is called internal because it lives in the &quot;guts&quot; of the JavaScript engine, we only get access to it through the special functions <strong>proto</strong>, Object.getPrototypeOf(), and others.</li>
+<li>The prototype property: Object.prototype, Function.prototype, and others.</li>
+<li>The <strong>proto</strong> property. A rare and not quite correct use, because technically <strong>proto</strong> is a getter / setter and only gets a reference to the prototype of the object and returns it.</li>
+</ul>
+<h3 id="__proto__-和-prototype的区别"><code>__proto__</code> 和 prototype的区别</h3>
+<p>首先 <code>class</code> 是语法糖,</p>
+<p><code>prototype</code> (原型)用于声明类时,创建类下的方法(不然会新建对象,其下的方法就会执行一次),<strong>可以认为prototype是类 <code>Foo</code> 的一个属性.</strong></p>
+<pre><code class="language-jsx">function Foo() {
+    this.bar = 1
+}
+
+Foo.prototype.show = function show() {
+    console.log(this.bar)
+}
+
+let foo = new Foo()
+foo.show()
+</code></pre>
+<p>类对象在实例化的时候,会拥有prototype中哦你感动属性和方法</p>
+<p><code>__proto__</code> 用于访问原型(prototype), 即</p>
+<pre><code class="language-jsx">foo.__proto__ == Foo.prototype
+</code></pre>
+<h3 id="原型链继承">原型链继承</h3>
+<p>原型链的查找发生在对象上.</p>
+<ol>
+<li>每个构造函数(constructor)都有一个原型对象(prototype)</li>
+<li>对象的<code>__proto__</code>属性，指向类的原型对象<code>prototype</code></li>
+<li>JavaScript使用prototype链实现继承机制</li>
+</ol>
+<h2 id="what-is-prototype-pollution">What is prototype pollution?</h2>
+<blockquote>
+<p>The term prototype pollution refers to the situation when the <code>prototype</code><br>
+ property of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects#fundamental_objects">fundamental objects</a><br>
+ is changed.</p>
+</blockquote>
+<p>what prototype pollution look like in the code</p>
+<pre><code class="language-jsx">var o = {};
+var a = process.argv[2];
+var b = 'test';
+var v = process.argv[3];
+
+console.log(({}).test);
+
+o[a][b] = v;
+
+console.log(({}).test);
+</code></pre>
+<p>attacker controls the parameters <code>a</code> and <code>v</code> ,they can:</p>
+<ul>
+<li><code>v = __proto__</code></li>
+</ul>
+<h2 id="base-sample">base sample:</h2>
+<p>sample 1:</p>
+<pre><code class="language-jsx">let someObject = {}
+let user = {}
+
+console.assert(user.isAdmin === true)
+// Rerturn:Assertion failed
+
+someObject.__proto__.isAdmin = true
+
+console.assert(user.isAdmin === true)
+// Return:udefined
+</code></pre>
+<p>sample 2</p>
+<pre><code class="language-jsx">// foo是一个简单的JavaScript对象
+let foo = {bar: 1}
+
+// foo.bar 此时为1
+console.log(foo.bar)
+
+// 修改foo的原型（即Object）
+foo.__proto__.bar = 2
+
+// 由于查找顺序的原因，foo.bar仍然是1
+console.log(foo.bar)
+
+// 此时再用Object创建一个空的zoo对象
+let zoo = {}
+
+// 查看zoo.bar
+console.log(zoo.bar)
+</code></pre>
+<p>sample3</p>
+<pre><code class="language-jsx">let o1 = {}
+let o2 = JSON.parse('{&quot;a&quot;: 1, &quot;__proto__&quot;: {&quot;b&quot;: 2}}')
+merge(o1, o2)
+console.log(o1.a, o1.b)
+
+o3 = {}
+console.log(o3.b)
+</code></pre>
+<p>JSON解析的情况下，<code>__proto__</code><br>
+会被认为是一个真正的“键名”，而不代表“原型”，所以在遍历o2的时候会存在这个键。</p>
+<h2 id="detection">Detection</h2>
+<p>该节参考:<a href="https://blog.s1r1us.ninja/research/PP">https://blog.s1r1us.ninja/research/PP</a></p>
+<h3 id="case-1">Case 1</h3>
+<p>检查 <code>query/hash</code></p>
+<p>该例子使用了<a href="https://www.google.com/url?q=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fcan-deparam&amp;sa=D&amp;sntz=1&amp;usg=AOvVaw220_I7_8edi7_BK19uQKBF">canjs-deparam</a> 库去解析query参数</p>
+<pre><code class="language-jsx">keyBreaker = /([^\[\]]+)|(\[\])/g,
+...
+module.exports = namespace.deparam = function (params, valueDeserializer) {
+    valueDeserializer = valueDeserializer || idenity;
+    var data = {}, pairs, lastPart;
+    if (params &amp;&amp; paramTest.test(params)) {
+        pairs = params.split('&amp;');
+        pairs.forEach(function (pair) {
+            var parts = pair.split('='),
+                key = prep(parts.shift()),
+                value = prep(parts.join('=')),
+                current = data;
+            if (key) {
+                parts = key.match(keyBreaker);
+                for (var j = 0, l = parts.length - 1; j &lt; l; j++) {
+                    var currentName = parts[j],
+                        nextName = parts[j + 1],
+                        currentIsArray = isArrayLikeName(currentName) &amp;&amp; current instanceof Array;
+                    if (!current[currentName]) {
+                        if(currentIsArray) {
+                            current.push( isArrayLikeName(nextName) ? [] : {} );
+                        } else {
+                            // If what we are pointing to looks like an `array`
+                            current[currentName] = isArrayLikeName(nextName) ? [] : {};
+                        }
+
+                    }
+                    if(currentIsArray) {
+                        current = current[current.length - 1];
+                    } else {
+                        current = current[currentName];
+                    }
+
+                }
+                lastPart = parts.pop();
+                if ( isArrayLikeName(lastPart) ) {
+                    current.push(valueDeserializer(value));
+                } else {
+                    current[lastPart] = valueDeserializer(value);
+                }
+            }
+        });
+    }
+    return data;
+}; 
+var obj = deparam(location.hash.substr(1))
+</code></pre>
+<p>例如上面的例子,检测是否存在原型链污染解析的方式是遍历不同的原型链污染payload在 <code>location.hash</code> 和 <code>location.search</code> 中:</p>
+<pre><code class="language-jsx">x[__proto__][abaeead] = abaeead
+
+x.__proto__.edcbcab = edcbcab
+
+__proto__[eedffcb] = eedffcb
+
+__proto__.baaebfc = baaebfc
+</code></pre>
+<h3 id="case-2">Case 2</h3>
+<p>这个例子里,我们检查一些位于客户端的<strong>用户输入</strong>或一些<strong>data/response处理</strong>的功能,会导致原型链污染.大部分时候,这个将导致self-XSS,这是因为攻击者无法控制例如case1的来自于location的输入,但,大部分时候,self-XSS能转换为reflected XSS</p>
+<p>这部分自动化使用CodeQL,需要下载全部的javascript,然后创建CodeQL数据库并扫描是否有js会导致prototype pollution</p>
+<h3 id="property-definition-by-pathlocation"><strong><strong>Property definition by path/location</strong></strong></h3>
+<aside>
+💡 There are numerous JavaScript libraries which are vulnerable to Prototype Pollution due to *`document.location`*
+</aside>
+<p>Prototype pollution list：https://github.com/BlackFan/client-side-prototype-pollution</p>
+<ul>
+<li>see al available properties of the Object: <code>Object.prototyp</code></li>
+</ul>
+<p>you can pollute：</p>
+<ul>
+<li>polluting all the object with the new attribute (reference <a href="https://www.notion.so/JSON-__proto__-o2-a379ece6dec24bdd87fe60bc39932a04">JSON解析的情况下，<code>__proto__</code><br>
+会被认为是一个真正的“键名”，而不代表“原型”，所以在遍历o2的时候会存在这个键。</a> ）</li>
+<li>polluting the DOM （reference <a href="https://www.notion.so/e19fee3d65fb47309c476cb7e103536b"></a>  )</li>
+</ul>
+<p><strong>unsafe merge recurses</strong></p>
+<p><code>lodash</code>and <code>Hoek</code> are examples of libraries susceptible to recursive merge attacks.</p>
+<p>简述原型污染下merge recurses步骤：</p>
+<ul>
+<li>检查源代码是否包含 <code>__proto__</code> 属性（被 <code>Object.definProperty()</code> 命名的），属性存在且一个object既在目标也在源代码中,且在目标上合并递归</li>
+<li>攻击者定义 <code>Object</code> 来源，将properties复制到 <code>Object</code> 的prototype上</li>
+</ul>
+<aside>
+💡 Clone operations是unsafe recursive merges的一个特殊子类：发生在recursive merges的对象是空的Object. `merge({},source)`
+</aside>
+<p><strong>Example 1</strong></p>
+<aside>
+💡 The impact and severity of Prototype Pollution depends on the application. Property definition by path/location is a key example.
+</aside>
+<p>we create object Book as：</p>
+<pre><code class="language-jsx">var book = {bookName: &quot;Book name&quot;, authorName: &quot;Author of book&quot;};
+</code></pre>
+<p>we can use <code>book.bookName</code> or <code>book[&quot;bookName&quot;]</code>  to get the book’s name</p>
+<ul>
+<li>
+<p>not work:</p>
+<pre><code class="language-jsx">*book.constructor.protoSomeRandomName // this will not work, since there is no attribute protoSomeRandomName*
+</code></pre>
+</li>
+<li>
+<p>work:</p>
+<pre><code class="language-jsx">Object.__proto__[&quot;protoSomeRandomName&quot;]=&quot;protoSomeRandomValue&quot;
+book.constructor.protoSomeRandomName // this will work and return value protoSomeRandomValue
+</code></pre>
+<ul>
+<li>We proved this indeed polluted all the objects created from the object Object with the new attribute,and all of these new objects have inherited this attribute from the prototype.</li>
+</ul>
+</li>
+<li>
+<p>other ways:</p>
+<pre><code class="language-jsx">Object.__proto__[&quot;protoSomeRandomName&quot;]=&quot;protoSomeRandomValue&quot;
+Object.__proto__.protoSomeRandomName=&quot;protoSomeRandomValue&quot;
+Object.constructor.prototype.protoSomeRandomName=&quot;protoSomeRandomValue&quot;
+Object.constructor[&quot;prototype&quot;][&quot;protoSomeRandomName&quot;]=&quot;protoSomeRandomValue&quot;
+</code></pre>
+</li>
+</ul>
+<h3 id="vulnerable-documentlocation-parsers">**<strong>vulnerable <em>document.location</em> parsers</strong></h3>
+<p><em>Credits go to: <a href="https://github.com/msrkp">s1r1us</a></em></p>
+<p>有关的文章:</p>
+<ul>
+<li><a href="https://blog.s1r1us.ninja/research/PP">https://blog.s1r1us.ninja/research/PP</a></li>
+</ul>
+<p>相关学习笔记</p>
+<p><a href="https://www.notion.so/document-location-c10ca99b748145849ac793d1ff47ce0e"><em><strong><strong>document.location 靶场练习笔记</strong></strong></em></a></p>
+<p><strong>Example 1 : <code>jquery-deparam</code>.</strong></p>
+<p><a href="https://msrkp.github.io/pp/1.html?__proto__%5BprotoSomeRandomName%5D=protoSomeRandomValue">https://msrkp.github.io/pp/1.html?<strong>proto</strong>[protoSomeRandomName]=protoSomeRandomValue</a></p>
+<p>related :<br>
+<a href="https://security.snyk.io/vuln/SNYK-JS-JQUERYDEPARAM-1255651">https://security.snyk.io/vuln/SNYK-JS-JQUERYDEPARAM-1255651</a></p>
+<p><strong>Example 2</strong></p>
+<p><a href="https://msrkp.github.io/pp/2.html?__proto__%5BprotoSomeRandomName%5D=protoSomeRandomValue">https://msrkp.github.io/pp/2.html?<strong>proto</strong>[protoSomeRandomName]=protoSomeRandomValue</a></p>
+<p><strong>Example 3</strong></p>
+<p><a href="https://msrkp.github.io/pp/3.html?__proto__%5BprotoSomeRandomName%5D=protoSomeRandomValue">https://msrkp.github.io/pp/3.html?<strong>proto</strong>[protoSomeRandomName]=protoSomeRandomValue</a></p>
+<h2 id="identifying-the-vulnerable-library">Identifying the vulnerable library</h2>
+<p>我们下一步需要:</p>
+<ul>
+<li>识别存在漏洞的library</li>
+<li>明确具体那一行原型链被污染</li>
+<li>哪些污染结果存储在了数据库中</li>
+</ul>
+<p>如果application不复杂,可以使用以下关键词: <code>location.hash/decodeURIComponent/location.search</code></p>
+<h3 id="blocking-the-js-resource-request-in-firefox">Blocking the JS resource request in Firefox</h3>
+<figure data-type="image" tabindex="1"><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled.png20220526_a.png" alt="Untitled" loading="lazy"></figure>
+<p>为了确认对应的js源文件是否导致了原型链污染.我们可以block url ,然后确认被污染的property是否为 <code>undefined</code> ,如果是,则确认该js源文件导致了原型链污染</p>
+<h3 id="debugger-breakpoint-on-setter">Debugger Breakpoint on setter</h3>
+<p>This technique is easier than others, we can set a breakpoint when the property is set to Obect.prototype.</p>
+<p>![Untitled](https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled 1.png20220526_a.png)</p>
+<pre><code class="language-jsx">function breakpoint(obj, prop){
+
+	var tmp = obj[prop];
+
+       Object.defineProperty(obj, prop, {
+
+           set: function(val) {
+
+               debugger;
+
+               return tmp = val;
+
+           }
+
+       });
+
+   };
+</code></pre>
+<h3 id="sensitive-function">sensitive function</h3>
+<p>javascript:</p>
+<ul>
+<li><code>Object.assign</code></li>
+</ul>
+<p>npmjs/jquery</p>
+<ul>
+<li><code>canjs-deparam</code> - deparam</li>
+</ul>
+<h2 id="finding-script-gadgets">Finding Script Gadgets</h2>
+<h3 id="what-is-a-script-gadget">What is a script gadget?</h3>
+<p>定义</p>
+<p>On the client-side, the escalation to XSS is the most interesting. The JavaScript code that can be used to escalate prototype pollution to other vulnerability is called a gadget.</p>
+<p>在确认了property被污染后,  是否有application logic或功能点能导致javascript execution.</p>
+<p>这里举的例子是SwiftType Search library中的script gadget,该payload会导致XSS:</p>
+<pre><code class="language-jsx">https://example.com/#__proto__[xxx]=alert(1)
+</code></pre>
+<p>以下是导致产生alert的代码片段(script gadget), <code>$.each</code> 遍历 <code>this._userServerConfiguration.install.hooks</code> 对象以及位于原型(prototype)上的属性,这将导致我们污染的原型 <code>xxx</code> 被执行</p>
+<pre><code class="language-jsx">each: function(t, e, i) {
+
+   /*removed for brevity*/
+     else
+         for (o in t)
+             if (r = e.call(t[o], o, t[o]),
+             r === !1)
+                 break;
+
+     return t
+
+ }
+
+pInstall._convertStringHooksToFunctions = function() {
+
+   var functionHooks = {};
+
+   $.each(this._userServerConfiguration.install.hooks, function(hookName, hookFunction) {
+
+       functionHooks[hookName] = eval(hookFunction)
+
+   }),
+
+   this._userServerConfiguration.install.hooks = functionHooks
+
+}
+</code></pre>
+<h3 id="using-existing-gadgets">using existing gadgets</h3>
+<p>First of all, it makes sense to check the existing gadgets in the <a href="https://github.com/BlackFan/client-side-prototype-pollution">BlackFan/client-side-prototype-pollution</a> repository or in the <a href="https://portswigger.net/web-security/cross-site-scripting/cheat-sheet#prototype-pollution">Cross-site scripting (XSS) cheat sheet.</a></p>
+<ul>
+<li>Using the <a href="https://chrome.google.com/webstore/detail/wappalyzer/gppongmhjkpfnbhagpmjfkannfbllamg?hl=en">Wappalyzer</a> plugin.</li>
+<li>Using a script <a href="https://gist.github.com/nikitastupin/b3b64a9f8c0eb74ce37626860193eaec">fingerprint.js</a>.</li>
+</ul>
+<p>fingerprint.js使用方式:</p>
+<ul>
+<li>
+<p>Copy the script and execute it in the context of the vulnerable page.</p>
+<p>![Untitled](https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled 2.png20220526_a.png)</p>
+<ul>
+<li><em><a href="https://gist.github.com/nikitastupin/b3b64a9f8c0eb74ce37626860193eaec">fingerprint.js</a> shows that the page has a Twitter Universal Website Tag gadget</em></li>
+</ul>
+</li>
+<li>
+<p>去https://github.com/BlackFan/client-side-prototype-pollution 搜关键词”Universal Website Tag” 发现已知gadget</p>
+</li>
+<li>
+<p>找到后测试:we are interested in the <a href="https://github.com/BlackFan/client-side-prototype-pollution/blob/004bf5353f6f30b720f3d68c5aca5191531f35d6/gadgets/twitter-uwt.md#poc">PoC</a> section with a ready-made payload. Trying out a payload on a vulnerable site <code>[https://ctf.nikitastupin.com/pp/known.html?__proto__[hif][]=javascript:alert(document.domain)](https://ctf.nikitastupin.com/pp/known.html?__proto__[hif][]=javascript:alert(document.domain).)</code></p>
+</li>
+</ul>
+<h3 id="finding-new-gadgets">👏 Finding new gadgets</h3>
+<p>like this: <code>[https://ctf.nikitastupin.com/pp/unknown.html?__proto__[polluted]=31337](https://ctf.nikitastupin.com/pp/unknown.html?__proto__[polluted]=31337.)</code></p>
+<p>Despite the fact that Wappalyzer reports the presence of jQuery,this is a false positive due to the jquery-deparam library that is used on the site</p>
+<p>There are several approaches to finding new gadgets:</p>
+<ol>
+<li><a href="https://github.com/filedescriptor/untrusted-types/tree/old">filedescriptor/untrusted-types</a>. At the time of writing, there are two versions of the plugin: <code>main</code> and <code>old</code>. We will use <code>old</code> because it is simpler than <code>main</code>. This plugin was originally developed for DOM XSS search, details can be found in the video <a href="https://youtu.be/CNNCCgDkt5k">Finding DOMXSS with DevTools | Untrusted Types Chrome Extension</a>.</li>
+<li><a href="https://github.com/securitum/research/tree/master/r2020_prototype-pollution">pollute.js</a>. How this tool works, as well as what vulnerabilities it allowed you to find, can be read in the article <a href="https://research.securitum.com/prototype-pollution-and-bypassing-client-side-html-sanitizers/">Prototype pollution — and bypassing client-side HTML sanitizers</a>.</li>
+<li>Search with your hands, using the debugger.</li>
+</ol>
+<p>案例请看<a href="https://infosecwriteups.com/javascript-prototype-pollution-practice-of-finding-and-exploitation-f97284333b2">https://infosecwriteups.com/javascript-prototype-pollution-practice-of-finding-and-exploitation-f97284333b2</a> 下的Edge case 接近于现实的案例.非常精彩的分析过程</p>
+<h3 id="keyword-search-and-source-code-review">Keyword search and Source Code Review</h3>
+<p>if application is simple,we can search for keywords like:</p>
+<ul>
+<li><code>srcdoc</code></li>
+<li><code>innerHTML</code></li>
+<li><code>iframe</code></li>
+<li><code>crateElement</code></li>
+</ul>
+<p>review the source code and check if it leads to javascript execution.</p>
+<p>Sometimes, mentioned techniques might not find gadgets at all.</p>
+<p>In that case, pure source code review reveals some nice gadgets like the below example.</p>
+<h3 id="jquery-example">jQuery example</h3>
+<p>BlackFan found this cool gadget in jQuery with source code review.</p>
+<pre><code class="language-jsx">&lt;script/src=https://code.jquery.com/jquery-3.3.1.js&gt;&lt;/script&gt;
+
+&lt;script&gt;
+
+ Object.prototype.preventDefault='x'
+
+ Object.prototype.handleObj='x'
+
+ Object.prototype.delegateTarget='&lt;img/src/onerror=alert(1)&gt;'
+
+ /* No extra code needed for jQuery 1 &amp; 2 */
+
+ $(document).off('foobar');
+
+&lt;/script&gt;
+</code></pre>
+<p>Here is the piece of code which is responsible for the gadget which is self explanatory.</p>
+<pre><code class="language-jsx">https://github.com/jquery/jquery/blob/5c2d08704e289dd2745bcb0557b35a9c0e6af4a4/src/event.js#L798
+
+if ( types &amp;&amp; types.preventDefault &amp;&amp; types.handleObj ) {
+
+   handleObj = types.handleObj;
+
+   jQuery( types.delegateTarget ).off(
+
+       handleObj.namespace ?
+
+           handleObj.origType + &quot;.&quot; + handleObj.namespace :
+
+           handleObj.origType,
+
+       handleObj.selector,
+
+       handleObj.handler
+
+   );
+
+   return this;
+
+}
+</code></pre>
+<h2 id="server-side-prototype-pollution">Server-side prototype pollution</h2>
+<p>It all started with the <a href="https://youtu.be/LUsiFV3dsK8">Olivier Arteau — Prototype pollution attacks in NodeJS applications</a> <br>
+, <a href="https://github.com/HoLyVieR/prototype-pollution-nsec18">prototype-pollution-nsec18</a>.Oliver discovered the prototype pollution vulnerability in <a href="https://hackerone.com/holyvier?filter=type%3Apublic&amp;type=user">several npm packages</a>, including one of the most popular <a href="https://www.npmjs.com/package/lodash">lodash</a> packages ( <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-3721">CVE-2018–3721</a>). The lodash package is used in many applications and packages of the JavaScript ecosystem. In particular, it is used in the popular <a href="https://github.com/TryGhost/Ghost">Ghost</a> CMS</p>
+<h3 id="finding-prototype-pollution">Finding prototype pollution</h3>
+<p>没有源代码这类漏洞很难被检测和利用(有CVE和现成的payload除外).</p>
+<p>假设,我们有源代码,代码中哪些地方值得被注意,漏洞最常见的地方在哪里?</p>
+<p><strong>What language constructs are prone to the vulnerability?</strong></p>
+<p>Most often, prototype pollution is found in the following constructs / operations:</p>
+<ul>
+<li>recursive merging of objects (for example, <a href="https://github.com/jonschlinkert/merge-deep">jonschlinkert/merge-deep</a>)</li>
+<li>cloning an object (for example, <a href="https://github.com/jonschlinkert/clone-deep">jonschlinkert/clone-deep</a>)</li>
+<li>converting GET parameters to a JavaScript object (for example, <a href="https://github.com/AceMetrix/jquery-deparam">AceMetrix/jquery-deparam</a>)</li>
+<li>convert <code>.toml</code> or <code>.ini</code> configuration files to a JavaScript object (for example, <a href="https://github.com/npm/ini">npm/ini</a>)</li>
+</ul>
+<p>We can trace a pattern: those operations that take a complex data structure (for example, <code>.toml</code><br>
+) as input and convert it into a JavaScript object are vulnerable</p>
+<h3 id="dynamic-analysis">Dynamic analysis</h3>
+<p>Let’s start with dynamic, as it is easier to understand and apply. The algorithm is quite simple and is already implemented in <a href="https://github.com/HoLyVieR/prototype-pollution-nsec18/tree/master/find-vuln">find-vuln</a>:</p>
+<ol>
+<li>Download the npm package.</li>
+<li>Call each function in the package, with a pagelode as an argument.</li>
+<li>Check whether the vulnerability has worked.</li>
+</ol>
+<p>The only drawback of <a href="https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/find-vuln/find-vuln.js">find-vuln.js</a> is that it doesn’t check <code>constructor.prototype</code> and therefore misses some of the vulnerabilities, but this gap is easy enough to fix.In general, making small changes to <a href="https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/find-vuln/find-vuln.js">find-vuln.js</a> even now you can find vulnerabilities in npm packages.</p>
+<h3 id="static-analysis">static analysis</h3>
+<p><a href="https://github.com/github/codeql/tree/main/javascript/ql/src/Security/CWE-915">CodeQL queries</a></p>
+<h3 id="impact-2">impact</h3>
+<p>在NodeJS环境里:</p>
+<ul>
+<li>guaranteed DoS:can overwrite a basic function</li>
+</ul>
+<h3 id="vuln-in-template-engines">vuln in template engines</h3>
+<p>In a web application, often you can spin up to remote code execution. Normally, this is done with the template engines. The details of the operation can be found in the articles below.</p>
+<ul>
+<li><a href="https://blog.p6.is/AST-Injection/">AST Injection, Prototype Pollution to RCE</a></li>
+<li><a href="https://blog.p6.is/Real-World-JS-1/">Real-world JS — 1</a></li>
+<li><a href="https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf">Prototype pollution attack in NodeJS application</a></li>
+</ul>
+<h2 id="nextjs">Next.js</h2>
+<p>you need know:</p>
+<ul>
+<li>Amp</li>
+</ul>
+<p>escape sandbox</p>
+<p>[16:49]</p>
+<p>![Untitled](https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled 3.png20220526_a.png)</p>
+<h2 id="mitigation">Mitigation</h2>
+<p>两种比较常用的方法:</p>
+<ul>
+<li>字段黑名单(Field black list)</li>
+<li>Json模式(JSON schema)</li>
+</ul>
+<h3 id="field-black-list">Field black list</h3>
+<p>大部分开发者是添加 <code>__proto__</code> 到黑名单(不推荐)</p>
+<p>黑名单推荐:</p>
+<ul>
+<li><code>constructor.prototype</code>
+<ul>
+<li>优点:能修复大部分问题,但是同时它没有完全解决问题</li>
+<li>缺点:仍然存在修改 <code>Object.prototype</code> 和其他 <code>prototype</code> 问题</li>
+</ul>
+</li>
+<li><code>Object.create(null)</code>
+<ul>
+<li>优点:使用没有prototype的object,这样修改prototype将变得不可能</li>
+<li>缺点:对功能性有些损失,例如有人想用 <code>toString()</code> 的场景,但会被提示 <code>o.toString is not a function</code></li>
+</ul>
+</li>
+<li><code>Object.freeze()</code>
+<ul>
+<li>优点:使用 <code>Object.freeze()</code> 来冻结 <code>Object.prototype</code> ,这样,在这之后, <code>Object.prototype</code> 不能被修改.</li>
+<li>缺点/pitfalls:
+<ul>
+<li>修改 <code>Object.prototype</code> 的依赖关系可能被中断</li>
+<li>通常也需要冻结 <code>Array.prototype</code> 和其他object</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="json-schema">JSON schema</h3>
+<p>验证通过<a href="https://json-schema.org/">JSON schema</a>预定义的输入数据,并丢弃其他参数</p>
+<p>For example, you can do this using the <a href="https://github.com/ajv-validator/ajv">avj</a> library with the <code>additionalProperties = false</code><br>
+ parameter.</p>
+<h2 id="resourcereference">Resource&amp;Reference:</h2>
+<p><strong>Video:</strong></p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=XS_UMqQalLI">https://www.youtube.com/watch?v=XS_UMqQalLI</a></li>
+<li><a href="https://www.youtube.com/watch?v=oGeEoaplMWA">https://www.youtube.com/watch?v=oGeEoaplMWA</a> <strong>DEF CON Safe Mode - Feng Xiao - Discovering Hidden Properties to Attack Node js Ecosystem</strong></li>
+</ul>
+<p><strong>Ariticle</strong></p>
+<ul>
+<li><a href="https://brightsec.com/blog/prototype-pollution/">https://brightsec.com/blog/prototype-pollution/</a></li>
+<li><a href="https://www.leavesongs.com/PENETRATION/javascript-prototype-pollution-attack.html">https://www.leavesongs.com/PENETRATION/javascript-prototype-pollution-attack.html</a> 推荐 讲的不错</li>
+<li><a href="https://infosecwriteups.com/javascript-prototype-pollution-practice-of-finding-and-exploitation-f97284333b2">https://infosecwriteups.com/javascript-prototype-pollution-practice-of-finding-and-exploitation-f97284333b2</a>  这个写的好好</li>
+</ul>
+<p><strong>Book</strong></p>
+<ul>
+<li>Prototype pollution attack in NodeJS application: <a href="https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf">https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf</a></li>
+</ul>
+<p><strong>Demo:</strong></p>
+<ul>
+<li>https://github.com/PwnFunction/Next.js-Flat-Prototype-Pollution</li>
+</ul>
+<p><strong>github:</strong></p>
+<ul>
+<li><a href="https://github.com/BlackFan/client-side-prototype-pollution">https://github.com/BlackFan/client-side-prototype-pollution</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/htbbackend-api/">
+              <h3 class="post-title">
+                下一篇：[HTB]Backend - API
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

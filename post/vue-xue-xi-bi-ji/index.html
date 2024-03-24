@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Vue学习笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Vue学习笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-12-03</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/jkUMP_xddR/">
+                    前端
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/9QDP9RqSk3q/">
+                    全栈
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/_H0fjvPhGUl/">
+                    vue
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>通过一天时间了解了一下vue，把一些对于新人来说比较混淆/不清楚的概念总结了一下</p>
+<h1 id="vue基本组件学习记录">Vue基本组件学习记录</h1>
+<h2 id="简单组件sample">简单组件sample</h2>
+<figure data-type="image" tabindex="1"><img src="https://i.loli.net/2020/12/03/LbFE5mSApPRhJXe.png" alt="Image" loading="lazy"></figure>
+<h2 id="局部注册">局部注册</h2>
+<figure data-type="image" tabindex="2"><img src="https://i.loli.net/2020/12/03/vbGenP2js36Mo7V.png" alt="Image" loading="lazy"></figure>
+<h1 id="基础指令">基础指令</h1>
+<h2 id="v-bind">v-bind</h2>
+<p>v-bind解释</p>
+<figure data-type="image" tabindex="3"><img src="https://i.loli.net/2020/12/03/EYJrAj9caf1i6N3.png" alt="Image" loading="lazy"></figure>
+<!-- more -->
+<p>v-bind动态赋值给prop</p>
+<pre><code class="language-html">    &lt;div id='app'&gt;
+    &lt;a v-bind:href=&quot;url&quot;&gt;link&lt;/a&gt;
+    
+    &lt;/div&gt;
+
+
+    &lt;script&gt;
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            url:'http://www.baidu.com/'
+        }
+    })
+
+
+    
+    &lt;/script&gt;
+        
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://i.loli.net/2020/12/03/sovRSWKbf4GMk8O.png" alt="Image" loading="lazy"></figure>
+<h2 id="v-on">v-on</h2>
+<p>监听事件指令：v-on</p>
+<figure data-type="image" tabindex="5"><img src="https://i.loli.net/2020/12/03/uSlih8Vp2r35ad1.png" alt="Image" loading="lazy"></figure>
+<h2 id="v-if">v-if</h2>
+<pre><code class="language-html"> &lt;div id='app'&gt;
+    &lt;h1 v-if=&quot;awesome&quot;&gt;Vue is awesome!&lt;/h1&gt;
+    &lt;h1 v-else&gt;Oh no 😢&lt;/h1&gt;
+    
+    &lt;/div&gt;
+
+
+    &lt;script&gt;
+    var vm = new Vue({
+        el:'#app',
+        data:{
+            awesome:false
+        }
+    })
+
+
+    
+    &lt;/script&gt;
+</code></pre>
+<h1 id="单文件组件">单文件组件</h1>
+<h2 id="项目基础">项目基础</h2>
+<figure data-type="image" tabindex="6"><img src="https://i.loli.net/2020/12/03/gapQD1Sdt94BZYG.png" alt="Image" loading="lazy"></figure>
+<p>然后在你需要创建项目的文件夹路径下输入：vue ui</p>
+<p><strong>然后 创建项目</strong></p>
+<h2 id="目录结构">目录结构</h2>
+<blockquote>
+<p>public 打包后部署到生产环境</p>
+<p>src 开发目录</p>
+<p>src -components 组件目录</p>
+<p>App.vue 入口文件</p>
+<p>helloword.vue 单文件按钮</p>
+</blockquote>
+<h2 id="如何运行">如何运行</h2>
+<p>如图</p>
+<figure data-type="image" tabindex="7"><img src="https://i.loli.net/2020/12/03/ajP96DnRUSKvQMf.png" alt="Image" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://i.loli.net/2020/12/03/Tp3c9nvXFw1lQHe.png" alt="Image" loading="lazy"></figure>
+<p>访问终端显示的地址</p>
+<!-- more -->
+<h2 id="单文件组件的结构">单文件组件的结构</h2>
+<p>script 声明数据，属性，方法</p>
+<figure data-type="image" tabindex="9"><img src="https://i.loli.net/2020/12/03/m2a4HpqOtfyZEb3.png" alt="img" loading="lazy"></figure>
+<p>然后在App.vue import这个单文件组件，然后在components中局部注册这个组件</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/code-audit-challengesphp-shua-ti-ji-lu-li-shi-bi-ji/">
+              <h3 class="post-title">
+                下一篇：Code-Audit-Challenges#php 刷题记录【历史笔记】
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

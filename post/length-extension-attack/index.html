@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Length Extension Attack | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Length Extension Attack</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-05-23</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/Svnemmt1vn/">
+                    刷题
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/u1f0sIOFOk/">
+                    加密攻击
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>关键词:MD5, SHA-1,Length Extension Attack</p>
+<h2 id="outline">Outline</h2>
+<p>网站通常会hash对应的secret以防止被篡改。而Length extension attack是指攻击者使用已知hash值的长度和hash算法类型，构造出新的有效hash值，而<strong>无需知道</strong>原始数据的内容。攻击成功后，攻击者可以向hash后的数据追加新的数据并重新计算hash值，而该hash值仍将保持有效。这种攻击通常会影响使用MD5和SHA-1等算法的网站。</p>
+<p>备注:</p>
+<ul>
+<li>可以通过data长度判断加密方式,例如128可能是MD5(it's the most common 128-bit hashing algorithm)</li>
+</ul>
+<h2 id="基础">基础</h2>
+<p>首先要对散列函数的基础概念有所了解.散列函数具有以下特性:</p>
+<ol>
+<li>散列函数的运算过程是不可逆的，这个称为散列函数的单向性。</li>
+<li>对于一个已知的消息及其散列值，要找到另外一个消息使其获得相同的散列值是不可能的，这个特性称为散列函数的弱碰撞性。这个特性可以用来防止消息伪造。</li>
+<li>任意两个不同消息的散列值一定不同。</li>
+<li>对原始消息长度没有限制。</li>
+</ol>
+<p>还有加密过程也是前置知识.</p>
+<h2 id="构造过程">构造过程</h2>
+<p>加密函数如下：</p>
+<pre><code class="language-php">HASH([SECRET][DATA])
+</code></pre>
+<p>攻击者则需要通过以下方式去计算</p>
+<pre><code class="language-php">HASH([SECRET][DATA][PADDING][SUFFIX])
+</code></pre>
+<p>其中secret为用于保护signature的secret，data为signed后的字符串</p>
+<p>攻击者需要知道对应的[SECRET]的size，以及[DATA]从而计算[PADDING]</p>
+<p>类似于CBC(我是说将第一次生成的结果作为下一次输入的一部分) 这里的长度攻击是从中间状态继续进行hash计算.</p>
+<p>具体的方式如下(总结自<a href="https://github.com/iagox86/hash_extender">github</a>),先假设前提:</p>
+<figure data-type="image" tabindex="1"><img src="https://i.imgur.com/RPMarJU.png" alt="Untitled" loading="lazy"></figure>
+<p>首先,服务器有一个初始的输入<code>secretdata</code>,并计算了其MD5 hash值:</p>
+<pre><code>6ee582a1669ce442f3719c47430dadee
+</code></pre>
+<p>然后,攻击者想在<code>secretdata</code>后面追加<code>append</code>,并伪造<code>secretdataappend</code>的hash值,以骗过服务器。但是攻击者不知道<code>secret</code>的值。那么如何计算<code>secretdataappend</code>的hash值呢?攻击者的方法是:</p>
+<ol>
+<li>
+<p>已知<code>secretdata</code>的hash值<code>6ee582a1669ce442f3719c47430dadee</code>。这是MD5函数计算完成后的状态。</p>
+</li>
+<li>
+<p>攻击者创建一个新的MD5上下文,并设置其初始状态为上一步得到的状态。这样,这个上下文就像是在<code>secretdata</code>后继续运行的。</p>
+</li>
+<li>
+<p>攻击者在这个上下文中再hash <code>append</code> 得到的hash值就是<code>secretdataappend</code>的hash值。</p>
+</li>
+<li>
+<p>攻击者可以将<code>dataappend</code>和伪造的hash值发送给服务器。服务器会在前面加上<code>secret</code>,计算hash值,得到的结果和攻击者一致,于是就被欺骗了。所以这个攻击的关键就是利用了MD5的长度扩展性质:知道一个hash值,可以继续从那个状态开始hash更长的输入。这就是所谓的长度扩展攻击。</p>
+</li>
+</ol>
+<h3 id="举例">举例</h3>
+<p>引用wiki的例子, 例如:</p>
+<pre><code class="language-php">Original Data: count=10&amp;lat=37.351&amp;user_id=1&amp;long=-119.827&amp;waffle=eggo
+Original Signature: 6d5f807e23db210bc254a28be2d6759a0f5f5d99
+</code></pre>
+<p>这个请求负责将10个类型为eggo的waffle运送到user_id为1的用户所指定的位置,当且仅当signature对用户来说是有效的.</p>
+<p>可以设计成以下:</p>
+<pre><code class="language-php">Desired New Data: count=10&amp;lat=37.351&amp;user_id=1&amp;long=-119.827&amp;waffle=eggo&amp;waffle=liege
+</code></pre>
+<p>这里message在遇到重复会优先选择最后一个waffle的值</p>
+<p>在长度攻击这里,可以将hash(上面的 <code>signature</code> ) 作为hashing function的状态输入, 并继续原来得请求.这里原始key(<code>count=10&amp;lat=37.351&amp;user_id=1&amp;long=-119.827&amp;waffle=eggo</code>)的长度是14, 可以伪造请求长度看服务器接受哪个长度.构造新的数据:</p>
+<pre><code class="language-php">New Data: count=10&amp;lat=37.351&amp;user_id=1&amp;long=-119.827&amp;waffle=eggo\x80\x00\x00
+          \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+          \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+          \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+          \x00\x00\x00\x02\x28&amp;waffle=liege
+</code></pre>
+<p>在这里DATA后跟着PADDING,然后SUFFIX为 <code>&amp;waffle=liege</code></p>
+<p>其中 <code>0x80</code> 为128 为原始长度.这里大多数算法包括MD4,MD5,RIPEMD-160,SHA-0,SHA-1,SHA-256都是string+padding直到长度为56 bytes(mod 64)然后再加一个8 bytes 的encoded 长度字段的大小端/an 8-byte little-endian length</p>
+<p>这里80 00 00 …. 作为PADDING部分.</p>
+<p>这里我觉得wiki的解释里的例子不太好,见github这个利用脚本的README里的讲解吧(https://github.com/iagox86/hash_extender)</p>
+<h2 id="工具">工具</h2>
+<p><a href="https://github.com/iagox86/hash_extender">https://github.com/iagox86/hash_extender</a></p>
+<p><code>git clone</code> 到本地后用makefile自动化编译.如果make报错的话需要从Makefile里移除 <code>Werror</code></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Length_extension_attack">https://en.wikipedia.org/wiki/Length_extension_attack</a></li>
+<li>Pentesterlab：Green</li>
+<li>https://github.com/iagox86/hash_extender</li>
+<li><a href="https://m.freebuf.com/articles/database/137129.html">https://m.freebuf.com/articles/database/137129.html</a></li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/htbencoding/">
+              <h3 class="post-title">
+                下一篇： HTB：Encoding
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

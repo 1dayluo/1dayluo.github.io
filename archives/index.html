@@ -1,0 +1,989 @@
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+        <div class="content-container">
+          
+          
+
+<div class="archives-container">
+  
+    <h2 class="year">2024</h2>
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/aws-chang-jian-an-quan-wen-ti-zong-jie-yi/">
+            <h2 class="post-title">
+              AWS 常见安全问题总结（一）
+              <small>2024-03-24</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/spring-ji-chu-gai-nian-bi-ji/">
+            <h2 class="post-title">
+              spring 基础概念笔记
+              <small>2024-01-09</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    <h2 class="year">2023</h2>
+    
+      
+    
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/cve-2023-50164-lou-dong-fen-xi-yu-xue-xi/">
+            <h2 class="post-title">
+              CVE-2023-50164 漏洞分析与学习
+              <small>2023-12-26</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/cc1-lian-xue-xi-bi-ji/">
+            <h2 class="post-title">
+              CC1链 学习笔记
+              <small>2023-07-11</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/java-xue-xi-bi-ji-servlet/">
+            <h2 class="post-title">
+              Java学习笔记: Servlet
+              <small>2023-06-08</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/gogs-rce-li-shi-lou-dong-xue-xi-bi-ji/">
+            <h2 class="post-title">
+               Gogs RCE 历史漏洞学习笔记
+              <small>2023-05-25</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/length-extension-attack/">
+            <h2 class="post-title">
+              Length Extension Attack
+              <small>2023-05-23</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htbencoding/">
+            <h2 class="post-title">
+               HTB：Encoding
+              <small>2023-04-23</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/synfony-rce-fen-xi/">
+            <h2 class="post-title">
+              Symfony RCE 分析
+              <small>2023-04-16</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htbvessel/">
+            <h2 class="post-title">
+              HTB:Vessel
+              <small>2023-04-02</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htbmentor/">
+            <h2 class="post-title">
+              HTB:Mentor
+              <small>2023-03-15</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htbforgot/">
+            <h2 class="post-title">
+              HTB:Forgot
+              <small>2023-03-09</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/xss-jin-jie-xue-xi-fen-xiang-yi/">
+            <h2 class="post-title">
+              XSS进阶学习分享（一）
+              <small>2023-02-07</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie/">
+            <h2 class="post-title">
+              XSS水题篇：关于DOM Colbbering一些个人理解
+              <small>2023-02-01</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/xin-zhu-ti-cute-notes-and-jian-ming-er-ci-kai-fa-zhi-bei/">
+            <h2 class="post-title">
+              新主题：Cute-Notes &amp; 简明二次开发指北
+              <small>2023-01-29</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/san-openvpn-lian-jie-htb-bao-cuo-xiu-fu-verfiy-error/">
+            <h2 class="post-title">
+              氵：openvpn连接htb报错修复：verfiy error
+              <small>2023-01-20</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/2022-nian-zong-jie/">
+            <h2 class="post-title">
+              初九 潜龙勿用：自学安全小白的2022年总结  
+              <small>2023-01-02</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    <h2 class="year">2022</h2>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/php-fan-xu-lie-hua-bi-ji/">
+            <h2 class="post-title">
+              PHP反序列化笔记
+              <small>2022-12-21</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/wo-hao-kun-11-yue-de-shui-wen-yi-fen/">
+            <h2 class="post-title">
+              我好困 11月的水文一份
+              <small>2022-11-30</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/shen-ru-qian-chu-ssrfer-wo-de-xue-xi-bi-ji/">
+            <h2 class="post-title">
+              深入浅出SSRF（二）：我的学习笔记
+              <small>2022-11-30</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/shen-ru-qian-chu-ssrf-wo-de-xue-xi-bi-ji/">
+            <h2 class="post-title">
+              深入浅出SSRF（一） ： 我的学习笔记
+              <small>2022-11-30</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/cve-2018-0114/">
+            <h2 class="post-title">
+              CVE-2018-0114 POC编写与实践
+              <small>2022-11-28</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/wo-de-gao-ji-ri-chang-po-zhen-kai-yuan-xi-tong-grapheneos-de-tui-jian/">
+            <h2 class="post-title">
+              我的「搞机」日常（破真）  - 开源系统GrapheneOS的推荐
+              <small>2022-11-26</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/jwt-crack-zong-jie/">
+            <h2 class="post-title">
+              JWT Crack总结 （一）
+              <small>2022-11-24</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/sddm-and-i3-mei-hua-and-za-tan/">
+            <h2 class="post-title">
+              sddm &amp; i3 美化 &amp; 杂谈
+              <small>2022-11-19</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/20220714-hui-tou-kan-wang-qian-zou/">
+            <h2 class="post-title">
+              20220714 回头看,往前走
+              <small>2022-07-14</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/linux-pian-pei-zhi-ni-de-aria2-wang-pan-xia-zai-dai-ti-xun-lei/">
+            <h2 class="post-title">
+              Linux篇:配置你的aria2 - (网盘下载 代替迅雷)
+              <small>2022-06-06</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/javascript-prototype-pollution-xue-xi-bi-ji/">
+            <h2 class="post-title">
+              Javascript Prototype Pollution 学习笔记
+              <small>2022-05-26</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htbbackend-api/">
+            <h2 class="post-title">
+              [HTB]Backend - API
+              <small>2022-04-17</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/wo-de-xue-xi-bi-ji-he-yi-xie-xiang-mu/">
+            <h2 class="post-title">
+              我的学习笔记和一些项目&amp;吐槽
+              <small>2022-04-15</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/java-rmiremote-method-invocation/">
+            <h2 class="post-title">
+              java RMI（Remote Method Invocation）
+              <small>2022-04-15</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/aws/">
+            <h2 class="post-title">
+              AWS 
+              <small>2022-04-15</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/struts2-s2-001-xue-xi-bi-ji/">
+            <h2 class="post-title">
+              Struts2 s2-001 学习笔记
+              <small>2022-04-09</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/lesslesszseanos-methodogygreatergreater-xue-xi-bi-ji/">
+            <h2 class="post-title">
+              《zseano&#39;s methodogy》学习笔记
+              <small>2022-02-01</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/google-dorking-learn/">
+            <h2 class="post-title">
+              Google Dorking Learn
+              <small>2022-02-01</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/geng-xin-liao-blog-nei-de-htb-de-wen-zhang-she-zhi-jia-mi/">
+            <h2 class="post-title">
+              更新了blog内的htb的文章,设置加密
+              <small>2022-01-31</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htbyi-dao-she-ji-dns-rebinding-attack-de-ti-wei-zuo-chu-lai/">
+            <h2 class="post-title">
+              [HTB]一道涉及DNS Rebinding attack的题(未做出来)
+              <small>2022-01-07</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    <h2 class="year">2021</h2>
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/tui-jian-yi-xia-zi-ji-kai-fa-de-lun-tan-dan-han/">
+            <h2 class="post-title">
+              推荐一下自己开发的论坛:蛋憨
+              <small>2021-12-29</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htb-petpet-rcbee/">
+            <h2 class="post-title">
+              [HTB] petpet rcbee 
+              <small>2021-12-28</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htb-weather-App/">
+            <h2 class="post-title">
+               [HTB] 又一道writeup:Weather | 收获颇多
+              <small>2021-12-22</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htbphonebook-or-writeup/">
+            <h2 class="post-title">
+              [HTB]phonebook | writeup
+              <small>2021-12-15</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/htb-templated-or-writeup/">
+            <h2 class="post-title">
+              [HTB] Templated | writeup
+              <small>2021-12-15</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/burpsuite-labauthentication-bypass-via-encryption-oracle/">
+            <h2 class="post-title">
+              【Burpsuite】 lab#Authentication bypass via encryption oracle
+              <small>2021-09-13</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/guan-yu-opener-de-xue-xi-ji-li-yong/">
+            <h2 class="post-title">
+              关于opener的学习及利用
+              <small>2021-08-27</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/guan-yu-mu-lu-bian-li-lou-dong-zhong-fei-biao-zhun-bian-ma-c02f-he-c0af-jun-neng-dai-biao-qie-jun-zai-lou-dong-zhong-sheng-xiao-de-yuan-li-tan-suo/">
+            <h2 class="post-title">
+               关于目录遍历漏洞中，非标准编码%C0%2F和%C0%AF均能代表/，且均在漏洞中生效的原理探索
+              <small>2021-08-17</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/ji-zhu-yue-du-web-huan-cun-tou-du/">
+            <h2 class="post-title">
+              [技术阅读]web缓存投毒
+              <small>2021-07-28</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/ji-zhu-yue-du-shuang-cha-xun-yuan-li/">
+            <h2 class="post-title">
+              [技术阅读]双查询原理
+              <small>2021-07-28</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/ji-zhu-yue-du-yong-github-lai-shi-xian-lou-dong-shang-jin-xi-ren/">
+            <h2 class="post-title">
+              [技术阅读]用github来实现漏洞赏金猎人
+              <small>2021-07-28</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/cc-pen-testingorwriteupornote/">
+            <h2 class="post-title">
+              CC Pen Testing|Writeup|Note
+              <small>2021-06-08</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+      
+        <article class="post">
+          <a href="https://1dayluo.github.io/post/markdown-tips/">
+            <h2 class="post-title">
+              Markdown Tips
+              <small>2021-05-14</small>
+            </h2>
+          </a>
+        </article>
+      
+    
+  
+</div>
+
+
+        </div>
+
+        <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+      </div>
+      <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+    </div>
+  </body>
+</html>

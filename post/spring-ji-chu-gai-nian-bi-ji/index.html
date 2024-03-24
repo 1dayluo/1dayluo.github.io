@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>spring 基础概念笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">spring 基础概念笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2024-01-09</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/3Sq6mun0f/">
+                    java
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>基于廖雪峰老师网站所做的java学习笔记。为了快速审计java代码，而非开发~</p>
+<h2 id="ioc">IOC</h2>
+<p><strong>Ioc容器</strong>，负责把一些service和datasource包装起来，并且管理创建和销毁</p>
+<p><strong>Bean</strong>， 一些service，例如用户注册，登陆，邮箱发送。。。这些会反复用到的.定义用[Annotation]((<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1282382596407330">https://www.liaoxuefeng.com/wiki/1252599548343744/1282382596407330</a>)，即<code>@Component</code> 注解的方式, 和 <code>@Autowired</code>注解，将指定Bean注入到指定字段中。其他注解：</p>
+<ul>
+<li><code>@Configuration</code> : 配置类，包括创建第三方Bean</li>
+<li><code>@ComponentScan</code>： 配置类同时会用这个Annotation，用于自动搜索当前类所在的包以及子包，把所有标注为<code>@Component</code>的Bean自动创建出来，并根据<code>@Autowired</code>进行装配。</li>
+<li>@Autowired(required = false) 注入Bean，但如果没有则忽略</li>
+<li><code>@PostConstruct</code>和<code>@PreDestroy</code> ： Bean的垃圾清理机制，对清理方法标记</li>
+</ul>
+<p>Bean系统中一个数据库事务中被调用，则使用 <code>@Transactional</code> 注解<br>
+除此之外，还有<code>Prototype</code>的Bean，需要 <code>@Scope</code>注解，第三方Bean，则需要 <code>@Bean</code><br>
+注解。<br>
+<strong>注入配置(<code>.properties</code>文件)：</strong><br>
+注入方法1: 使用 <code>@PropertySource</code>注解（例如<code>@PropertySource(&quot;app.properties&quot;))，在</code>@Configuration`配置类上加注解。</p>
+<pre><code class="language-java">@Value(&quot;${smtp.port:25}&quot;)
+    private int port;
+
+</code></pre>
+<p>上述，<code>@Value(&quot;${smtp.port:25}&quot;)</code> 的用法为读取<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1282383225552930">默认值</a>。<br>
+注入方法2: 在Bean上直接用 <code>@Value(&quot;${smtp.port:25}&quot;)</code> , 然后，也可以用 <code>@Value(&quot;#{smtpConfig.host}&quot;)</code>读取Bean下的host值（没有注解的变量也可以）。<code>#{}</code>表示从JavaBean读取属性<br>
+此外，java分不同的环境，例如开发（native/dev），测试（test），生产（prod），则需要用条件装配：</p>
+<pre><code class="language-java">@Configuration
+@ComponentScan
+public class AppConfig {
+    @Bean
+    @Profile(&quot;!test&quot;)
+    ZoneId createZoneId() {
+        return ZoneId.systemDefault();
+    }
+
+    @Bean
+    @Profile(&quot;test&quot;)
+    ZoneId createZoneIdForTest() {
+        return ZoneId.of(&quot;America/New_York&quot;);
+    }
+}
+
+</code></pre>
+<p>除此之外，还可以用 <code>@Conditional</code> 决定是否创建某个Bean， 案例见<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/13080438746644820">这个</a>，还有：</p>
+<ul>
+<li><code>@ConditionalOnProperty(name=&quot;app.smtp&quot;, havingValue=&quot;true&quot;)</code></li>
+<li><code>@ConditionalOnClass(name = &quot;javax.mail.Transport&quot;)</code></li>
+</ul>
+<h2 id="aop">AOP</h2>
+<p>AOP包括以下概念：</p>
+<ul>
+<li>Aspect：切面，即一个横跨多个核心逻辑的功能，或者称之为系统关注点；</li>
+<li>Joinpoint：连接点，即定义在应用程序流程的何处插入切面的执行；</li>
+<li>Pointcut：切入点，即一组连接点的集合；</li>
+<li>Advice：增强，指特定连接点上执行的动作；</li>
+<li>Introduction：引介，指为一个已有的Java对象动态地增加新的接口；</li>
+<li>Weaving：织入，指将切面整合到程序的执行流程中；</li>
+<li>Interceptor：拦截器，是一种实现增强的方式；</li>
+<li>Target Object：目标对象，即真正执行业务的核心逻辑对象；</li>
+<li>AOP Proxy：AOP代理，是客户端持有的增强后的对象引用。<br>
+通过AOP可以将指定的方法装配到指定Bean的前后</li>
+</ul>
+<p>Aspect相关注解/拦截器类型<br>
+拦截器：</p>
+<ul>
+<li><code>@Aspect</code> : 表明是一个Aspect</li>
+<li><code>@Before</code>： 标注的方法在注入到指定Service的每个public方法执行前</li>
+<li><code>@Around</code> ： 标注的方法在注入到指定Service的每个public方法执行后</li>
+</ul>
+<p>案例还是看<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1310052352786466">教程</a>写的<br>
+同时，例如于配置的类，需要加注解 <code>@EnableAspectJAutoProxy</code> 表示自动查找Aspect的Bean<br>
+另外这里还可以自定义注解, 任何有@MetricTIme注解的方法， 则调用 <code>metric()</code> 方法:</p>
+<pre><code class="language-java">@Aspect
+@Component
+public class MetricAspect {
+    @Around(&quot;@annotation(metricTime)&quot;)
+    public Object metric(ProceedingJoinPoint joinPoint, MetricTime metricTime) throws Throwable {
+        String name = metricTime.value();
+        long start = System.currentTimeMillis();
+        try {
+            return joinPoint.proceed();
+        } finally {
+            long t = System.currentTimeMillis() - start;
+            // 写入日志或发送至JMX:
+            System.err.println(&quot;[Metrics] &quot; + name + &quot;: &quot; + t + &quot;ms&quot;);
+        }
+    }
+}
+
+</code></pre>
+<h3 id="数据库">数据库</h3>
+<p><strong>jdbc</strong><br>
+spring提供了使用jdbc访问数据库的方法，例如用 <code>@PropertySource(&quot;jdbc.properties&quot;)</code> 读取数据库配置文件，同样也是加载配置类上的。spring还提供了 JdbcTemplate的方式：</p>
+<pre><code class="language-java">return jdbcTemplate.execute((Connection conn) -&gt; {
+
+	// ...
+}
+return jdbcTemplate.execute(&quot;SELECT * FROM users WHERE name = ?&quot;, (PreparedStatement ps) -&gt; {
+	// ...
+}
+
+</code></pre>
+<p>更多的jdbcTemplate的数据库查询案例见<a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1282383699509281">原文</a></p>
+<p><strong>事务</strong><br>
+spring为了同时支持jdbc和jta（分布式）两种事务类型，抽象出 <code>PlatformTransactionManager</code>, 除了在配置类下，定义出<code>PlatformTransactionManger</code>外，还要加 <code>@EnableTransactionManagement</code> 用于支持声明式事务。<br>
+使用到事务的方法，则加一个 <code>@Transactional</code>注解 / 或加在类上，表示任何public方法都支持事务</p>
+<ul>
+<li>需要回滚的事务注解：<code>@Transactional(rollbackFor = {RuntimeException.class, IOException.class})</code></li>
+<li>复杂的事务场景：需要定义事务传播模型</li>
+</ul>
+<p><strong>集成Hibernate</strong><br>
+实现orm到java对象互换</p>
+<p><strong>JPA</strong><br>
+一个ORM标准，但只是提供接口，依旧需要一些”实现“，例如Hibernate就是JPA的实现</p>
+<p>Hibernate和JPA需要用到<code>SessionFactory</code>与<code>EntityManagerFactory</code></p>
+<p><strong>Proxy模式</strong><br>
+为了获取Bean的更改及时同步到数据库，需要创建代理类。例如一些实现用户注册，登陆的User类，让UserProxy继承User类，同时这个代理类必须保持session，事务提交session关闭。但，为了关闭后，依旧获取事务一致的数据，引入了Attached/Datached状态，用于记录Bean是否在session范围内。<br>
+ORM还提供了多级缓存，用于多次查询返回同一实例</p>
+<p><strong>全自动ORM/半自动ORM</strong></p>
+<p>全自动ORM相对于jdbcTemplate有以下差别：</p>
+<ol>
+<li>查询后需要手动提供Mapper实例以便把ResultSet的每一行变为Java对象；</li>
+<li>增删改操作所需的参数列表，需要手动传入，即把User实例变为[<a href="http://user.id/">user.id</a>, <a href="http://user.name/">user.name</a>, user.email]这样的列表，比较麻烦。<br>
+jdbcTemplate有确定性，缺点是代码繁琐，ORM则有多个缓存，在二级缓存增大了数据的不一致性，可能会意外更新。所以产生了半自动ORM<br>
+半自动ORM框架常见的就是MyBatis，</li>
+</ol>
+<p><strong>MyBaitis</strong><br>
+需要创建 <code>SqlSessionFactoryBean</code></p>
+<pre><code class="language-java">@Bean
+SqlSessionFactoryBean createSqlSessionFactoryBean(@Autowired DataSource dataSource) {
+    var sqlSessionFactoryBean = new SqlSessionFactoryBean();
+    sqlSessionFactoryBean.setDataSource(dataSource);
+    return sqlSessionFactoryBean;
+}```
+另外，Mybatis使用Mapper来实现映射，且Mapper必须是接口。例如
+```java
+public interface UserMapper {
+	@Select(&quot;SELECT * FROM users WHERE id = #{id}&quot;)
+	User getById(@Param(&quot;id&quot;) long id);
+}
+</code></pre>
+<p>如果插入不需要传入 <code>id</code> 但是需要获取插入后的主键，需要加 <code>@Options</code>注解。<br>
+使用 <code>@MapperScan</code>自动创建Mapper实现类，将多个不同的Mapper接口自动创建接口实现。</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/cve-2023-50164-lou-dong-fen-xi-yu-xue-xi/">
+              <h3 class="post-title">
+                下一篇：CVE-2023-50164 漏洞分析与学习
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

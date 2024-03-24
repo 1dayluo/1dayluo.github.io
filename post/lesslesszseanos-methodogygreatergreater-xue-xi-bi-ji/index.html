@@ -1,0 +1,732 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>《zseano&#39;s methodogy》学习笔记 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">《zseano&#39;s methodogy》学习笔记</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-02-01</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/5CW47rOjA1/">
+                    学习笔记
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/ZYt2rq1nxl/">
+                    笔记
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="zseanos-methodogy学习笔记">《zseano's methodogy》学习笔记</h1>
+<p>一些图片没有上传,本地和notion好好的,上传上来格式有些emmm(看阅读时间要35min也能够知道完整的文章目前博客显示不完整),完整笔记可以联系我tg. 之前看书写的了,现在分享出来,希望能帮助到其他人.zseano的这本书可以在他的网站上找到,对于小白的我非常的有帮助!</p>
+<ul>
+<li>never go in with the mindset of trying every type of vulnerability possible</li>
+<li>all about spending months on the same program with the intention of diving as deep as possible</li>
+<li>to begin with I am focused purely<br>
+on finding areas（第一次尝试，需要确认一个你主要尝试的目标/方向）</li>
+</ul>
+<h1 id="common-issues-i-start-with-why">Common issues I start with &amp; why</h1>
+<h2 id="cross-siet-scriptingxss">Cross Siet Scripting(XSS)</h2>
+<p>XSS是最好预防的漏洞，存在WAF拦截，往往意味着application易受XSS攻击。关于绕WAF的payload：https://github.com/0xInfection/Awesome-WAF#how-wafs-work</p>
+<h3 id="step-onetesting-different-encoding-and-checking-for-any-weird-behaviour">Step One:Testing different encoding and checking for any weird behaviour</h3>
+<p>尝试：</p>
+<ul>
+<li>
+<p>输入<code>&lt;h2&gt;</code>,<code>&lt;img&gt;</code>等</p>
+</li>
+<li>
+<p>去看那些是被允许的，哪些是不被允许的。理解，目标是如何处理encoding的。例如：如果被过滤为<code>&amp;lt</code> or <code>%3C</code>,那么尝试double encoding,例如：<code>%253C</code>以及<code>%26lt;</code>去看看如何处理这类的encoding.</p>
+<ul>
+<li>如果不管你尝试什么，你总是看到<code>&amp;lt;script&amp;gt; </code>或<code>%3Cscript%3E</code> ,那么，该相关参数可能不易受到XSS攻击</li>
+</ul>
+<p>补充：一些有趣的encoding：https://d3adend.org/xss/ghettoBypass</p>
+</li>
+</ul>
+<h3 id="step-two-reverse-engineering-the-developers-thoughts">Step Two: Reverse engineering the developers' thoughts</h3>
+<p>(this gets easier with time &amp; experience)</p>
+<p>这一步站在开发者的视角去推测他们会创造什么类型的过滤（以及问：为什么？）</p>
+<ul>
+<li>切入点1-是否过滤完整的HTML tag：
+<ul>
+<li>如果发现他们过滤<code>&lt;script&gt;</code>，<code>&lt;iframe&gt;</code>,<code>&quot;onerror&quot;=</code>,但是同时注意到他们不过滤<code>&lt;script</code>。那么我们猜测：“是否只过滤完整的HTML tag”。我们可以尝试<code>&lt;script src=//mysite.com?c=</code></li>
+</ul>
+</li>
+<li>切入点2-是否维护着一个黑名单
+<ul>
+<li>忽略了一些HTML tag：也许开发者忽略了类似于<code>&lt;svg&gt;</code></li>
+<li>覆盖面：也许并不是全部参数都存在黑名单</li>
+<li>对于encoding如何处理？<code> &lt;%00iframe</code>, <code>on%0derro</code></li>
+</ul>
+</li>
+</ul>
+<p>**Testing for XSS flow:&quot; **</p>
+<ul>
+<li>
+<p>测试非而已HTML tag,例如<code>&lt;h2&gt;</code></p>
+</li>
+<li>
+<p>测试不完全的tag,例如<code>&lt;iframe src=//zseano.com/c=</code></p>
+</li>
+<li>
+<p>测试encoding,例如<code>&lt;%00h2?</code>（There are LOTS to try here,<br>
+<code>%0d</code>,<code> %0a</code>,<code> %09</code> etc）</p>
+</li>
+<li>
+<p>存在硬编码字符串的黑名单吗？测试<code> &lt;/script/x&gt;</code> 有效吗？或者<ScRipt> 等</p>
+</li>
+</ul>
+<p>推荐的资源：</p>
+<p><a href="https://github.com/masatokinugawa/filterbypass/wiki/Browser's-XSS-Filter-Bypass-Cheat-Sheet">Browser's-XSS-Filter-Bypass-Cheat-Sheet</a></p>
+<h2 id="cross-site-request-forgerycsrf">Cross Site Request Forgery(CSRF)</h2>
+<p>CSRF一般是通过HTML form (<code>&lt;form action=”/login” method=”POST”&gt;</code>),而且很容易被找到。经典的CSRF的例子是，改变一个用户的email为你 所控制的email地址，这将导致账户接管（account takeover)。</p>
+<ul>
+<li>
+<p>当你尝试发送空白的CSRF值时，是否有任何framework的信息通过error泄漏。</p>
+</li>
+<li>
+<p>它是否反映了你的更改，但出现的了CSRF错误。</p>
+</li>
+<li>
+<p>你是否在其他网站上看到了这个参数的名字</p>
+</li>
+</ul>
+<p>Test their most secure features (account functions usually as mentioned above) and work your way backwards. you may<br>
+discover that some features have different CSRF protection. Now consider, why?</p>
+<ul>
+<li>
+<p>一个常见的开发者检查referer header的值是否是他们的网站。会适得其反因为检查只存在与referer标头被查找到，而标头不存在，不会检查。</p>
+<ul>
+<li>你可以构造一个空的referrer，如下：</li>
+</ul>
+<p>​	<code>&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot; /&gt;&lt;iframe src=&quot;data:text/html;base64,form_code_here&quot;&gt;</code></p>
+<ul>
+<li>他们检查他们的域名是否存在于referer标头，你可以构造这样的referer：<code>https://www.yoursite.com/https://www.theirsite.com/</code></li>
+</ul>
+</li>
+</ul>
+<p>but typically all sensitive features should<br>
+be protected from CSRF, so find them and test there</p>
+<h2 id="open-url-redirects">Open url redirects</h2>
+<blockquote>
+<p>My favorite bug to find because I usually have a 100% success rate of using a<br>
+“harmless” redirect in a chain if the target has some type of Oauth flow which<br>
+handles a token along with a redirect</p>
+</blockquote>
+<p>Open Url redirect举例，类似于：https://www.google.com/redirect?goto=https://www.bing.com/ 当浏览时，将会重定向URL到给定的参数（这里是www.bing.com）。许多开发者未对这类链接进行过滤或限制。但即使如此，过滤器有时可能会阻止你的前进。</p>
+<p>以下是一些用于检测过滤器（filter）是否被使用的payload：</p>
+<pre><code>\/yoururl.com
+\/\/yoururl.com
+\\yoururl.com
+//yoururl.com
+//theirsite@yoursite.com
+/\/yoursite.com
+https://yoursite.com%3F.theirsite.com/
+https://yoursite.com%2523.theirsite.com/
+https://yoursite?c=.theirsite.com/ (use # \ also)
+//%2F/yoursite.com
+////yoursite.com
+https://theirsite.computer/
+https://theirsite.com.mysite.com
+/%0D/yoursite.com (Also try %09, %00, %0a, %07)
+/%2F/yoururl.com
+/%5Cyoururl.com
+//google%E3%80%82com
+</code></pre>
+<p>Some common words I dork for on google to find vulnerable endpoints: (don't forget<br>
+to test for upper &amp; lower case!)</p>
+<pre><code>return, return_url, rUrl, cancelUrl, url, redirect, follow, goto, returnTo, returnUrl, r_url,
+history, goback, redirectTo, redirectUrl, redirUrl
+</code></pre>
+<hr>
+<p>学习Oauth login flow works相关的知识：</p>
+<p>https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2</p>
+<p>在Ouath login的场景中，如果有一个登陆页面发出像这样的请求</p>
+<p>https://www.target.com/login?client_id=123&amp;redirect_url=/sosecure</p>
+<p>通常redirect_url在<code>*.target.com</code>  的白名单中。Spot the mistake?<br>
+Armed with an open url redirect on their website you can leak the token because as the redirect occurs the token is smuggled with the request.</p>
+<p>用户发送：</p>
+<p>https://www.target.com/login?client_id=123&amp;redirect_url=https://www.target.com/redirect?url=https://www.google.com/</p>
+<p>登陆后被重定向到攻击者的网站并伴随授权的token.Account take over report incoming!</p>
+<hr>
+<p>另一个常见的问题是人们没有正确编码，特别是目标只允许<code>/localRedirects</code>。你的payload可能看起来有些像<code>/redirect?goto=https://zseano.com/</code> ，但是当使用它时，<code>?goto=parameter</code>可能会在重定向中被丢弃。</p>
+<p>在有多个参数的时候（通过&amp;链接）重定向参数也有可能丢失。zseano总是要将特定值例如<code>&amp; ? # / \ </code>进行编码，去让览器在第一个跳转后强行解码。</p>
+<p><code>Location: /redirect%3Fgoto=https://www.zseano.com/%253Fexample=hax</code></p>
+<p>第一次跳转，链接变为（浏览器自动将<code>%3F</code>化为<code>?</code>：</p>
+<p><code>https://www.example.com/redirect?goto=https://www.zseano.com/%3Fexample=hax</code></p>
+<p>当它再次跳转时，将会允许<code>?example</code>也一起被发送。你将会在下文读到更多关于此更有趣的。</p>
+<p>有时你将需要根据跳转次数，来对<code>&amp;</code>参数选择double encode次数</p>
+<pre><code>https://example.com/login?return=https://example.com/?redirect=1%26returnurl=https%3A%2F%2Fwww.google.com%2F
+
+
+#第二条与第一条区别是需要两次解码。第一次解码后为：
+#https://example.com/login？return=https://example.com/?redirect=1%26returnurl=https%3A%2F%2Fwww.google.com%2F
+#第二次解码后则是和第一条完全一样。
+
+
+https://example.com/login?return=https%3A%2F%2Fexample.com%2F%3Fredirect=
+1%2526returnurl%3Dhttps%253A%252F%252Fwww.google.com%252F 
+
+</code></pre>
+<p><strong>当寻找open url redirects时也要牢记，他们可以被用来SSRF漏洞</strong></p>
+<p>如果你发现重定向是通过<code>Location:</code>标头进行的，那么XSS是<strong>不可能的</strong>,然而如果它通过一些例如<code>window.location</code>来重定向，那么你应该测试<code>javascript:</code>而不是测试重定向到你的网站。因为这里有可能出现XSS。</p>
+<p>一些常见的bypass filter</p>
+<pre><code>java%0d%0ascript%0d%0a:alert(0)
+j%0d%0aava%0d%0aas%0d%0acrip%0d%0at%0d%0a:confirm`0`
+java%07script:prompt`0`
+java%09scrip%07t:prompt`0`
+jjavascriptajavascriptvjavascriptajavascriptsjavascriptcjavascriptrjavascriptijavascript
+pjavascriptt:confirm`0`
+</code></pre>
+<h2 id="server-side-request-forgeryssrf">Server Side Request Forgery(SSRF)</h2>
+<p>SSRF是in-scope domain发出的一个请求到你所定义的一个URL/endpoint。有时并不总是标志着目标易受攻击。当hunting for SSRF，zseano通常寻找已经使用URL参数的特性。重点关注处理URL的参数的名称</p>
+<p>当你测试srrf时，你应该总是测试他们如何处理重定向的。你能够通过XAMPP &amp; NGrok 来（zseano写过这个方法找到apple的漏洞，见另一个笔记）</p>
+<ul>
+<li>设置一个简单的重定向脚本，并查看目标如何解析和跟随重定向：。增加sleep(1000)在重定向前，你能导致服务器处理超时或挂起？</li>
+<li>也许fileter只检查参数值而不检查redirect value.从而你能成功访问到内网。</li>
+<li>当目标过滤外在网站时，利用开放重定向作为你的chain中的一部分。</li>
+</ul>
+<p>除了关注URL参数，也需要查找他们可能使用的第三方软件，例如jira.</p>
+<h2 id="file-uploads-for-stored-xss-remote-code-execution">File uploads for stored XSS &amp; remote code execution</h2>
+<p>There is a 99% chance the developer has created a filter as to what files to allow and what to block.通常至少会有一个（或更多的）过滤在这里。</p>
+<p>一般先尝试上传例如：</p>
+<p><code>.txt</code>,<code>.svg</code>,<code>.xml</code> 类型的文件。</p>
+<p>这三种文件类型又是会被遗忘，并且通过过滤器。</p>
+<ul>
+<li>首先上传<code>.txt</code> 检查filter过滤有多严格（是否说只允许图片，例如:<code>.jpg .png .gif</code>等)
+<ul>
+<li>以及只是简单地上传三种类型的图片（<code>.png .gif .jpg</code>)，通过这个给你一条狗他们是如何处理上传的指示
+<ul>
+<li>例如，是否所有的照片被保存为统一格式而忽视我们上传的格式？他们是否不信任我们的任何输入并始终保存为 <code>.jpg</code>？</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>测试上传文件名（类似于XSS）
+<ul>
+<li>测试名字<code>zseano.php/jpg</code> 。代码可能会看到<code>.jpg</code> 通过。但实则写入服务器的为<code>zseano.php</code>并忽略<code>/</code>后所有的内容。</li>
+<li>测试例如<code>zseano.html%0d%0a.jpg</code>  在这里<code>%0d%0a</code>是代表着换行。所以将保存为<code>zseano.html</code>。</li>
+<li>不要忘记文件名通常反应在页面上。你也可以走私一些XSS字符在文件名内。（一些开发者认为用户不会保存文件用<code>&lt;</code>或<code>》</code>）</li>
+</ul>
+</li>
+</ul>
+<pre><code>------WebKitFormBoundarySrtFN30pCNmqmNz2
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;58832_300x300.jpg&lt;svg
+onload=confirm()&gt;&quot;
+Content-Type: image/jpeg
+ÿØÿà
+</code></pre>
+<p>开发者究竟会检查什么，以及如何处理它。他们会相信任意我们所输入的吗？例如，我提供了以下：</p>
+<pre><code>------WebKitFormBoundaryAxbOlwnrQnLjU1j9
+Content-Disposition: form-data; name=&quot;imageupload&quot;; filename=&quot;zseano.jpg&quot;
+Content-Type: text/html
+</code></pre>
+<p>代码看到<code>.jpg</code> 思考这是图片扩展。从而相信了我的<code>content-type</code>并且把它作为<code>Content-Type:text/html</code>来映射吗？或者它基于file extension来设置content-type。如果，你提供了不带文件扩展名的（或者没有文件名），它会设置默认<code>content-type</code> 或默认文件扩展名吗？</p>
+<pre><code>------WebKitFormBoundaryAxbOlwnrQnLjU1j9
+Content-Disposition: form-data; name=&quot;imageupload&quot;; filename=&quot;zseano.&quot;
+Content-Type: text/html
+
+</code></pre>
+<pre><code>------WebKitFormBoundaryAxbOlwnrQnLjU1j9
+Content-Disposition: form-data; name=&quot;imageupload&quot;; filename=&quot;.html&quot;
+Content-Type: image/png
+&lt;html&gt;HTML code!&lt;/html&gt;
+</code></pre>
+<p>这些都是为了给它提供畸形（malformed)的输入以及看它们所信任的有多少。也许他们并不检查文件扩展名，相反检查图片大小。一些时候，如果你leave the image header this is enough to bypass the checks</p>
+<pre><code>------WebKitFormBoundaryoMZOWnpiPkiDc0yV
+Content-Disposition: form-data; name=&quot;oauth_application[logo_image_file]&quot;;
+filename=&quot;testing1.html&quot;
+Content-Type: text/html
+‰PNG
+&lt;script&gt;alert(0)&lt;/script&gt;
+</code></pre>
+<p>File upload 将很可能包括某种类型的过滤器去防止恶意上传，所以一定要花足够时间去测试它们。</p>
+<h2 id="insecure-direct-object-referenceidor">Insecure Direct Object Reference(IDOR)</h2>
+<p>一个IDOR bug的例子。例如：https://api.zseano.com/user/1当查询的时候所给你的信息仅有用户的userid为“1”。改变user id为“2”，则应该给你一个错误的，并拒绝——想你展示你访问了其他的用户的详情。然而，如果他们是易受攻击的，那么，它将给你展示其他用户的信息。简而言之，IDOR就是改变数字为其他用户，并能看到返回的结果。</p>
+<p>但并不总是简单的整数（1）那么简单，有时，你将会看到GUID（2b7498e3-9634-4667-b9ce-a8e81428641e）或者其他类型被加密的值。暴力破解GUID不可取，通常会检查该值是否哪里有泄漏。</p>
+<ul>
+<li>Tips：即使你看到了一些encrypted value,也要试着尝试一下integer！</li>
+<li>Tips：笔者对mobile apps的IDOR很重视。通常会有IDOR漏洞产生。</li>
+</ul>
+<p>可能存在IDOR的地方：</p>
+<ul>
+<li>网站上传照片功能处，你也可以查看其他用户的照片
+<ul>
+<li>深入思考，如果你注册不同角色，你能以guest身份实施admin身份的动作吗？</li>
+</ul>
+</li>
+<li>非付费用户可以使用付费用户的内容吗？</li>
+<li>在post请求处见到postdata为JSON，格式为以下(也适用于非JSON格式）：
+<ul>
+<li><code>{&quot;example&quot;:&quot;example&quot;},</code> 则就可以尝试诸如一个新的参数名：<code>{&quot;example&quot;:&quot;example&quot;,&quot;id&quot;:&quot;1&quot;}</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="corscross-origin-resource-sharing">CORS(Cross-Origin Resource Sharing)</h2>
+<p>另一个常被推荐的领域是查找<strong>filtering</strong></p>
+<p>当你看到response中的header出现:“Access-Control-Allow-Origin:”。那么同时,有时根据场景你也需要&quot;Access-Allow-Credentials:true&quot;。这些header允许外部网站去阅读网站的内容。</p>
+<p>如果request中需要会话cookie，则需要Allow-credentials。开发者通常创造过滤器从而只允许他们的domain去阅读内容，但是，谨记，只要存在过滤就存在绕过的可能性。</p>
+<p>最常见的方式是尝试anythinghere<strong>theirdomain.com</strong>，他们通常ui检查他们的域名是否被查找到，就像这个例子中的一样。</p>
+<p>在测试CORS的时候，你仅需添加<code>Origin: theirdomain.com</code> 在每一个你发起的请求里，然后创建一个grep,来检测<code>Access-Control-Allow-Origin</code> 。即使你发现了一个确认的endpoint包含该header,但是却不包含任意敏感信息，你也需要花费时间去尝试bypass。过滤器。开发人员总是重复使用代码，这里的“harmless” bypass也许会在你研究的随后起到作用。</p>
+<h2 id="sql-injection">SQL Injection</h2>
+<p>特别需要注意的是，遗留代码更容易受到SQL injection,所以留意旧有功能。SQL injection能够简单地在站点上被测试，因为大多数代码都会进行某些数据库查询（举个例子，比如查询，他通常会用你的输入查询数据库）。</p>
+<p>过去：</p>
+<ul>
+<li>当测试SQL注入时，你能够简单地利用<code>‘ and </code>  去寻找错误，但自从过去以来发生了很多变化，许多开发者开始禁止error messages。</li>
+</ul>
+<p>现在：</p>
+<ul>
+<li>使用<code>sleep</code>进行盲注。例如：
+<ul>
+<li><code>' or sleep(15) and 1=1#</code></li>
+<li><code>' or sleep(15)#</code></li>
+<li><code>' union select sleep(15),null#</code></li>
+</ul>
+</li>
+</ul>
+<p>测试SQL诸如，采取和XSS一样的方法，并且是在整个web application中测试。</p>
+<p>作者：<strong>Being honest I do not have as much success<br>
+finding SQL as I do with other vulnerability types</strong></p>
+<h2 id="businessapplication-logic">Business/Application Logic</h2>
+<p>理解网站是如何工作的，并且尝试不同的技术去创造奇怪的行为，可能会导致一些有趣的发现。例如想象你的目标测试网站发放贷款，他们有最大限制是<code>£1,000</code>，如果你能简单地改为10000,并且bypass了他们的限制，那么你什么也没做仅仅是利用了你前面的功能。不需要扫描，没有奇怪的filter，没有真正涉及黑客行为，只是简单地检查该过程是否正常工作。</p>
+<p>另一个常见的当hunting for application logic bugs的查找是新特性和旧特性的交互（<strong>new features which interact with old features</strong>），想象一些，你可以声明页面的所有权，但是你需要提供身份证明。</p>
+<p>新特性出现让你升级页面去获取一些额外的好处，但是唯一需要的信息是有效付款数据。一旦提供，他们将加你为页面的所有者，且你会bypass掉认证步骤。当你继续阅读时，你会发现笔者的方法论就是花几天/几周时间去了解一个网站如何运行的，以及开发人员希望用户去输入/做什么，以及相处打破和绕过的方法。</p>
+<p>另一个例子是一些企业逻辑漏洞能够注册一个用户，以example@target.com注册。一些时候这些账户拥有特权，例如没有速率限制和绕过某些验证。</p>
+<p>当你对一个web application如何工作了解的时候，business/application逻辑漏洞就会浮出水面。你对他们所提供的也有了更清晰的了解。The more you use their website the more you’ll start to<br>
+understand how things SHOULD work</p>
+<h1 id="chosing-a-program">Chosing a program</h1>
+<blockquote>
+<p>I typically choose wide scope and well known names</p>
+</blockquote>
+<blockquote>
+<p><strong>There is no right or wrong answer to choosing a bug bounty program if I'm<br>
+honest.</strong></p>
+</blockquote>
+<blockquote>
+<p>If the first few reports go well then I will continue</p>
+</blockquote>
+<p>以下是确认你是否参与了运行良好的漏洞赏金计划的清单：</p>
+<ul>
+<li>团队是否直接与你沟通，或是否100%依赖平台？能够与团队直接沟通与交流是最好的，如过program使用的是托管服务，则务必谨慎</li>
+<li>program活跃吗？scope最后一次更新是什么时候？（通常在bug bounty platform上存在&quot;update&quot;的tab）</li>
+<li>团队如何处理“low hanging furit bugs” 在chains中能够制造更大的影响？团队是否视不同XSS都是一样的，或者他们认可你的工作甚至奖励更多？这是你的风险与回报将发挥作用的地方。一些programs将会为XSS支付相同的回报，而另一些则会根据影响来支付。</li>
+<li>大概在3～5篇报告的响应时间。如果你在报告3个月以上仍在等待答复，那么思考在这个program是否值得花费更多的时间。很可能没有</li>
+</ul>
+<h1 id="writing-notes-as-you-hack">Writing notes as you hack</h1>
+<p>在前面笔者自己后悔自己第一次参与赏金计划时，没有记笔记（我也需要注意）</p>
+<p>写笔记能够切实在当你未来卡住的时候起到帮助。当你觉得，你已经浏览过所有提供的特性时，你需要<strong>回顾你的笔记</strong> 去重温有趣的点，以及用新的心态尝试新的方法。</p>
+<p>记录笔记的方法没有正确的和错误的，这里笔者提出了参考，</p>
+<ul>
+<li>他自己使用sublime，，并且记录有趣的endpoint，有趣的行为，或参数。有时候，笔者会测试无法利用的某个feature/endpoint（想着我之后会回来的）。<strong>Never burn yourself out</strong></li>
+<li>另一件笔记需要记录的，是<strong>create custom wordlists</strong>
+<ul>
+<li>假设，我们测试example.com的时候，发现了<code>/admin</code>,<code>/admin-new</code>,以及<code>/server_health</code>，伴随着参数<code>debug</code>和<code>isTrue</code> 。我们可以创建一个<code>examplecom-endpoints.txt &amp; params.txt</code>,这样我们知道这些endpoint在特定的domain上工作。</li>
+<li>而且，你可以跨多个domains来测试所有的endpoints/parameters。并且创造一个 “global-endpoints.txt” ，开始提供常见的发现到的endpoint。Over time you will end up with lots of endpoints/parameters for specific domains and you will begin to map out a web application much easier.</li>
+</ul>
+</li>
+</ul>
+<h1 id="lets-apply-my-methodology-hack">Let’s apply my methodology &amp; hack！</h1>
+<h2 id="step-one-getting-a-feel-for-things">Step One: Getting a feel for things</h2>
+<p>With that said, before I even open a program's in-scope domain I<br>
+want to know something.</p>
+<p><strong>Has anyone else found anything and disclosed a writeup?</strong></p>
+<p>在开始hacking之前，笔者将会google,hackerone disclosed以及OpenBugBounty上查找任何过去发现的问题。因为笔者想是否有有效的问题被发现，以及是否存在任何有趣的bypass.</p>
+<ul>
+<li>https://www.google.com/?q=domain.com+vulnerability</li>
+<li>https://www.hackerone.com/hacktivity</li>
+<li>https://www.openbugbounty.org/</li>
+</ul>
+<p>测试公开披露的漏洞能够给你一个立即开始的起点，以及当你感受网站如何工作时，给你一个站在不同问题类型上的视角。一些时候，你甚至需要bypass old disclosed bugs！（https://hackerone.com/reports/504509 )</p>
+<ol>
+<li>
+<p>在开始最初检查和运行任何扫描器前，笔者也先了解一下他们的web application是怎样工作的。在这一点上，笔者将测试上述列出的bugs足为他自己的总体意图——理解这些东西在一开始是怎样运行的。基于假设：”网站是安全的“ &amp; ”它应该按意图的流程来“</p>
+</li>
+<li>
+<p>记住要<strong>记笔记</strong>。当笔者测试一些feature,例如register&amp;login的时候，通常在大脑中会有一系列的问题，例如，我能够用我的社交账户登陆吗？这个在mobile app上表现的一致吗？如果我尝试其他的地里定位，我能够登陆后有更多的选项，例如WeChat。 哪些字符是不允许的？</p>
+<blockquote>
+<p><strong>I let my thoughts naturally go down the rabbit hole because that's what makes you a natural hacker.</strong></p>
+</blockquote>
+</li>
+</ol>
+<p>​	  当你注册时，那些输入是你可控的？他们反映在那里？再次，手机注册时网站会使用不同的代码吗？笔者喜欢从简单的注册这里找到大量的XSS在mobile app上，而不是desktop。并且没有过滤！</p>
+<hr>
+<p>Below is a list of key features I go for on my first initial look &amp; questions I ask<br>
+myself when looking for vulnerabilities in these areas. Follow this same approach<br>
+and ask the same questions and you may very well end up with the same answer I<br>
+get... a valid vulnerability!</p>
+<h3 id="registration-process"><strong>Registration Process</strong></h3>
+<ul>
+<li>注册需要什么？</li>
+<li>是否需要大量信息（Name,Location,bio,etc)</li>
+<li>这些那里会在注册后所反映</li>
+</ul>
+<p>一个随后的例子，当你注册以<code>BARKER</code>时，它会要求你输入display name,profile description以及upload a photo。他要求了很多信息能让你玩上几个小时，让我们分解它，并弄清楚我们应该寻找什么。</p>
+<p><strong>Uploading a photo</strong></p>
+<p>上文提到，我们想知道我们能上传什么类型的图片，所以我们上传普通的jpeg图片。但，改变扩展名为<code>.txt</code> ,<code>.xml</code>，<code>.svg</code>，然后看它如何处理的。这取决于web application工作方式，你可能看不到你上传的photo，直到你完成了注册流程。Now can you see why re-testing features multiple times comes into action?</p>
+<p><strong>Display name and profile description</strong></p>
+<p>同样，在你完成注册过程之前，这些可能会不被看到。但是他们在那里反映，哪些字符被允许？</p>
+<p>不仅如此，还要考虑这些信息会在<strong>哪里</strong>被使用。想象一下，你能够通过<code>&lt;``&gt;</code>但是当你在桌面上浏览个人资料时却不会受到攻击，这个时候考虑mobile apps，或者与网站交互时（发布一个文章，添加一个人）。开发者只阻止了你页面的XSS吗？</p>
+<p>Q&amp;A:</p>
+<ul>
+<li>
+<p>我能够用自己的社交媒体张号码？</p>
+<ul>
+<li>如果是，这是通过某个类型的Oauth flow实现的并且包含我的token,我的token可能会被泄漏？允许哪类社交媒体？他们信任我的社交媒体上的哪些信息？</li>
+</ul>
+</li>
+<li>
+<p>Google知道这些注册页面吗？</p>
+<ul>
+<li>
+<p>Login/register页面的改变（为了用户体验），google机器人索引能够记住很多：</p>
+<pre><code>site:example.com inurl:register inurl:&amp; 
+
+site:example.com inurl:signup inurl:&amp;
+
+site:example.com inurl:join inurl:&amp;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="login-process-and-reset-password"><strong>Login Process ( and reset password)</strong></h3>
+<ul>
+<li>
+<p>登陆页面上是否使用了重定向参数？</p>
+<p>答案通常是“是”，如果他们想人用户完成登陆后受控制的跳转。Even if you don’t see one being used always try the most common, in various upper/lower cases: <mark>returnUrl, goto,<br>
+return_url, returnUri, cancelUrl, back, returnTo</mark></p>
+</li>
+</ul>
+<p>![image-20211202110132955](/home/koui/Documents/BB Notes/《zseano's methodogy》学习笔记.assets/image-20211202110132955-16384140965051.png)</p>
+<ul>
+<li>
+<p>如果我尝试使用<code>myemail%00@email.com</code>登陆会如何？它会识别为<code>myemail@email.com</code>吗，或许允许我登陆进？如果是，尝试注册<code>my%00email@email.com</code> 并尝试一个用户的takeover.在声明用户名时也要考虑同样的问题</p>
+</li>
+<li>
+<p>我能够用我的社交账户登陆吗？</p>
+<p>If yes, is this implemented via some<br>
+type of Oauth flow which contains tokens which I may be able to leak? What social<br>
+media accounts are allowed? Is it the same for all countries? This would typically be<br>
+related to the registration process however not always. Sometimes you can only<br>
+login via social media and NOT register, and you connect it once logged in. (Which<br>
+would be another process to test in itself!)</p>
+</li>
+<li>
+<p>mobile登陆流会和desktop有所不同吗？</p>
+</li>
+</ul>
+<p>​    记住，用户体验！mobile websites设计给不需要鼠标去导航只需要简单的导航。</p>
+<ul>
+<li>重置你的密码的时候，用了哪些参数？</li>
+</ul>
+<p>​	也许，这里有IDOR的漏洞（尝试诸如id参数）。host标头是否可信？尝试重置密码时，设置host为<code>Host: evil.com</code>，网站会信任该值并且发送到email吗，当用户点击这个链接的时候，是否会导致重置密码token泄漏（比如，链接到<code>evil.com/resetpassword?token=123</code>)</p>
+<p>​     通常，你进行login/register/reset密码的时候要有速率限制（brute force），但通常考虑<strong>informative/out of scope</strong>，所以笔者不总是浪费世界。检查 program policy以及和他们对立的立场。大多数网站都采用了稳固的密码政策和2FA</p>
+<h3 id="updating-account-information"><strong>Updating account information</strong></h3>
+<ul>
+<li>
+<p>当你更新页面信息的时候，是否存在CSRF保护？</p>
+<p>（这里应该有，并且期待它存在。记住，我们期待这个网站一切都是安全的，并且我们要挑战我们自己绕过他们）。如果是，它是怎样生效的？如果我发送一个空白的CSRF token,或者同样长度的token会发生什么。</p>
+</li>
+<li>
+<p>更改你的email/password,有第二步确认吗？</p>
+<p>如果没有，那么你可以将其与XSS（用XSS来实现账户接管）来作为一个攻击链。通常，它本身不是问题。但是如果program想看到XSS的影响，这个是必须的。</p>
+</li>
+<li>
+<p>他们是如何处理基础的<code>&lt; &gt; &quot; '</code> 字符，以及他们在哪里被映射？</p>
+<p>unicode又是怎样的呢？像<code>%09 %07 %0d%0a</code> 这些字符应该在一切可能的地方进行测试，  It’s mentioned a few times, but sometimes things can be overlooked. <strong>Leave no stone unturned</strong></p>
+</li>
+<li>
+<p>我能否在我自己的profile中输入我自己的URL？</p>
+<p>有什么针对<code>javascript:alert(0)</code>的过滤？这是我在设置个人资料时寻找的关键</p>
+</li>
+<li>
+<p>更新账户的页面与mobile app有什么区别？</p>
+<p>大多数mobile app使用api来更新信息，所以也许它很容易受到IDOR影响。除了这个，也可以采用不同的过滤系统。笔者有很多例子：desktop端存在XSS过滤，但是对于mobile application却没有针对XSS的过滤。Perhaps the mobile team is<br>
+not as educated on security as the desktop team? Maybe it was rushed.</p>
+</li>
+<li>
+<p>如何处理photo/video上传（如果提供的话）？</p>
+<p>在它说仅能上传<code>.jpg</code> <code>.png</code>的前提下我还能上传<code>.txt</code>吗？他们存储这些文件在root domain还是托管在某处？即使他们托管在某处（example-cnd.com)检查该域名是否被包含在CSP，也许它会有用。</p>
+</li>
+<li>
+<p>在我公开的profile上，有哪些信息是我可控的？</p>
+<p>关键是在于你能控制的在哪和怎样被映射。例如，有什么可以防止我在我的bio输入恶意HTML？也许它们过滤了<code>&lt;``&gt;</code>，并且反映为如下：</p>
+<p><code>&lt;div id=”example” onclick=”runjs(‘userinput&amp;lt;&amp;quot;’);”&gt;</code></p>
+<p>但是你可以使用<code> ‘);alert(‘example’);</code></p>
+</li>
+</ul>
+<h3 id="developer-tools">Developer tools</h3>
+<p>开发者工具有时会包括一些类似于测试webhooks,oauth flows,graphql explorers。这些工具专门为 开发者设置的工具能够测试各种公开API.</p>
+<ul>
+<li>
+<p>托管到哪里？</p>
+<p>这个很重要，如果托管到AWS，你的目标则为AWS密钥</p>
+</li>
+<li>
+<p><strong>google for SSRF webhook and you’ll see</strong></p>
+</li>
+</ul>
+<p>这一章节不做过多笔记</p>
+<h3 id="the-main-feature-of-the-site">The main feature of the site</h3>
+<p>比如dropbox,笔者就会着重在处理文件上传并从那里开始。会在不同网站上链接自己账户查看第三方如何交互工作的。</p>
+<p><strong>Map their features starting from the top</strong></p>
+<p>As you test each feature you should overtime get a<br>
+mental mind map of how the website is put together</p>
+<ul>
+<li>所有的features仅在web application上提供，还是都提供了</li>
+</ul>
+<p>他们有什么不同吗？如果你发现了只在手机app上的feature,而没有桌面版的 。不要忘记测试不同国家地区的，你也许发现不同国家/区域提供的也是不一样的。</p>
+<ul>
+<li>
+<p>What features are actually available to me, what do they do and what type of data is handled?Do multiple features all use the same data source?</p>
+</li>
+<li>
+<p>Can I pay for any upgraded features? If yes test with a paid vs free account. Can<br>
+the free account access paid content without actually paying? Typically payment<br>
+areas are the most missed as researchers are not happy to pay for potentially not<br>
+finding an issue. Personally I have always found a bug after upgrading but this may<br>
+differ from program to program.</p>
+</li>
+<li>
+<p>What are the oldest features?</p>
+<p>Old code = bugs</p>
+</li>
+<li>
+<p>What new features do they plan on releasing?Can I find any reference to it already on their site？ Follow them on twitter &amp; signup to their newsletters.</p>
+<p>一篇不错的文章：https://www.jonbottarini.com/2019/06/17/using-burp-suite-match-and-replace-settings-to-escalate-your-user-privileges-and-find-hidden-features/  <mark>《USING BURP SUITE MATCH AND REPLACE SETTINGS TO ESCALATE YOUR USER PRIVILEGES AND FIND HIDDEN FEATURES》</mark></p>
+</li>
+<li>
+<p>Do any features offer a privacy setting (private &amp; public)? Spend time testing if<br>
+something is simply working as they’ve intended it to. Is that post really private?</p>
+</li>
+<li>
+<p>If any features have different account level permissions (admin, moderator,user, guest)</p>
+</li>
+</ul>
+<h4 id="payment-feature">Payment feature</h4>
+<ul>
+<li>
+<p>What features are available if I upgrade my account? Can I access them without paying?</p>
+</li>
+<li>
+<p>- What payment options are available for different countries?</p>
+<p>一些用于测试的卡号：http://support.worldpay.com/support/kb/bg/testandgolive/tgl5103.html</p>
+<p>以及：https://www.paypalobjects.com/en_GB/vhelp/paypalmanager_help/credit_card_numbers.htm</p>
+</li>
+</ul>
+<h2 id="step-twoexpanding-our-attack-surface">Step Two:Expanding our attack surface</h2>
+<p>这一部分，笔者跑上述文中提到的subdomain扫描工具，去看看列出来的结果有什么新的。</p>
+<p>笔者写到，在工具扫描的时候，会对网站的一些feature进行测试。例如如下的关键字：<br>
+<code>developer, affiliate, careers, upload, mobile, upgrade, passwordreset</code></p>
+<p>当你测试主要功能的时候，你需要记录下有趣的endpoints,这些endpoint会帮助你解决问题。</p>
+<blockquote>
+<p>There is no right answer as to what to dork for, the possibilities<br>
+are endless. There is a great post I recommend you check out here - https://exposingtheinvisible.org/guides/google-dorking/</p>
+</blockquote>
+<p>有时，这里会让作者忙上几天，因为google是世界上最出色的爬虫。</p>
+<ul>
+<li>
+<p>另一个研究人员容易忽视的问题就是在dorking是google的重复结果时。当你点击搜索的最后一也，点击“repeat the search with the<br>
+omitted results included“会有更多的结果。</p>
+</li>
+<li>
+<p>当你搜索的时候，你可以用&quot;<code>-keyword</code>&quot; 来去掉特定的你不感兴趣的endpoint。</p>
+</li>
+</ul>
+<blockquote>
+<p>Don't forget to also check the results with a mobile user-agent as the Google results on a mobile are different to desktop.</p>
+</blockquote>
+<ul>
+<li>笔者也会使用文件后缀名进行google dorking,例如：<code>php, aspx, jsp, txt, xml, bak</code> 。文件后缀名的泄漏会给你domain/server在网站上使用了什么技术栈的视角，也会帮助你决定使用什么样的<strong>worldlist</strong> （你甚至可能会幸运的找到敏感文件泄漏）。</li>
+</ul>
+<blockquote>
+<p><strong>Don’t blindly use wordlists on your targets and actually use meaningful wordlists to yield better results</strong></p>
+</blockquote>
+<ul>
+<li>同样的方法适用于Github（and other Search engines such as<br>
+Shodan, BinaryEdg）。Dorking和搜索特定的字符串，例如：“domain.com” **api_secret, api_key, apiKey, apiSecret,password,admin_password **</li>
+</ul>
+<hr>
+<p><strong>After dorking</strong>:</p>
+<p>subdomain工具搜索完成，笔者使用XAMPP来快速扫描/robots.txt.</p>
+<p>/robots.txt是一个很好的标识：子域名是否值得进一步扫描文件/目录</p>
+<blockquote>
+<p>Why robots.txt?</p>
+<p>Because Robots.txt contains a list of endpoints the website owner does &amp; does NOT want indexed by<br>
+google so for example if the subdomain is using some type of third-party software then this may reveal information about what's on the subdomain.</p>
+</blockquote>
+<blockquote>
+<p>You can expand your robots.txt data by scraping results from WayBackMachine.org. WayBackMachine enables you to view a site's history from years ago and sometimes old files referenced in robots.txt from years ago are still present today</p>
+<p>I have high success with wide-scope programs and WayBackMachine</p>
+</blockquote>
+<p>在对/robots.txt及子域名做对应处理后，接着，扫描一些公共endpoint,例如：<code>/admin</code>,<code>/server-status</code>以及成功扩大我的单词列表。你能够在本指南开发找到wordlists的引用以及工具。</p>
+<p>​		主要看一些敏感文件/目录的暴露</p>
+<blockquote>
+<p>creating a custom wordlist as you hunt can help you find<br>
+more endpoints to test for.</p>
+</blockquote>
+<p>学习进行扫描的同时——进行发现新的endpoint,也同时检查一些更新。学习如何构建自定义wordlists。，这对于你的研究来说至关重要。</p>
+<p>在hunting中，记录你所发现的参数（特别是变量参数）是特别重要的。这节省了大量的时间。同时，积累的wordlists后，可以用burp配合在每一个endpoint使用。测试是否存在多个漏洞，例如XSS。</p>
+<blockquote>
+<p>This is one reason I created “InputScanner” so I could easily scrape each endpoint for any input name/id listed on the page, test them &amp; note down for future reference.</p>
+</blockquote>
+<blockquote>
+<p>I define the position on /endpoint and then simply add discovered parameters onto the request, and from there I can use Grep to quickly check the results for any interesting behaviour. /endpoint?param1=xss”&amp;param2=xss”. Lots of endpoints, lots of common parameters = bugs! (Don’t forget to test GET.POST! I have had cases where it wasn’t vulnerable in a GET request but it was in a POST. _GET vs $_POST)</p>
+</blockquote>
+<p>深入研究。重复每个过程。尽可能学习一切。<strong>The more you look, the more you learn.</strong></p>
+<h2 id="time-to-automate-step-threerinse-repeat">Time to automate! Step Three:Rinse &amp; Repeat</h2>
+<p>在这个点上，我花费了数月在同一个program上。而且有着完整的关于目标的mental mind map，我一路上所写的全部的笔记。</p>
+<p>牢记这个事实，开发人员每天在持续更新新的代码，而十年前犯的错误如今仍在继续。保持tools检查新的改变，在你的笔记中列出有趣的endpoint。，保持dorking,测试他们提出的新的features。并且，你可以采用这个方法到另一个program中，</p>
+<p>以下是笔者对于读者的几个建议：</p>
+<ul>
+<li><strong>扫描子域名，文件，目录&amp;泄漏</strong></li>
+</ul>
+<p>你需要将这个扫描流程自动化。这些过程耗费时间，你应当将时间耗费在hacking。上。You can use a service such as CertSpotter by SSLMate to keep up to date with new HTTPS certificates a company is creating and @NahamSecreleased LazyRecon to help automate your recon:https://github.com/nahamsec/lazyrecon</p>
+<ul>
+<li><strong>Changes on a website</strong></li>
+</ul>
+<p>了解网站是如何工作的，然后不断地检查是否有新功能&amp;特性。Don’t forget to also include .js files in those daily scans as they typically contain new code first before the feature goes live</p>
+<h1 id="笔者过去经验">笔者过去经验</h1>
+<p>把感兴趣的截图了（</p>
+<h2 id="补充">补充</h2>
+<p>https://www.startpage.com/ 隐私搜索（google）</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/google-dorking-learn/">
+              <h3 class="post-title">
+                下一篇：Google Dorking Learn
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

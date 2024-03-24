@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>对于Flask的个人理解及安全相关 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">对于Flask的个人理解及安全相关</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-08-17</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/Y9X8jL1qdWL/">
+                    flask
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <blockquote>
+<p>这是一个应付技术分享会的文稿<br>
+写在开头：<br>
+技术分享会写的稿子，文字写的很认真。PPT就。。。应付吧，计划用reveal-md生成PPT （反正第一天感觉好多都好水)  据我认真观察，讲水的大家听段子，讲认真的也没有几个人听，PPT做的炫酷也不过是换来几个抬头几下。更何况屏幕离远点字体就不清晰了，效果比较差。而且干货用PPT讲也很难讲出深度，只能用于科普。所以还不如干脆在blog里分享自己的稿件，梳理一遍自己对于Flask的理解和知识点。</p>
+</blockquote>
+<p>顺便安利一款叫做marp的工具，能够用markdown写PPT。觉得还是很不错的。<code>npm</code>安装后用npx导出为pptx格式一直卡死，最后我直接用vscode插件商店的marp插件就很快导出来了pptx格式</p>
+<h1 id="技术分享ppt提纲">技术分享PPT提纲</h1>
+<p>[TOC]</p>
+<h2 id="flask基本的概念">Flask基本的概念</h2>
+<ol>
+<li>
+<p>路由</p>
+</li>
+<li>
+<p>模板渲染及jinja2引擎</p>
+</li>
+<li>
+<p>视图及表单</p>
+</li>
+<li>
+<p>数据库及数据库迁移</p>
+</li>
+</ol>
+<h3 id="flask是什么">Flask是什么？</h3>
+<p>Flask是一种web框架，Flask本身相当于一个内核，其他几乎所有的功能都要用到扩展，都需要用第三方的扩展来实现。用 extension 增加其他功能。Flask没有默认使用的数据库、窗体验证工具。你可以选择MySQL，也可以用NoSQL。其 WSGI 工具箱采用 Werkzeug（路由模块），模板引擎则使用 Jinja2</p>
+<p>简而言之，用Flask能够帮助你快速构建一个网站。（比喻的话，就是Flask提供了构建房子的基本骨架，而具体内容的建造则交给用户自己）</p>
+<p>（在这一节 Flask的基本概念里 我将用较比较易懂的解释，让大家对flask这个web框架有个很基础的概念 如果有人感兴趣的话，可以尝试一下用flask实现一些个人小项目 ）</p>
+<h3 id="路由">路由</h3>
+<p>在Flask框架中，路由 就表示为用户请求的<em>URL</em>找出其对应的<em>处理函数</em>之意。</p>
+<p>解释</p>
+<p>前端页面的显示是依赖于后台提供的数据的，例如一个博客网站，首页显示的文章，用户来自于数据库。那么路由的作用就是将后台的函数与网页对应的url的绑定起来</p>
+<h3 id="模板渲染及jinja2">模板渲染及jinja2</h3>
+<p>接下来我们思考这样一个场景，在flask中是如何实现前后端分离的呢?</p>
+<p>这里就要提出了flask的模板渲染，和jinja2引擎的概念</p>
+<p>之前讲到了url是负责将函数与url绑定，那么模板渲染则可以理解为函数与templates绑定。及具体到渲染哪一个html页面</p>
+<p>至于jinja2则是Flask的默认的模板渲染引擎，它的语法，例如一些变量的使用很像vue，前端人员可以直接写templates对应的html/css，而无需在意后端的实现</p>
+<h4 id="模板的继承">模板的继承</h4>
+<p>当然对于一个网站而言，很多页面结构可能出现相似的情况</p>
+<p>例如：对于用户的信息显示保持不变，内容发生了改变。如果是这样的话需要写很多内容相似的模板么？在flask这里可以使用模板继承的相关功能</p>
+<h3 id="视图函数">视图函数</h3>
+<p>其实视图函数的概念在前文已经说出，之前在讲到一个函数会负责与url及html前端关联，这个函数就是视图函数</p>
+<h3 id="表单">表单</h3>
+<p>表单包括什么呢？举个例子，例如用户注册就是一个最简单的表单，如果不考虑使用现成的md轮子，由多个组件组成的发表文章的功能也算是一个表单。</p>
+<p>Flask有一套属于自己的表单类(FlaskForm),如果使用的话只需要直接继承该类，并实现对应的字段，例如，实现表单中用户名的定义，只需要在类内实现一个StringField并赋值给一个变量，例如该变量叫username</p>
+<p>在视图函数中检查表单内容是否满足要求，则直接看该变量下data的字段是否合乎要求</p>
+<h3 id="数据库及数据库迁移">数据库及数据库迁移</h3>
+<p>在开头讲到，Flask 没有关联的默认数据库。但是这里一些小型的项目我这里推荐Flask自带的ORM模型，例如Flask-SQLalchemy</p>
+<p>它的优点之一简单，它是简化了SQL的具体语法，便捷地创造对应的数据模型</p>
+<p>优点之二则是ORM支持多种数据库有很强的可移植性</p>
+<p>创建一个模型只需要创建一个类，例如创建一个用户类，代表一个用户所涉及到的全部数据存储项，例如 用户名，id，邮箱，关于甚至可以用ORM模型快速地创建例如一对多的关系</p>
+<p>至于数据库迁移，有很多应用场景。这里我来举一个我日常使用的例子，例如在我开发迭代自己个人项目的过程中，突然发现用户的数据对象需要新增一个头像的功能，但是又不希望把以往的数据丢弃，那么可以用数据迁移实现</p>
+<h2 id="flask安全">Flask安全</h2>
+<h3 id="flask自身安全">Flask自身安全：</h3>
+<p>得益于jinja2引擎，jinja自带XSS过滤，之前我自己在自己项目对表单进行一些自带对特殊字符的过滤，例如&lt; &gt;等，都会发现jinja会自动转义。但是jinja无法避免全部的XSS攻击，例如设置value时变量没有用引号包围</p>
+<p>还有就是jinja引擎对标签a的href属性容易存在注入，例如</p>
+<p><code>javascript:alert('unsafe');</code></p>
+<p>最后自身安全讲一下CSRF，这个是可以在Flask的配置中配置的</p>
+<h3 id="开发安全">开发安全</h3>
+<p>以Flask-admin模块为例，有装饰器login_required来限制仅登录用户可以访问页面，</p>
+<p>初次之外flask-admin还能提供记住模式，保存session，退出当前用户等</p>
+<p>但是在使用login_required装饰器来限制仅注册用户访问的代码段时，如果考虑不周也会有对应的安全问题</p>
+<p>例如：</p>
+<p><code>http://127.0.0.1:5000/login?next=%2Fpost</code></p>
+<p>在应用中，我们用视图函数实现了一个这样的url，当我们登陆后则会重定向到next所指向的位置</p>
+<p>这里有一个很严重的安全问题，当我们用<code>request.args.get('next')</code>获取重定向的位置时，很有可能有人恶意在next后使用绝对路径从而绕过一些验证，越权访问到不该访问的页面。所以这里的开发要添加一个检查是绝对路径还是相对路径的函数</p>
+<p>以Flask开发为例的web框架的开发，还有类似的场景就是文件上传，例如对文件名的检查,可以使用过长的文件名溢出，或者用特殊字符构造文件名绕过检测</p>
+<h2 id="使用异步及flask自身局限性">使用异步及Flask自身局限性</h2>
+<h3 id="异步">异步</h3>
+<ol>
+<li>
+<p>选择broker（消息队列)，例如<code>redis </code></p>
+</li>
+<li>
+<p>尝试用celery实现,在<code>__init__</code>中实例化celery以及定义对应的celery配置文件。</p>
+</li>
+<li>
+<p>在routes或者其他文件中用celery的装饰器定义对应的异步后台任务</p>
+</li>
+<li>
+<p>调用<code>delay</code>或<code>apply_async</code>方法执行对应的celery任务</p>
+</li>
+</ol>
+<h3 id="使用缺点">使用缺点：</h3>
+<ul>
+<li><code>celery4</code> 不支持<code>windows</code>,celery3不支持py3.6及以上</li>
+<li><code>celery</code>过重,<code>broker</code>需要<code>redis</code>类型的支持</li>
+<li>虽然轻便但是对于一些大型项目的开发比Django不那么完美，尤其是像后台管理系统没有比Django更成熟的能够拿来即用的轮子</li>
+<li>和jinja2绑死，无法使用其他模板引擎，例如mako</li>
+</ul>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan/">
+              <h3 class="post-title">
+                下一篇：使用celery让任务在后台运行（失败，celery不支持windows)
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>[技术阅读]双查询原理 | 持剑</title>
+<meta name="description" content="碎月星辰揽江风 , 我心有剑问天涯 ">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://1dayluo.github.io/favicon.ico?v=1711284755357">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://1dayluo.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://1dayluo.github.io">
+        <img class="avatar" src="https://1dayluo.github.io/images/avatar.png?v=1711284755357" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://1dayluo.github.io">
+        <h1 class="site-title">持剑</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">[技术阅读]双查询原理</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-07-28</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://1dayluo.github.io/tag/RsVeNwQ62C/">
+                    知识点巩固
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://1dayluo.github.io/tag/ZSxJIWHH2y/">
+                    技术阅读
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h1 id="double_-sql_injection0x01-双查询">Double_ SQL_Injection/#0x01-双查询</h1>
+<p>原文链接：<a href="https://mochazz.github.io/2017/09/23/Double_%20SQL_Injection/#0x01-%E5%8F%8C%E6%9F%A5%E8%AF%A2">Double SQL Injection(双查询注入) | Mochazz's blog</a></p>
+<h2 id="笔记">笔记</h2>
+<p>： 0x3a是<code>:</code></p>
+<p>注入sample：</p>
+<pre><code class="language-sql">select count(*),concact((&lt;injection&gt;),floor(rand(0)*2)a from &lt;target-table&gt; group by a --+
+</code></pre>
+<p>爆表</p>
+<pre><code class="language-sql">select count(*),concact(
+(select table_name from information_schema.tables where table_schema='security'),
+floor(rand(0)*2)
+)a
+from information_schema.column 
+group by a
+</code></pre>
+<h3 id="语法讲解">语法讲解</h3>
+<p><strong>concact()a</strong></p>
+<p><code>concact</code> 本身是用于将里面的参数全部连接起来</p>
+<pre><code class="language-sql">select concact()a 
+等价于
+select concact() as a
+</code></pre>
+<h3 id="原理">原理：</h3>
+<p><code>floor(rand(0)*2)</code> 可以用floor和rand(0)的配合取消rand的随机性，导致每次组合运行时都会特点输出01101。</p>
+<p><code>group by</code>遇到<code>count</code> 会创建一个虚拟表，而group by的查询到的对象不在虚拟表中，则会插入一条数据，有则会调用count进行计数+1</p>
+<p><code>group by</code> 默认遇到<code>rand</code> 在插入group by 的虚拟表中，会再进行一次rand计算。</p>
+<p>所以导致：</p>
+<p><code>011011</code></p>
+<p>第一次 0：</p>
+<p>虚拟表中没有，由于<code>count</code> 特性准备插入，</p>
+<p>再由于<code>group by</code> ,又运行了一次rand，导致插入的数字为 1</p>
+<p>第三次 0：</p>
+<p>同理，在虚拟表中没有0，由于由于<code>count</code> 特性准备插入，</p>
+<p>再由于<code>group by</code> ,又运行了一次rand，导致插入</p>
+<p>但是，数字1 作为键已经存在，</p>
+<p>此时会报错</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://1dayluo.github.io/post/ji-zhu-yue-du-yong-github-lai-shi-xian-lou-dong-shang-jin-xi-ren/">
+              <h3 class="post-title">
+                下一篇：[技术阅读]用github来实现漏洞赏金猎人
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">碎月星辰揽江风 , 我心有剑问天涯 </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+   | <a class="rss" href="https://1dayluo.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>
