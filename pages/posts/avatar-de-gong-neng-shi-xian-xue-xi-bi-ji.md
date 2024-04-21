@@ -1,5 +1,5 @@
 ---
-title: ' ☆Avatar的功能实现学习笔记'
+title: ' Avatar的功能实现学习笔记'
 date: 2020-07-13 23:30:42
 tags: [python,flask]
 published: true
