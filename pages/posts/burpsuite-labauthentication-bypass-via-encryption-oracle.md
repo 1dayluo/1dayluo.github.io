@@ -63,7 +63,7 @@ WOHlxrFhpplZ1%2fQ5TWpuQ%2fBqnHLRiWCSos7j6Nv%2fWYY%3d
 - /my-account 的stay-logged-in当作encrypt
 - /post/comment 下的notificatoin也可以当作encrypt
 
-将ENCRYPT下的stay-logged-in，放到DECRYPT的notification下。解得：
+将ENCRYPT下的stay-logged-in，放到DECRYPT的notification下。解得：   
 
 ```jsx
 xkYNlEW%2b2VVQoO83%2b91YWTkxxWy2cegjd1%2f4BNWnd%2fs%3d;
@@ -71,7 +71,7 @@ xkYNlEW%2b2VVQoO83%2b91YWTkxxWy2cegjd1%2f4BNWnd%2fs%3d;
 
 为：
 
-```jsx
+```
 wiener:1630929464302
 ```
 
