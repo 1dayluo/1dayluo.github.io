@@ -6,7 +6,8 @@ published: true
 hideInList: false
 feature: 
 isTop: false
----
+---    
+
 > 堆点安全的博文，一直以来是笔记党。把去年8月的刷题笔记发上来。正在做的攻防世界没做啥刷题笔记，就用这篇代替啦（bu 
 > 今年光顾着写代码了，安全啥的给落下了还是要继续努力>-<  （而且发现好久不巩固是会忘记的，又要再次巩固学习一次了）
 
@@ -58,7 +59,8 @@ if ($input === $user) {
  }
 ````
 这里用户名用这里会比较通过（以用户5的身份进行比较）。
-但是在下一行代码，取$input[0]的时候，会发现user[0]不存在。于是$uid便为：
+但是在下一行代码，取 `$input[0]`的时候，会发现`user[0]`不存在。于是`$uid`便为：
+
 `$uid=NULL+0;//uid=0;`
 最终将以用户0的身份登录，也就是admin用户。
 最终payload为
@@ -286,7 +288,4 @@ php版本小于5.3.4才可以
 要注入下列sql语句：
 `"select * from `admin` where password='".md5($pass,true)."'"`
 
-关键在md5($pass,true)，若$pass的值为ffifdyop，则经过md5转换后的值再经过php转为字符串后会变成'or'6蒥欓!r,b，6的后面是一堆乱七八糟的字符，姑且记为xx吧。则最后的sql查询语句为：
-
-`select * from `admin` where password=''or'6蒥欓!r,b'`
-
+关键在 `md5($pass,true)` ，若 `$pass` 的值为ffifdyop，则
