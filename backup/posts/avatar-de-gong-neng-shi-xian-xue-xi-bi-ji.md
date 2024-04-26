@@ -32,15 +32,15 @@ isTop: false
 
 ## 一.表单设置
 
-````python
+```python
 class UploadAvatar(FlaskForm):
     avatar = FileField('avatar',validators=[FileRequired('文件未选择'),FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField('Submit')
-````
+```
 
 `Flask-WTF` 提供了 `FileField` 类来处理文件上传，它在表单提交后， 自动从 `flask.request.files` 抽取数据。 `FileField` 的 data 属性是一个` Werkzeug FileStorage` 实例。
 例如：
-````python
+```python
 from werkzeug import secure_filenamefrom flask_wtf.file import FileField
 
 
@@ -55,27 +55,27 @@ class PhotoForm(Form):
     else:
         filename = None
     return render_template('upload.html', form=form, filename=filename)
-````
+```
 那么 `secure_filename() `函数具体做了那些事呢？现在的问题是，有一个信条叫做“永远别相信你用户的输入” ，这句话对于上传文件的文件名也是同样有效的。
 <b>Remember to set the enctype of the HTML form to multipart/form-data, otherwise request.files will be empty.</b>
 因为这句话，所以templates要有所更改，查看对应的章节
 ## 二. Models修改
 
 我在这里对用户增加了avatar的方法，返回是头像对应的地址
-````python
+```python
 def user_avatar(self):
     return './static/avatar/{}'.format(self.avatar)
-````
+```
 同时我对数据库结构进行了更改，我增加了这一分类
 
 `avatar = db.Column(db.String(120))`
 
 注意方法和column不能重名，否则迁移数据库会识别不到更改。
 修改完数据库后,用migrate进行迁移
-````python
+```python
 flask db migrate  -m "avatar"
 flask db upgrade
-````
+```
 
 后期优化：
 考虑增加default(已完成)
@@ -88,7 +88,7 @@ flask db upgrade
        
 
 对文件名进行检测：
-````python
+```python
 
 from werkzeug.utils import secure_filename
 filename = secure_filename(f.filename)
@@ -111,21 +111,22 @@ def avatar_set(username):
 
 
     return render_template('upload_avatar.html', title='上传你的头像把',form=form)
-````
+```
 `set_avatar`是设置头像的函数，我放在了operation.py中=-=，如下：
 后期可以考虑优化，例如上传图片对图片名称进行过滤并保存其md5至数据库和本体
-````python
+
+```python
 def set_avatar(cur_user,upload_path):
     user = User.query.get(cur_user)
     user.avatar = upload_path
     db.session.commit()
     return user
-````
+```
 四 模板
 前端还没美化，只是功能实现，凑乎看把
 (一）上传头像的模板处
 红体字是必须的，否则会提示文件不存在
-````html
+```html
 <form action="" method="post" novalidate enctype="multipart/form-data">
 
 
@@ -139,7 +140,7 @@ def set_avatar(cur_user,upload_path):
     {% endfor %}
 </p>
 <p>{{ form.submit() }}</p>
-````
+```
 (二）主页模板
 
 ````html

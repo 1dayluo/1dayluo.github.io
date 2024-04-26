@@ -579,7 +579,7 @@ POP 面向属性编程(Property-Oriented Programing)
 
 ### 示例
 
-```reason
+```php
 <?php
     class TestObject {
     }
@@ -610,7 +610,7 @@ POP 面向属性编程(Property-Oriented Programing)
 
 示例
 
-```reason
+```txt
 <?php
     class TestObject {
     }

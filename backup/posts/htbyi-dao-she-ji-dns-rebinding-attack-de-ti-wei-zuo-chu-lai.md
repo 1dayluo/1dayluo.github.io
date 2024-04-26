@@ -3,22 +3,19 @@ title: '[HTB]一道涉及DNS Rebinding attack的题(未做出来)'
 date: 2022-01-07 21:56:33
 tags: [HTB,web,刷题]
 published: true
-hideInList: false
-feature: 
 isTop: false
 ---
 # baby CachedView (没做出来)
 
-题目提供的Dockerfile下载cffi的时候报错,需要下载libcairo2-dev gcc 
-暂时不打算做了.服务器之前白嫖了一个ipv6的小鸡,但是老实说自己不怎么会玩= =好像连ipv6好只能手机下一个1.1.1.1的vpn.......弄python环境又费好长时间.太费时间了.主要记录一下思路
+题目提供的Dockerfile下载cffi的时候报错,需要下载`libcairo2-dev gcc` 
+暂时不打算做了.服务器之前白嫖了一个ipv6的小鸡,但是老实说自己不怎么会玩= =好像连ipv6好只能手机下一个`1.1.1.1`的vpn.......弄python环境又费好长时间.太费时间了.主要记录一下思路
 
-<!-- more -->
 
 
 ![Untitled](https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220107_1.png)
 
 
-先看一下代码,是有对应的flag路径的,并且是一个flag.png 
+先看一下代码,是有对应的flag路径的,并且是一个`flag.png `
 仔细观察访问/flag的路由处调用的函数(自定义的装饰器) 会发现有一个or的语法
 ![Untitled](https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/20220107_2.png)
 cache_web 内部有负责检查json传递的url是否是内网的ip.如果是,就会拒绝访问并提示
@@ -121,7 +118,7 @@ do
 done
 ```
 
-还要修改/etc/resolv.conf
+还要修改 `/etc/resolv.conf`
 
 同时,在自己购买的域名(刚买的)上进行配置:
 

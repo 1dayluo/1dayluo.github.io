@@ -228,7 +228,7 @@ it could also be bypassed by using making a subdomain or directory as the whitel
 
 [https://www.sqlsec.com/2021/05/ssrf.html#toc-heading-2](https://www.sqlsec.com/2021/05/ssrf.html#toc-heading-2)
 
-```reason
+```txt
 # 清空 key
 dict://172.72.23.27:6379/flushall
 
@@ -259,7 +259,7 @@ step1: 抓取请求包
 
 step2: 删除HTTP请求的
 
-```reason
+```txt
 Accept-Encoding: gzip, deflate
 ```
 

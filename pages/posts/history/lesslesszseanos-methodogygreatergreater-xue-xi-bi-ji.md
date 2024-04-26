@@ -67,7 +67,7 @@ XSS是最好预防的漏洞，存在WAF拦截，往往意味着application易受
 - 测试encoding,例如`<%00h2?`（There are LOTS to try here,
   `%0d`,` %0a`,` %09` etc）
 
-- 存在硬编码字符串的黑名单吗？测试` </script/x>` 有效吗？或者<ScRipt> 等
+- 存在硬编码字符串的黑名单吗？测试` </script/x>` 有效吗？或者 `<ScRipt>`等    
 
   
 
@@ -759,7 +759,7 @@ subdomain工具搜索完成，笔者使用XAMPP来快速扫描/robots.txt.
 
 
 
-> This is one reason I created “InputScanner” so I could easily scrape each endpoint for any input name/id listed on the page, test them & note down for future reference.
+> This is one txt I created “InputScanner” so I could easily scrape each endpoint for any input name/id listed on the page, test them & note down for future reference.
 
 
 

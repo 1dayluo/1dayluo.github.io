@@ -142,7 +142,7 @@ even you add `Content-Type` header,the response is stiil different from burpsuit
 curl -X POST  http://10.10.11.161/api/v1/signup -H 'Content-Type: application/json' -d 'user=ipp' | jq .
 ```
 
-so，the next we use wireshark to capture the package，and find the reason
+so，the next we use wireshark to capture the package，and find the txt
 
 ![Untitled](https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/Untitled%201.png20220417a.png)
 

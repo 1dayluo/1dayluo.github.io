@@ -87,12 +87,12 @@ notion阅读版:https://cubic-brace-c93.notion.site/Struts2-s2-001-1629a6906fba4
 - tld文件如果没有被识别出来，需要配置tomcat下的 `[catalin.properties](http://catalin.properties)` (文章点击[这里](https://blog.nowcoder.net/n/0f9f61f7a722490d9ac157adca1803d2)）如果没有生效(看[这篇](https://blog.chiyu.monster/?p=83)文章），需要解压缩文件并配置web.xml
 
 步骤/踩的坑：
-
+```
 1. File -> Project Structure 设置 Project SDK
 2. Modules → Import Module 把目录以Maven Module来添加
 3. Modules → 选择刚创建的Module，新建 `Framework` 下的web
 4. configuration tomcat → Deployment → 添加Artifacts
-
+```
 虽然踩了坑 但是最后终于解决了🥲 debug好耶
 
 参考：
