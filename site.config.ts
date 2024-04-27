@@ -6,6 +6,10 @@ export default defineSiteConfig({
   title: '星尘谷',
   author: {
     name: '1dayluo',
+    avatar: 'https://img2.imgtp.com/2024/04/27/qNeoZUIz.png',
+  },
+  encrypt: {
+    enable: true,
   },
   description: '欢迎来到我的blog. ^ ^',
   social: [
@@ -37,13 +41,13 @@ export default defineSiteConfig({
   ],
 
   search: {
-    enable: false,
-  },
-
-  sponsor: {
     enable: true,
-    title: 'meow！',
-    methods: [
-    ],
-  },
+  }
+
+  // sponsor: {
+  //   enable: true,
+  //   title: 'meow！',
+  //   methods: [
+  //   ],
+  // },
 })
