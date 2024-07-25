@@ -6,7 +6,7 @@ export default defineSiteConfig({
   title: '喵帕斯',
   author: {
     name: '1dayluo',
-    avatar: '',
+    avatar: 'https://pic.imgdb.cn/item/66a1f641d9c307b7e9291f64.jpg',
   },
   encrypt: {
     enable: true,
