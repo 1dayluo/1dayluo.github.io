@@ -3,15 +3,15 @@ import { defineSiteConfig } from 'valaxy'
 export default defineSiteConfig({
   url: 'https://1dayluo.github.io/',
   lang: 'zh-CN',
-  title: '星尘谷',
+  title: '喵帕斯',
   author: {
     name: '1dayluo',
-    avatar: 'https://img2.imgtp.com/2024/04/27/qNeoZUIz.png',
+    avatar: '',
   },
   encrypt: {
     enable: true,
   },
-  description: '欢迎来到我的blog. ^ ^',
+  description: '遁入迷宫的技术宅的隐秘角落 ｜ 我记录些什么就是为了记录些什么',
   social: [
     {
       name: 'RSS',
@@ -42,6 +42,7 @@ export default defineSiteConfig({
 
   search: {
     enable: true,
+    type: 'fuse',
   }
 
   // sponsor: {
