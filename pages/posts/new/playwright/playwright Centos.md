@@ -1,6 +1,8 @@
 ---
 title: playwright环境(centos)
-
+date: 2025-11-25 15:24:49
+tags: [scrapy, 爬虫, playwright]
+published: true
 ---    
 
 
@@ -23,7 +25,7 @@ title: playwright环境(centos)
     
     `sudo yum install libstdc++.x86_64`
     
-    ![image.png](playwright-pic1.png)
+    ![image.png](./playwrightpic1.png)
     
 
 ### 升级make

@@ -87,7 +87,7 @@ declare module 'vue-router/auto-routes' {
     '/posts/history/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie': RouteRecordInfo<'/posts/history/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie', '/posts/history/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie', Record<never, never>, Record<never, never>>,
     '/posts/history/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian': RouteRecordInfo<'/posts/history/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian', '/posts/history/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian', Record<never, never>, Record<never, never>>,
     '/posts/new/htb_runner/HTB Runnerwriteup': RouteRecordInfo<'/posts/new/htb_runner/HTB Runnerwriteup', '/posts/new/htb_runner/HTB Runnerwriteup', Record<never, never>, Record<never, never>>,
-    '/posts/playwright-centos': RouteRecordInfo<'/posts/playwright-centos', '/posts/playwright-centos', Record<never, never>, Record<never, never>>,
+    '/posts/new/playwright/playwright Centos': RouteRecordInfo<'/posts/new/playwright/playwright Centos', '/posts/new/playwright/playwright Centos', Record<never, never>, Record<never, never>>,
     '/tags/': RouteRecordInfo<'/tags/', '/tags', Record<never, never>, Record<never, never>>,
     '/tags/[tag]/': RouteRecordInfo<'/tags/[tag]/', '/tags/:tag', { tag: ParamValue<true> }, { tag: ParamValue<false> }>,
   }
