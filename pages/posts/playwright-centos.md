@@ -1,3 +1,10 @@
+---
+title: playwright环境(centos)
+
+---    
+
+
+
 # playwright环境(centos)
 
 ### 装libstdc/升级gcc
