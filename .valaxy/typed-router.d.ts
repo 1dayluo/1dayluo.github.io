@@ -86,6 +86,7 @@ declare module 'vue-router/auto-routes' {
     '/posts/history/xss-jin-jie-xue-xi-fen-xiang-yi': RouteRecordInfo<'/posts/history/xss-jin-jie-xue-xi-fen-xiang-yi', '/posts/history/xss-jin-jie-xue-xi-fen-xiang-yi', Record<never, never>, Record<never, never>>,
     '/posts/history/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie': RouteRecordInfo<'/posts/history/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie', '/posts/history/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie', Record<never, never>, Record<never, never>>,
     '/posts/history/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian': RouteRecordInfo<'/posts/history/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian', '/posts/history/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian', Record<never, never>, Record<never, never>>,
+    '/posts/new/ai_agent/agent-security-learn-01-0613': RouteRecordInfo<'/posts/new/ai_agent/agent-security-learn-01-0613', '/posts/new/ai_agent/agent-security-learn-01-0613', Record<never, never>, Record<never, never>>,
     '/posts/new/htb_runner/HTB Runnerwriteup': RouteRecordInfo<'/posts/new/htb_runner/HTB Runnerwriteup', '/posts/new/htb_runner/HTB Runnerwriteup', Record<never, never>, Record<never, never>>,
     '/posts/new/playwright/playwright Centos': RouteRecordInfo<'/posts/new/playwright/playwright Centos', '/posts/new/playwright/playwright Centos', Record<never, never>, Record<never, never>>,
     '/tags/': RouteRecordInfo<'/tags/', '/tags', Record<never, never>, Record<never, never>>,
